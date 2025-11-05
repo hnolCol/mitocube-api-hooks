@@ -1,0 +1,42 @@
+{
+    "name": "@mitocube/api-hooks",
+    "author": "Hendrik Nolte <h.nolte@age.mpg.de> (http://github.com/hnolcol)",
+    "contributors": [],
+    "version": "1.0.0",
+    "license": "MIT",
+    "description": "Hooks for API calls to the MitoCube backend. The package requires a functional MitoCube backend (hnolcol/mitocube-backend) due to implemented API calls to retrieve information about attributes/otologies and genotypes as well as proteins. Authorization should be handled using the axios default settings Authorization Header ('Bearer ...').",
+    "keywords": [
+        "react",
+        "d3",
+        "visualisation",
+        "visx",
+        "charts",
+        "mitocube"
+    ],
+    "main": "index.js",
+    "scripts": {
+        "test": "jest"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/hnolcol/mitocube-api-hooks.git"
+    },
+    "bugs": {
+        "url": "https://github.com/hnolcol/mitocube-api-hooks/issues",
+        "email": "h.nolte@age.mpg.de"
+    },
+    "dependencies": {
+        "axios": "^1.8.2",
+        "dotenv": "^16.4.7",
+        "lodash": "^4.17.21",
+        "react": "^19.0.0",
+        "react-dom": "^19.0.0",
+        "react-query": "^3.39.3"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.26.10",
+        "@babel/preset-env": "^7.26.9",
+        "babel-jest": "^29.7.0",
+        "jest": "^29.7.0"
+    }
+}

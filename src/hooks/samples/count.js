@@ -1,0 +1,41 @@
+import { useQuery } from "react-query"
+import axios from "axios"
+import config from "../../../config";
+/**
+ * @description Retrieves the sample count
+ * @param {Object} props
+ * @param {String} props.protein_tag  The protein tag to filter samples that quantified the given protein.
+ *
+ * @returns {Object} The sample count.
+ */
+async function getSampleCount_API({ has_peptide_quantification, has_protein_quantification, protein_group_tag, submission_tag, trait_tag  }) {
+    const res = await axios.get(`${config.baseURL}/samples/count`, {
+        params: {
+            has_peptide_quantification,
+            has_protein_quantification,
+            protein_group_tag,
+            submission_tag,
+            trait_tag
+        }
+    })
+    return res.data
+}
+
+export const useGetSampleCount = (APIParams = {
+    has_protein_quantification: undefined,
+    has_peptide_quantification: undefined, 
+    protein_group_tag: undefined,
+    submission_tag: undefined,
+    trait_tag: undefined
+}, useQueryOptions = { staleTime: 3000000 }) => {
+    return useQuery(["getSampleCount",
+        APIParams.protein_group_tag,
+        APIParams.submission_tag,
+        APIParams.trait_tag,
+        APIParams.has_protein_quantification,
+        APIParams.has_peptide_quantification], () => getSampleCount_API({ ...APIParams }), useQueryOptions)
+}
+export const useGetSubmissionConditionApplication = (APIParams = {tag, group_by_attribute}, useQueryOptions = { staleTime: 500}) => {
+    return useQuery(["getSubmissionConditionApplication", APIParams.tag, APIParams.group_by_attribute],
+        () => getSubmissionCA_API({ ...APIParams }), useQueryOptions)
+}

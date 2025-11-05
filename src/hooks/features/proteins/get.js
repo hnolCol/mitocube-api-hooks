@@ -1,0 +1,18 @@
+import axios from "axios"
+import { useQuery } from "react-query"
+
+
+/**
+ * @description Get the information about a feature including gene name, etc. Endpoint: /api/features/${tag}/i
+ * @param {Object} props
+ * @param {String} props.tag - The feature tag (e.g. Uniprot ID)
+ * @returns {import("./types").Feature} The feature information. 
+ */
+async function getProteinByTag_API({ tag }) {
+    const res = await axios.get(`/api/features/proteins/${tag}`, { })
+    return res.data
+}
+
+export function useGetProteinByTag(APIParams = {tag}, useQueryOptions = { }) {
+    return useQuery(["protein",APIParams.tag],() =>  getProteinByTag_API({...APIParams}), useQueryOptions)
+}

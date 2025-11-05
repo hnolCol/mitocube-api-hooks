@@ -1,0 +1,81 @@
+import { useQuery, useMutation } from "react-query"
+import axios from "axios"
+import config from "../../../config";
+
+
+/**
+ * 
+ * @param {Object} props 
+ * @param {Number} props.limit - The maximum number of news to be returned 
+ * @param {String} props.order - The order of the news, either 'asc' or 'desc'. Default is 'desc'.
+ * @returns {import("../../types/news").News[]}
+ */
+async function findNews_API({limit, order = 'desc'}) {
+    const res = await axios.get(`${config.baseURL}/news`,{params : {limit, order}})
+    return res.data 
+}
+
+export const useFindNews = (APIParams = {limit, order: 'desc'}, useQueryOptions = {}) => {
+    return useQuery(["getNews"],() =>  findNews_API({...APIParams}), useQueryOptions)
+}
+
+
+/**
+ * Returns a specifc news item by its tag.
+ * @param {Object} props 
+ * @param {String} props.tag - The news tag
+ * @returns {import("../../types/news").News}
+ */
+async function getNewsByTag_API({tag}) {
+    const res = await axios.get(`${config.baseURL}/news/${tag}`)
+    return res.data 
+}
+
+export const useGetNewsByTag = (APIParams = {tag}, useQueryOptions = {}) => {
+    return useQuery(["getNewsByTag", APIParams.tag],() =>  getNewsByTag_API({...APIParams}), useQueryOptions)
+}
+
+
+
+
+/**
+ * @description Endpoint: POST '/api/news'
+ * @param {Object} props 
+ * @param {String} props.title - The news title
+ * @param {String} props.content - The news content in markdown format
+ * @param {String[]} props.submission_tags - Tags of submissions associated with the news. For example, if the news is about a new submission, the submission tag should be included here. 
+ * @param {String[]} props.feature_tags - Features (peptides, proteins, genes etc) associated with the news.
+ * @returns {Boolean} If insertion was successful
+ */
+async function postNews_API({ title, content, submission_tags, feature_tags }) {
+    const res = await axios.post(`${config.baseURL}/news`,
+        {
+            title,
+            content,
+            submission_tags,
+            feature_tags
+    }
+    )
+    return res.data 
+}
+
+export const usePostNews = (useMutationOptions = {}) => {
+    return useMutation((APIParams) => postNews_API({...APIParams}), useMutationOptions)
+}
+
+
+
+/**
+ * @description Endpoint: DELETE '/api/news'
+ * @param {Object} props 
+ * @param {String} props.tag - The news tag to delete
+ * @returns {Boolean} If deletion was successful
+ */
+async function deleteNews_API({ tag }) {
+    const res = await axios.delete(`${config.baseURL}/news/${tag}`)
+    return res.data
+}
+
+export const useDeleteNews = (useMutationOptions = {}) => {
+    return useMutation((APIParams) => deleteNews_API({...APIParams}), useMutationOptions)
+}
