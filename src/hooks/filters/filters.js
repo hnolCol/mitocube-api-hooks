@@ -10,16 +10,15 @@ import _ from "lodash"
  * @param {String} props.submission_tag - Restrict the filter for the submission tag (e.g. which filter are available for the given submission.)
  * @returns {import("./types").Filter[]} - The filter found for the given proteome_tag 
  */
-async function getFilters_API({proteome_tag, feature_tag, submission_tag}){
-    //fetch availabe features from the API. Reconsider /details 
-    const res = await axios.get("/api/filters", {params : {proteome_tag,feature_tag, submission_tag}} )
+async function getFilters_API({proteome_tag, protein_tag, submission_tag}){
+    const res = await axios.get("/api/filters/q", {params : {proteome_tag, protein_tag, submission_tag}} )
     return res.data
 }
 
-export function useGetFilters (APIParams = {proteome_tag, feature_tag, submission_tag}, useQueryOptions = {}) {
+export function useGetFilters (APIParams = {proteome_tag, protein_tag, submission_tag}, useQueryOptions = {}) {
     return useQuery(["getFilters",
         APIParams.proteome_tag,
-        APIParams.feature_tag,
+        APIParams.protein_tag,
         APIParams.submission_tag],
 
         () => getFilters_API({ ...APIParams }), useQueryOptions)

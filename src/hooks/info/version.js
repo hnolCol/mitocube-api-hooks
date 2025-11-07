@@ -10,6 +10,6 @@ async function getVersion_API({}) {
     return res.data 
 }
 
-export const useGetBackendVersion = (APIParams = {}, useQueryOptions = {}) => {
+export const useGetBackendVersion = (APIParams = {}, useQueryOptions = {staleTime : Infinity}) => {
     return useQuery(["getVersion"],() =>  getVersion_API({...APIParams}), useQueryOptions)
 }

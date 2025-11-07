@@ -4,7 +4,6 @@ test.config.js
 .env
 babel_config.js
 babel.config.js
-config.js
 .DS_Store
 # Byte-compiled / optimized / DLL files
 __pycache__/
