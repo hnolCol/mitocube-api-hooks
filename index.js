@@ -56,6 +56,7 @@ import { useGetProteinByTag } from "./src/hooks/features/proteins/get";
 import { useGetSampleCount } from "./src/hooks/samples/count";
 import { useGetRequiredTraits } from "./src/hooks/attributes/requires";
 import { usePostGenotype } from "./src/hooks/genotypes/insert";
+import { useGetGenotypesBySearchString } from "./src/hooks/genotypes/query";
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 
@@ -120,7 +121,8 @@ export default {
         useGetUserByQuery
     },
     genotypes: {
-        usePostGenotype
+        usePostGenotype,
+        useGetGenotypesBySearchString
     },
     features: {
         useGetFeaturesByQuery,
