@@ -8,14 +8,15 @@ import config from "../../../config";
  *
  * @returns {Object} The sample count.
  */
-async function getSampleCount_API({ has_peptide_quantification, has_protein_quantification, protein_group_tag, submission_tag, trait_tag  }) {
+async function getSampleCount_API({ has_peptide_quantification, has_protein_quantification, protein_group_tag, submission_tag, trait_tag, genotype_tag  }) {
     const res = await axios.get(`${config.baseURL}/samples/count`, {
         params: {
             has_peptide_quantification,
             has_protein_quantification,
             protein_group_tag,
             submission_tag,
-            trait_tag
+            trait_tag,
+            genotype_tag
         }
     })
     return res.data
@@ -26,14 +27,16 @@ export const useGetSampleCount = (APIParams = {
     has_peptide_quantification: undefined, 
     protein_group_tag: undefined,
     submission_tag: undefined,
-    trait_tag: undefined
+    trait_tag: undefined,
+    genotype_tag: undefined,
 }, useQueryOptions = { staleTime: 3000000 }) => {
     return useQuery(["getSampleCount",
         APIParams.protein_group_tag,
         APIParams.submission_tag,
         APIParams.trait_tag,
         APIParams.has_protein_quantification,
-        APIParams.has_peptide_quantification], () => getSampleCount_API({ ...APIParams }), useQueryOptions)
+        APIParams.has_peptide_quantification,
+        APIParams.genotype_tag], () => getSampleCount_API({ ...APIParams }), useQueryOptions)
 }
 export const useGetSubmissionConditionApplication = (APIParams = {tag, group_by_attribute}, useQueryOptions = { staleTime: 500}) => {
     return useQuery(["getSubmissionConditionApplication", APIParams.tag, APIParams.group_by_attribute],
