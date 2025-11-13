@@ -35,7 +35,7 @@ import { useGetAttributeCount } from "./src/hooks/attributes/count";
 import { useGetAttributeMinState } from "./src/hooks/attributes/state";
 import { useGetSubmissionConditionApplication } from "./src/hooks/submissions/ca";
 import { useGetConditionApplication, useGetConditionApplicationText } from "./src/hooks/condition_applications/condition_applications";
-import { useGetSample, useGetSampleConditionApplications } from "./src/hooks/samples/samples";
+import { useGetSample, useGetSampleConditionApplications, useGetSampleGenotype } from "./src/hooks/samples/samples";
 import { useDeleteMetatext, useGetMetatext, usePatchMetatext } from "./src/hooks/metatext/metatext";
 import { useGetSubmissionPermissions, useGetSubmissionPermissionsByTag } from "./src/hooks/submissions/permissions";
 import { useDeleteNews, useFindNews, useGetNewsByTag, usePostNews } from "./src/hooks/news/news";
@@ -56,7 +56,14 @@ import { useGetProteinByTag } from "./src/hooks/features/proteins/get";
 import { useGetSampleCount } from "./src/hooks/samples/count";
 import { useGetRequiredTraits } from "./src/hooks/attributes/requires";
 import { usePostGenotype } from "./src/hooks/genotypes/insert";
-import { useGetGenotypesBySearchString, useGetGenotypeText } from "./src/hooks/genotypes/query";
+import { useGetGenotypesBySearchString } from "./src/hooks/genotypes/query";
+import { useGetGenotypeText } from "./src/hooks/genotypes/text";
+import { useGetGenotypeDescription } from "./src/hooks/genotypes/description";
+import { useGetGenotypeItem } from "./src/hooks/genotypes/item";
+import { useGetGenotypeProteins } from "./src/hooks/genotypes/proteins";
+import { useGetGenotypeSampleCount } from "./src/hooks/genotypes/countsamples";
+import { useDeleteGenotype } from "./src/hooks/genotypes/delete";
+import { useGetGenotypePermissions } from "./src/hooks/genotypes/permission";
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 
@@ -123,7 +130,13 @@ export default {
     genotypes: {
         usePostGenotype,
         useGetGenotypesBySearchString,
-        useGetGenotypeText
+        useGetGenotypeText,
+        useGetGenotypeDescription,
+        useGetGenotypeItem,
+        useGetGenotypeProteins,
+        useGetGenotypeSampleCount,
+        useDeleteGenotype,
+        useGetGenotypePermissions, 
     },
     features: {
         useGetFeaturesByQuery,
@@ -143,7 +156,8 @@ export default {
     samples: {
         useGetSample,
         useGetSampleConditionApplications,
-        useGetSampleCount
+        useGetSampleCount, 
+        useGetSampleGenotype,
     },
     submissions: {
         useGetSubmissionMetatextByTag,
