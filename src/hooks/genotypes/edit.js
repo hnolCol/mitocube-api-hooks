@@ -10,9 +10,9 @@ import config from "../../../config";
  * @returns {Boolean} If editing was successful
  */
 
-async function editGenotype_API({ tag, text, description, publication, technical_text, protein_tags, application_tags }) {
-    
-    const res = await axios.put(`${config.baseURL}/genotypes/${tag}`, { text, description, publication, technical_text, protein_tags, application_tags })
+async function editGenotype_API({ tag, text, description, publication, components }) {
+    console.log(tag, text, description, publication, components)
+    const res = await axios.put(`${config.baseURL}/genotypes/${tag}`, {text, description, publication, components })
     
     return res.data
 }
