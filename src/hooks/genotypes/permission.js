@@ -10,11 +10,11 @@ import config from "../../../config";
  * @returns {Object} React Query object
  */
 
-async function getGenotypePermissions_API({ genotype_tag }) {
-  const res = await axios.get(`${config.baseURL}/genotypes/${genotype_tag}/permissions`);
+async function getGenotypePermissions_API({ }) {
+  const res = await axios.get(`${config.baseURL}/genotypes/permissions`);
   return res.data;
 }
 
-export const useGetGenotypePermissions = (APIParams = { genotype_tag: "" }, useQueryOptions = {}) => {
-  return useQuery(["getGenotypePermissions", APIParams.genotype_tag],() => getGenotypePermissions_API({ ...APIParams }). useQueryOptions);
+export const useGetGenotypePermissions = (APIParams = { }, useQueryOptions = {}) => {
+  return useQuery(["getGenotypePermissions"],() => getGenotypePermissions_API({ ...APIParams }). useQueryOptions);
 };

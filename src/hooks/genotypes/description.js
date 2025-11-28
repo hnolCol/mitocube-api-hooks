@@ -18,3 +18,4 @@ async function getGenotypeDescription_API({ genotype_tag }) {
 export const useGetGenotypeDescription = (APIParams = { genotype_tag }, useQueryOptions = {}) => {
     return useQuery(["getGenotypeDescription", APIParams.genotype_tag],() => getGenotypeDescription_API({ ...APIParams }),useQueryOptions)
 }
+

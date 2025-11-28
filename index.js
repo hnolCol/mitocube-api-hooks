@@ -64,6 +64,8 @@ import { useGetGenotypeProteins } from "./src/hooks/genotypes/proteins";
 import { useGetGenotypeSampleCount } from "./src/hooks/genotypes/countsamples";
 import { useDeleteGenotype } from "./src/hooks/genotypes/delete";
 import { useGetGenotypePermissions } from "./src/hooks/genotypes/permission";
+import { useEditGenotype } from "./src/hooks/genotypes/edit";
+import { useGetGenotypeConditionApplications, useGetGenotypeConditionApplicationsData } from "./src/hooks/genotypes/condition_applications";
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 
@@ -137,6 +139,11 @@ export default {
         useGetGenotypeSampleCount,
         useDeleteGenotype,
         useGetGenotypePermissions, 
+        useEditGenotype,
+        condition_applications : {
+            useGetGenotypeConditionApplications,
+            useGetGenotypeConditionApplicationsData
+        }
     },
     features: {
         useGetFeaturesByQuery,
