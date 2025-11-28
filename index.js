@@ -17,7 +17,7 @@ import { useGetPublicUserByTag, usePatchUser, usePostUser } from "./src/hooks/us
 import { useGetAttributeChildren } from "./src/hooks/attributes/children";
 import { useGetTraitBySearchString, useGetTraitByTag, useGetTraitCount, useGetTraitsByAttributeTag, useGetTraitText, usePostTrait } from "./src/hooks/attributes/traits";
 import { useGetInstrument, useGetInstrumentsByType, useGetInstrumentState, useGetInstrumentStateByQuery, useGetInstrumentStateDurations, useGetInstrumentTypes, useGetSpecificInstrumentStateDurations } from "./src/hooks/instruments/instruments";
-import { useGetSymptomByQuery, useGetSymptomByTag } from "./src/hooks/maintenance/symptoms";
+import { useGetSymptomByQuery, useGetSymptomByTag, useCheckSymptomExists, useEditSymptom, useGetSymptoms, usePostSymptom, useDeleteSymptom, useGetSymptomDescription,useGetSymptomText, useGetSymptomPriority } from "./src/hooks/maintenance/symptoms";
 import { useGetSubmissionByQuery } from "./src/hooks/submissions/query";
 import { useGetSubmissionTitle, usePatchSubmissionTitle } from "./src/hooks/submissions/title";
 import { useGetAttributeByGroup, useGetAttributeGroups } from "./src/hooks/attributes/groups";
@@ -66,6 +66,7 @@ import { useDeleteGenotype } from "./src/hooks/genotypes/delete";
 import { useGetGenotypePermissions } from "./src/hooks/genotypes/permission";
 import { useEditGenotype } from "./src/hooks/genotypes/edit";
 import { useGetGenotypeConditionApplications, useGetGenotypeConditionApplicationsData } from "./src/hooks/genotypes/condition_applications";
+import { use } from "react";
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 
@@ -270,7 +271,15 @@ export default {
         },
         symptoms: {
             useGetSymptomByQuery,
-            useGetSymptomByTag
+            useGetSymptomByTag,
+            useCheckSymptomExists,
+            useGetSymptomDescription,
+            useGetSymptomText,
+            useGetSymptomPriority,
+            useEditSymptom,
+            useGetSymptoms,
+            usePostSymptom,
+            useDeleteSymptom
         },
         costs: {
             useGetMaintenanceCosts
