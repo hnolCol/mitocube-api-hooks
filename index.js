@@ -57,6 +57,11 @@ import { useGetSampleCount } from "./src/hooks/samples/count";
 import { useGetRequiredTraits } from "./src/hooks/attributes/requires";
 import { usePostGenotype } from "./src/hooks/genotypes/insert";
 import { useGetGenotypesBySearchString, useGetGenotypeText } from "./src/hooks/genotypes/query";
+import { useGetProteome, useGetProteomeCreatedAt, useGetProteomeIsUpdating, useGetProteomeText } from "./src/hooks/proteomes/get";
+import { useGetProteomeBySearchString } from "./src/hooks/proteomes/find";
+import { useGetProteomeCount, useGetProteomeProteinCount } from "./src/hooks/proteomes/count";
+import { usePostProteome } from "./src/hooks/proteomes/insert";
+import { useGetProteomePermissions } from "./src/hooks/proteomes/permissions";
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 
@@ -139,6 +144,17 @@ export default {
             useGetProteinFeatureByQuery,
             useGetProteinByTag
         }
+    },
+    proteomes: {
+        useGetProteome,
+        useGetProteomeText,
+        useGetProteomeBySearchString,
+        useGetProteomeCount,
+        useGetProteomeProteinCount,
+        usePostProteome,
+        useGetProteomeIsUpdating,
+        useGetProteomePermissions,
+        useGetProteomeCreatedAt
     },
     samples: {
         useGetSample,

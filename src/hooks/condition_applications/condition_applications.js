@@ -28,6 +28,7 @@ export const useGetConditionApplication = (APIParams = { tag }, useQueryOptions 
  */
 async function getConditionApplicationTextByTag_API({ tag }) {
     const res = await axios.get(`${config.baseURL}/condition_applications/${tag}/text`)
+    console.log(res)
     return res.data
 }
 
