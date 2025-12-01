@@ -69,3 +69,13 @@ export const useGetConditionApplicationByQuery = (APIParams = {samples_only : tr
 }
 
 
+export const useGetCATreeForUI = (params, options = {}) => {
+    return useQuery(
+      ["ca-tree-for-ui", params.tag],
+      () => axios
+        .get(`${config.baseURL}/condition_applications/${params.tag}/tree_for_ui`)
+        .then((res) => res.data),
+      options
+    );
+  };
+  

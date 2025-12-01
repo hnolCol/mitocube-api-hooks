@@ -32,3 +32,19 @@ async function getSampleConditionApplication_API({ tag, group_by_attribute}) {
 export const useGetSampleConditionApplications = (APIParams = {tag, group_by_attribute : false}, useQueryOptions = {staleTime : 3000000}) => {
     return useQuery(["getSampleConditionApplications", APIParams.tag, APIParams.group_by_attribute], () => getSampleConditionApplication_API({...APIParams}), useQueryOptions)
 }
+
+/**
+ * @description Get the genotype for the given sample 
+ * @param {object} props
+ * @param {String} props.tag The tag of the sample 
+ * @returns {String} The genotype tag for the sample 
+ */
+
+async function getSampleGenotype_API({ tag }) {
+    const res = await axios.get(`${config.baseURL}/samples/${tag}/${genotype_tag}`)
+    return res.data
+}
+
+export const useGetSampleGenotype = (APIParams = { tag }, useQueryOptions = {staleTime : 3000000}) => {
+    return useQuery(["getSampleGenotype", APIParams.tag], () => getSampleGenotype_API({...APIParams}), useQueryOptions)
+}
