@@ -23,7 +23,7 @@ import { useGetSubmissionTitle, usePatchSubmissionTitle } from "./src/hooks/subm
 import { useGetAttributeByGroup, useGetAttributeGroups } from "./src/hooks/attributes/groups";
 import { useGetMaintenanceCosts, useGetQueryMaintenanceEvents, usePostMaintenanceEvent, useGetMaintenanceEventByTag, usePostSymptomToMaintenanceEvent, useDeleteSymptomToMaintenanceEvent, usePostMaintenanceProcedureToMaintenanceEvent, useDeleteMaintenanceProcedureToMaintenanceEvent, useGetMaintenanceEventCount, usePostSparePartToMaintenanceEvent, useDeleteSparePartToMaintenanceEvent, useGetSparePartCountByMaintenanceEvent, useGetMaintenanceEventState, usePostMaintenanceEventState } from "./src/hooks/maintenance/events";
 import { useGetMaintenanceProcedureByQuery, useGetMaintenanceProcedureByTag } from "./src/hooks/maintenance/procedures";
-import { useGetSparePartByQuery, useGetSparePartByTag } from "./src/hooks/maintenance/spareparts";
+import { useGetSparePartByQuery, useGetSparePartByTag, useGetSparePartText, useGetSparePartDescription, useGetSparePartCompany, useGetSparePartProductID, useGetSparePartPrice, useGetSparePartLink, usePostSparePart, useUpdateSparePart, useDeleteSparePart } from "./src/hooks/maintenance/spareparts";
 import { useGetMaintenanceEventStates } from "./src/hooks/maintenance/states";
 import { useGetFeatureCorrelation } from "./src/hooks/features/correlation";
 import { useGetSubmissionCreatedAt } from "./src/hooks/submissions/createdat";
@@ -67,6 +67,7 @@ import { useGetGenotypePermissions } from "./src/hooks/genotypes/permission";
 import { useEditGenotype } from "./src/hooks/genotypes/edit";
 import { useGetGenotypeConditionApplications, useGetGenotypeConditionApplicationsData } from "./src/hooks/genotypes/condition_applications";
 import { use } from "react";
+import { useGetSparepartPermissions } from "./src/hooks/maintenance/sparepartpermissions";
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 
@@ -267,7 +268,20 @@ export default {
         // }
         spareparts: {
             useGetSparePartByQuery,
-            useGetSparePartByTag
+            useGetSparePartByTag,
+            useGetSparePartText, 
+            useGetSparePartDescription, 
+            useGetSparePartCompany, 
+            useGetSparePartProductID, 
+            useGetSparePartPrice, 
+            useGetSparePartLink, 
+            usePostSparePart, 
+            useUpdateSparePart, 
+            useDeleteSparePart 
+        },
+
+        sparepartpermissions: {
+            useGetSparepartPermissions
         },
         symptoms: {
             useGetSymptomByQuery,
