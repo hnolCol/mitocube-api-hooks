@@ -14,6 +14,7 @@
  * @property {Boolean} state_change - If true, the user can change the state of the object. This only applies to objects with states such as submissions. 
  * @property {String} user_tag - The tag of the user these permissions apply to. 
  * @property {String} tag - The tag of the object these permissions apply to. 
+ * @property {Boolean} update - If true, the user can update the object.
  * @summary Permission information.
 */
 
