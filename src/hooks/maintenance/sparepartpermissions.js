@@ -4,7 +4,7 @@ import axios from "axios";
 import config from "../../../config";
 
 /**
- * Fetch sparepart permissions for a given genotype tag
+ * Fetch sparepart permissions for a given sparepart tag
  * @param {Object} props
  * @param {String} props.genotype_tag - The sparepart tag to fetch permissions for
  */
