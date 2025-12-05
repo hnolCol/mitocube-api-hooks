@@ -12,8 +12,8 @@ async function getSparePartByQuery_API({search_string, limit}) {
     return res.data 
 }
 
-export const useGetSparePartByQuery = (APIParams = {search_string : "", limit : 10}, useQueryOptions = {stateTime : 200000, placeholderData: (prev) => prev}) => {
-    return useQuery(["getSparePartBySearchString", APIParams.search_string],() =>  getSparePartByQuery_API({...APIParams}), useQueryOptions)
+export const useGetSparePartByQuery = (APIParams = {search_string, limit}, useQueryOptions = {}) => {
+    return useQuery(["getSparePartBySearchString", APIParams.search_string, APIParams.limit],() =>  getSparePartByQuery_API({...APIParams}), useQueryOptions)
 }
 
 
@@ -26,7 +26,7 @@ async function getSparePartByTag_API({tag}) {
     return res.data 
 }
 
-export const useGetSparePartByTag = (APIParams = { tag: "" }, useQueryOptions = {stateTime : 200000}) => {
+export const useGetSparePartByTag = (APIParams = { tag: "" }, useQueryOptions = {}) => {
     return useQuery(["getSparePartByTag", APIParams.tag],() =>  getSparePartByTag_API({...APIParams}), useQueryOptions)
 }
 

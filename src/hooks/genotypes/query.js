@@ -10,11 +10,11 @@ import config from "../../../config";
  * @param {String} props.search_string - The search string to query genotypes.
  * @returns {String[]} - The genotype tags matching the search string.
  */
-async function getGenotypesBySearchString_API({search_string, user_tag, limit}) {
-    const res = await axios.get(`${config.baseURL}/genotypes/q`, {params: {search_string, user_tag, limit}})
+async function getGenotypesBySearchString_API({search_string, limit}) {
+    const res = await axios.get(`${config.baseURL}/genotypes/q`, {params: {search_string, limit}})
     return res.data
 }
 
-export const useGetGenotypesBySearchString = (APIParams = {search_string, user_tag, limit}, useQueryOptions = {}) => {
-    return useQuery(["getGenotypesBySearchString", APIParams.search_string, APIParams.user_tag, APIParams.limit],() =>  getGenotypesBySearchString_API({...APIParams}), useQueryOptions)
+export const useGetGenotypesBySearchString = (APIParams = {search_string, limit}, useQueryOptions = {}) => {
+    return useQuery(["getGenotypesBySearchString", APIParams.search_string, APIParams.limit],() =>  getGenotypesBySearchString_API({...APIParams}), useQueryOptions)
 }

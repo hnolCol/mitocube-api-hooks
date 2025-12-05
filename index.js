@@ -18,6 +18,7 @@ import { useGetAttributeChildren } from "./src/hooks/attributes/children";
 import { useGetTraitBySearchString, useGetTraitByTag, useGetTraitCount, useGetTraitsByAttributeTag, useGetTraitText, usePostTrait } from "./src/hooks/attributes/traits";
 import { useGetInstrument, useGetInstrumentsByType, useGetInstrumentState, useGetInstrumentStateByQuery, useGetInstrumentStateDurations, useGetInstrumentTypes, useGetSpecificInstrumentStateDurations } from "./src/hooks/instruments/instruments";
 import { useGetSymptomByQuery, useGetSymptomByTag, useCheckSymptomExists, useEditSymptom, useGetSymptoms, usePostSymptom, useDeleteSymptom, useGetSymptomDescription,useGetSymptomText, useGetSymptomPriority } from "./src/hooks/maintenance/symptoms";
+import { useGetSymptomsPermissions } from "./src/hooks/maintenance/symptomspermissions";
 import { useGetSubmissionByQuery } from "./src/hooks/submissions/query";
 import { useGetSubmissionTitle, usePatchSubmissionTitle } from "./src/hooks/submissions/title";
 import { useGetAttributeByGroup, useGetAttributeGroups } from "./src/hooks/attributes/groups";
@@ -310,6 +311,11 @@ export default {
             usePostSymptom,
             useDeleteSymptom
         },
+
+        symptomspermissions: {
+            useGetSymptomsPermissions
+        },
+        
         costs: {
             useGetMaintenanceCosts
         },

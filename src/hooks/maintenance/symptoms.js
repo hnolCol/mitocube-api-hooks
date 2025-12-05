@@ -6,14 +6,14 @@ import config from "../../../config";
  * @description Finds a symtom by its search string.
  * @returns {String[]} - The tags matching the search string. 
  */
-async function getSymptom_API({search_string, limit}) {
+async function getSymptomByQuery_API({search_string, limit}) {
     const res = await axios.get(`${config.baseURL}/maintenance/symptoms/q`, { params: { search_string, limit } })
     console.log(res.data)
     return res.data 
 }
 
-export const useGetSymptomByQuery = (APIParams = {search_string : "", limit : 5}, useQueryOptions = {stateTime : 200000, placeholderData: (prev) => prev}) => {
-    return useQuery(["getSymptomBySearchString", APIParams.search_string],() =>  getSymptom_API({...APIParams}), useQueryOptions)
+export const useGetSymptomByQuery = (APIParams = {search_string : "", limit : 10}, useQueryOptions = {}) => {
+    return useQuery(["getSymptomBySearchString", APIParams.search_string, APIParams.limit],() =>  getSymptomByQuery_API({...APIParams}), useQueryOptions)
 }
 
 /**
