@@ -21,3 +21,40 @@ export const useGetSubmissionConditionApplication = (APIParams = {tag, group_by_
     return useQuery(["getSubmissionConditionApplication", APIParams.tag, APIParams.group_by_attribute],
         () => getSubmissionCA_API({ ...APIParams }), useQueryOptions)
 }
+
+
+
+/**
+ * @description Returns the condition applications attributes for a submission
+ * @param {Object} props 
+ * @param {String} props.tag The submission tag.
+ * @returns {Object} The condition applications attributes for the submission
+ */
+export async function getSubmissionCAAttributes_API({ tag }) {
+    const res = await axios.get(`${config.baseURL}/submissions/${tag}/ca/attributes`)
+    return res.data
+}
+
+export const useGetSubmissionConditionApplicationAttributes = (APIParams = {tag }, useQueryOptions = { staleTime: 500}) => {
+    return useQuery(["getSubmissionConditionApplicationAttributes", APIParams.tag],
+        () => getSubmissionCAAttributes_API({ ...APIParams }), useQueryOptions)
+}
+
+
+
+
+/**
+ * @description Returns the condition applications attributes for all submission samples
+ * @param {Object} props 
+ * @param {String} props.tag The submission tag.
+ * @returns {Object} The condition applications attributes for the submission samples
+ */
+export async function getSubmissionSampleCAAttributes_API({ tag }) {
+    const res = await axios.get(`${config.baseURL}/submissions/${tag}/samples/ca/attributes`)
+    return res.data
+}
+
+export const useGetSubmissionSampleConditionApplicationAttributes = (APIParams = {tag }, useQueryOptions = { staleTime: 500}) => {
+    return useQuery(["getSubmissionSampleConditionApplicationAttributes", APIParams.tag],
+        () => getSubmissionSampleCAAttributes_API({ ...APIParams }), useQueryOptions)
+}
