@@ -16,7 +16,7 @@ import { useGetSubmissionComments } from "./src/hooks/submissions/comments";
 import { useGetPublicUserByTag, usePatchUser, usePostUser } from "./src/hooks/users/users";
 import { useGetAttributeChildren } from "./src/hooks/attributes/children";
 import { useGetTraitBySearchString, useGetTraitByTag, useGetTraitCount, useGetTraitsByAttributeTag, useGetTraitText, usePostTrait } from "./src/hooks/attributes/traits";
-import { useGetInstrument, useGetInstrumentsByType, useGetInstrumentState, useGetInstrumentStateByQuery, useGetInstrumentStateDurations, useGetInstrumentTypes, useGetSpecificInstrumentStateDurations } from "./src/hooks/instruments/instruments";
+import { useGetInstrument, useGetInstrumentsByType, useGetInstrumentState, useGetInstrumentStateByQuery, useGetInstrumentStateDurations, useGetInstrumentTypes, useGetSpecificInstrumentStateDurations, useGetStatesOfAnInstrument } from "./src/hooks/instruments/instruments";
 import { useGetSymptomByQuery, useGetSymptomByTag, useCheckSymptomExists, useEditSymptom, useGetSymptoms, usePostSymptom, useDeleteSymptom, useGetSymptomDescription,useGetSymptomText, useGetSymptomPriority } from "./src/hooks/maintenance/symptoms";
 import { useGetSubmissionByQuery } from "./src/hooks/submissions/query";
 import { useGetSubmissionTitle, usePatchSubmissionTitle } from "./src/hooks/submissions/title";
@@ -33,7 +33,7 @@ import { useGetUserCount } from "./src/hooks/users/counts";
 import { useGetUserIsActive } from "./src/hooks/users/active";
 import { useGetAttributeCount } from "./src/hooks/attributes/count";
 import { useGetAttributeMinState } from "./src/hooks/attributes/state";
-import { useGetSubmissionConditionApplication } from "./src/hooks/submissions/ca";
+import { useGetSubmissionConditionApplication, useGetSubmissionConditionApplicationAttributes, useGetSubmissionSampleConditionApplicationAttributes } from "./src/hooks/submissions/ca";
 import { useGetConditionApplication, useGetConditionApplicationText } from "./src/hooks/condition_applications/condition_applications";
 import { useGetSample, useGetSampleConditionApplications, useGetSampleGenotype } from "./src/hooks/samples/samples";
 import { useDeleteMetatext, useGetMetatext, usePatchMetatext } from "./src/hooks/metatext/metatext";
@@ -208,7 +208,9 @@ export default {
         },
         condition_applications: {
 
-            useGetSubmissionConditionApplication
+            useGetSubmissionConditionApplication,
+            useGetSubmissionSampleConditionApplicationAttributes,
+            useGetSubmissionConditionApplicationAttributes
         },
         metatexts: {
             useGetMetatexts,
@@ -325,6 +327,7 @@ export default {
         useGetInstrument,
         useGetInstrumentsByType,
         useGetInstrumentTypes,
+        useGetStatesOfAnInstrument,
         states: {
             useGetInstrumentStateDurations,
             useGetSpecificInstrumentStateDurations,

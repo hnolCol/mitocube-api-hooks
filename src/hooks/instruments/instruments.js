@@ -18,6 +18,9 @@ export const useGetInstrumentTypes = (APIParams = {}, useQueryOptions = {stateTi
 }
 
 
+
+
+
 /**
  * @description 
  * @param {String} tag The type tag
@@ -32,6 +35,18 @@ export const useGetInstrumentsByType = (APIParams = {tag}, useQueryOptions = {st
     return useQuery(["getInstrumentByType",APIParams.tag],() =>  getInstrumentsByType_API({...APIParams}), useQueryOptions)
 }
 
+/**
+ * @description Returns the states of an instrument.
+ * @returns {Object[]} - The state responses of the instrument. 
+ */
+async function getStatesOfAnInstrument_API({tag, limit}) {
+    const res = await axios.get(`${config.baseURL}/instruments/${tag}/states`, {params : {limit}})
+    return res.data 
+}
+
+export const useGetStatesOfAnInstrument = (APIParams = {tag}, useQueryOptions = {stateTime : Infinity}) => {
+    return useQuery(["getStatesOfAnInstrument", APIParams.tag],() =>  getStatesOfAnInstrument_API({...APIParams}), useQueryOptions)
+}
 
 
 
