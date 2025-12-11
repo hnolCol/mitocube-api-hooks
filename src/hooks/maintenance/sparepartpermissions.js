@@ -6,14 +6,14 @@ import config from "../../../config";
 /**
  * Fetch sparepart permissions for a given sparepart tag
  * @param {Object} props
- * @param {String} props.genotype_tag - The sparepart tag to fetch permissions for
+ * @param {String} 
  */
 
-async function getSparepartPermissions_API({ tag }) {
-  const res = await axios.get(`${config.baseURL}/maintenance/sparepartpermissions/${tag}/permissions`);
+async function getSparepartPermissions_API({}) {
+  const res = await axios.get(`${config.baseURL}/maintenance/permissions/spareparts`);
   return res.data;
 }
 
-export const useGetSparepartPermissions = (APIParams = { tag }, useQueryOptions = {}) => {
-  return useQuery(["getSparepartPermissions", APIParams.tag],() => getSparepartPermissions_API({ ...APIParams }), useQueryOptions);
+export const useGetSparepartPermissions = (APIParams = { }, useQueryOptions = {}) => {
+  return useQuery(["getSparepartPermissions"],() => getSparepartPermissions_API({ ...APIParams }), useQueryOptions);
 };
