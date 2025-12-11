@@ -10,7 +10,7 @@ import config from "../../../config";
  */
 
 async function getProcedurePermissions_API({ }) {
-  const res = await axios.get(`${config.baseURL}/maintenance/maintenancepermissions/procedures`);
+  const res = await axios.get(`${config.baseURL}/maintenance/permissions/procedures`);
   return res.data;
 }
 

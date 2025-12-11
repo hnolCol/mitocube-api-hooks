@@ -10,7 +10,7 @@ import config from "../../../config";
  */
 
 async function getSparepartPermissions_API({}) {
-  const res = await axios.get(`${config.baseURL}/maintenance/maintenancepermissions/spareparts`);
+  const res = await axios.get(`${config.baseURL}/maintenance/permissions/spareparts`);
   return res.data;
 }
 

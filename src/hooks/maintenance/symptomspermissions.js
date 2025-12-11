@@ -10,7 +10,7 @@ import config from "../../../config";
  */
 
 async function getSymptomsPermissions_API({  }) {
-  const res = await axios.get(`${config.baseURL}/maintenance/maintenancepermissions/symptoms`);
+  const res = await axios.get(`${config.baseURL}/maintenance/permissions/symptoms`);
   return res.data;
 }
 
