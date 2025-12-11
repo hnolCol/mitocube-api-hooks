@@ -6,14 +6,14 @@ import config from "../../../config";
 /**
  * Fetch procedure permissions for a given genotype tag
  * @param {Object} props
- * @param {String} props.genotype_tag - The procedure tag to fetch permissions for
+ * @param {String} 
  */
 
-async function getProcedurePermissions_API({ procedure_tag }) {
-  const res = await axios.get(`${config.baseURL}/maintenance/procedurepermissions/${procedure_tag}/permissions`);
+async function getProcedurePermissions_API({ }) {
+  const res = await axios.get(`${config.baseURL}/maintenance/maintenancepermissions/procedures`);
   return res.data;
 }
 
-export const useGetProcedurePermissions = (APIParams = { procedure_tag }, useQueryOptions = {}) => {
-  return useQuery(["getProcedurePermissions", APIParams.procedure_tag],() => getProcedurePermissions_API({ ...APIParams }), useQueryOptions);
+export const useGetProcedurePermissions = (APIParams = { }, useQueryOptions = {}) => {
+  return useQuery(["getProcedurePermissions"],() => getProcedurePermissions_API({ ...APIParams }), useQueryOptions);
 };

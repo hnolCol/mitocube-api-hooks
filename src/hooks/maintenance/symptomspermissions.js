@@ -6,14 +6,14 @@ import config from "../../../config";
 /**
  * Fetch symptoms permissions for a given symptom tag
  * @param {Object} props
- * @param {String} props.genotype_tag - The symptom tag to fetch permissions for
+ * @param {String} 
  */
 
-async function getSymptomsPermissions_API({ tag }) {
-  const res = await axios.get(`${config.baseURL}/maintenance/symptomspermissions/${tag}/permissions`);
+async function getSymptomsPermissions_API({  }) {
+  const res = await axios.get(`${config.baseURL}/maintenance/maintenancepermissions/symptoms`);
   return res.data;
 }
 
-export const useGetSymptomsPermissions = (APIParams = { tag }, useQueryOptions = {}) => {
-  return useQuery(["getSymptomsPermissions", APIParams.tag],() => getSymptomsPermissions_API({ ...APIParams }), useQueryOptions);
+export const useGetSymptomsPermissions = (APIParams = {  }, useQueryOptions = {}) => {
+  return useQuery(["getSymptomsPermissions"],() => getSymptomsPermissions_API({ ...APIParams }), useQueryOptions);
 };
