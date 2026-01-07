@@ -9,7 +9,7 @@ import { useGetFeatureInfo } from "./src/hooks/features/info";
 import { useGetStateColor } from "./src/hooks/states/color";
 import { useGetStateName } from "./src/hooks/states/name";
 import { useGetStates, useGetSubmissionState, useGetSubmissionStateCount, usePatchSubmissionState } from "./src/hooks/submissions/state";
-import { useGetSubmissionSampleCount, useGetSubmissionSampleNames } from "./src/hooks/submissions/samples";
+import { useGetSubmissionSampleCount, useGetSubmissionSampleTags } from "./src/hooks/submissions/samples";
 import { useGetMetatexts, useGetSubmissionMetatextByTag, usePostMetatext } from "./src/hooks/submissions/metatext";
 import { useGetUserRoleByTag, useGetUserRoles } from "./src/hooks/users/roles";
 import { useGetSubmissionComments } from "./src/hooks/submissions/comments";
@@ -35,7 +35,7 @@ import { useGetUserCount } from "./src/hooks/users/counts";
 import { useGetUserIsActive } from "./src/hooks/users/active";
 import { useGetAttributeCount } from "./src/hooks/attributes/count";
 import { useGetAttributeMinState } from "./src/hooks/attributes/state";
-import { useGetSubmissionConditionApplication, useGetSubmissionConditionApplicationAttributes, useGetSubmissionSampleConditionApplicationAttributes } from "./src/hooks/submissions/ca";
+import { useGetSubmissionConditionApplication, useGetSubmissionConditionApplicationAttributes, useGetSubmissionSampleConditionApplications, useGetSubmissionSampleConditionApplicationAttributes } from "./src/hooks/submissions/ca";
 import { useGetConditionApplication, useGetConditionApplicationText } from "./src/hooks/condition_applications/condition_applications";
 import { useGetSample, useGetSampleConditionApplications, useGetSampleGenotype } from "./src/hooks/samples/samples";
 import { useDeleteMetatext, useGetMetatext, usePatchMetatext } from "./src/hooks/metatext/metatext";
@@ -76,6 +76,7 @@ import { useGetGenotypeConditionApplications, useGetGenotypeConditionApplication
 import { useGetSparepartPermissions } from "./src/hooks/maintenance/sparepartpermissions";
 import { useGetProcedurePermissions } from "./src/hooks/maintenance/procedurespermissions";
 import { useGetExternalServicePermissions } from "./src/hooks/maintenance/externalservicepermissions";
+import { useGetInstrumentPermissions } from "./src/hooks/instruments/permissions";
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 
@@ -199,7 +200,7 @@ export default {
             usePatchSubmissionTitle
         },
         samples: {
-            useGetSubmissionSampleNames,
+            useGetSubmissionSampleTags,
             useGetSubmissionSampleCount
         },
         states: {
@@ -214,7 +215,8 @@ export default {
 
             useGetSubmissionConditionApplication,
             useGetSubmissionSampleConditionApplicationAttributes,
-            useGetSubmissionConditionApplicationAttributes
+            useGetSubmissionConditionApplicationAttributes,
+            useGetSubmissionSampleConditionApplications
         },
         metatexts: {
             useGetMetatexts,
@@ -371,6 +373,9 @@ export default {
             useGetSpecificInstrumentStateDurations,
             useGetInstrumentState,
             useGetInstrumentStateByQuery
+        },
+        permissions: {
+            useGetInstrumentPermissions
         }
         
     },

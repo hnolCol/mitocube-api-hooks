@@ -109,7 +109,6 @@ export const useGetTraitCount = (APIParams = { tag }, useQueryOptions) => {
  * @returns {String} The trait text
  */
 async function getTraitText_API({ tag }) {
-    console.log("Fetching trait text for tag:", tag);
     const res = await axios.get(`/api/attributes/traits/${tag}/text`)
     return res.data
 }
