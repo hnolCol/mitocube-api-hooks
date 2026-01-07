@@ -22,10 +22,11 @@ import { useGetSymptomsPermissions } from "./src/hooks/maintenance/symptomspermi
 import { useGetSubmissionByQuery } from "./src/hooks/submissions/query";
 import { useGetSubmissionTitle, usePatchSubmissionTitle } from "./src/hooks/submissions/title";
 import { useGetAttributeByGroup, useGetAttributeGroups } from "./src/hooks/attributes/groups";
-import { useGetMaintenanceCosts, useGetQueryMaintenanceEvents, usePostMaintenanceEvent, useGetMaintenanceEventByTag, usePostSymptomToMaintenanceEvent, useDeleteSymptomToMaintenanceEvent, usePostMaintenanceProcedureToMaintenanceEvent, useDeleteMaintenanceProcedureToMaintenanceEvent, useGetMaintenanceEventCount, usePostSparePartToMaintenanceEvent, useDeleteSparePartToMaintenanceEvent, useGetSparePartCountByMaintenanceEvent, useGetMaintenanceEventState, usePostMaintenanceEventState } from "./src/hooks/maintenance/events";
+import { useGetMaintenanceCosts, useGetQueryMaintenanceEvents, usePostMaintenanceEvent, useGetMaintenanceEventByTag, usePostSymptomToMaintenanceEvent, useDeleteSymptomToMaintenanceEvent, usePostMaintenanceProcedureToMaintenanceEvent, useDeleteMaintenanceProcedureToMaintenanceEvent, useGetMaintenanceEventCount, usePostSparePartToMaintenanceEvent, useDeleteSparePartToMaintenanceEvent, useGetSparePartCountByMaintenanceEvent, useGetMaintenanceEventState, usePostMaintenanceEventState, useGetMaintenanceEventCosts, usePostExternalServiceToMaintenanceEvent, useDeleteExternalServiceFromMaintenanceEvent} from "./src/hooks/maintenance/events";
 import { useGetMaintenanceProcedureByQuery, useGetMaintenanceProcedureByTag, useCheckMaintenanceProcedureExists, useGetMaintenanceProcedures, useGetMaintenanceProcedureText, useGetMaintenanceProcedureDescription, useGetMaintenanceProcedurePriority, usePostMaintenanceProcedure, useEditMaintenanceProcedure, useDeleteMaintenanceProcedure} from "./src/hooks/maintenance/procedures";
 import { useGetSparePartByQuery, useGetSparePartByTag, useGetSparePartText, useGetSparePartDescription, useGetSparePartCompany, useGetSparePartProductID, useGetSparePartPrice, useGetSparePartLink, usePostSparePart, useUpdateSparePart, useDeleteSparePart } from "./src/hooks/maintenance/spareparts";
 import { useGetMaintenanceEventStates } from "./src/hooks/maintenance/states";
+import { useGetExternalServiceByTag, useGetExternalServiceByQuery, usePostExternalService, useUpdateExternalService, useDeleteExternalService, useGetExternalServiceDescription, useGetExternalServiceName, useGetExternalServiceCompany, useGetExternalServiceEmail, useGetExternalServiceCosts, useGetExternalServiceBillingNumber, useGetExternalServiceInternalID  } from "./src/hooks/maintenance/externalservice"; 
 import { useGetFeatureCorrelation } from "./src/hooks/features/correlation";
 import { useGetSubmissionCreatedAt } from "./src/hooks/submissions/createdat";
 import { useGetSubmissionExists } from "./src/hooks/submissions/exists";2
@@ -74,6 +75,7 @@ import { useEditGenotype } from "./src/hooks/genotypes/edit";
 import { useGetGenotypeConditionApplications, useGetGenotypeConditionApplicationsData } from "./src/hooks/genotypes/condition_applications";
 import { useGetSparepartPermissions } from "./src/hooks/maintenance/sparepartpermissions";
 import { useGetProcedurePermissions } from "./src/hooks/maintenance/procedurespermissions";
+import { useGetExternalServicePermissions } from "./src/hooks/maintenance/externalservicepermissions";
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 
@@ -278,6 +280,9 @@ export default {
         useGetSparePartCountByMaintenanceEvent,
         useGetMaintenanceEventState,
         usePostMaintenanceEventState,
+        useGetMaintenanceEventCosts,
+        usePostExternalServiceToMaintenanceEvent,
+        useDeleteExternalServiceFromMaintenanceEvent,
         procedures: {
             useGetMaintenanceProcedureByQuery,
             useGetMaintenanceProcedureByTag,
@@ -331,7 +336,26 @@ export default {
         },
         states: {
             useGetMaintenanceEventStates
-        }
+        },
+
+        externalservice: {
+            useGetExternalServiceByTag, 
+            useGetExternalServiceByQuery,
+            usePostExternalService, 
+            useUpdateExternalService, 
+            useDeleteExternalService, 
+            useGetExternalServiceDescription, 
+            useGetExternalServiceName, 
+            useGetExternalServiceCompany, 
+            useGetExternalServiceEmail, 
+            useGetExternalServiceCosts, 
+            useGetExternalServiceBillingNumber, 
+            useGetExternalServiceInternalID
+        },
+
+        externalservicepermissions: {
+            useGetExternalServicePermissions
+        },
     },
     openai: {
         useGetCypherQuery,

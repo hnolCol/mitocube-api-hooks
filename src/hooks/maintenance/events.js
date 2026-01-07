@@ -276,3 +276,50 @@ export const useDeleteSymptomToMaintenanceEvent = (useMutationOptions = {}) => {
 
 
 
+/**
+ * @description Get cost per maintenance event. Endpoint: GET '/api/maintenance/{maintenance_event_tag}/costs'
+ * @param {Object} props 
+ * @param {String} props.maintenance_event_tag  Maintenance event tag
+ */
+async function getMaintenanceEventCosts_API({ maintenance_event_tag }) {
+    const res = await axios.get(`${config.baseURL}/maintenance/${maintenance_event_tag}/costs`)
+    return res.data 
+}
+
+export const useGetMaintenanceEventCosts = (APIParams = { maintenance_event_tag }, useQueryOptions = { placeholderData : prev => prev }) => {
+    return useQuery(["getMaintenanceEventCosts", APIParams.maintenance_event_tag], () => getMaintenanceEventCosts_API({ ...APIParams }), useQueryOptions)
+}   
+
+/**
+ * @description
+ * @param {Object} props
+ * @param {String} props.maintenance_event_tag  Maintenance event tag
+ */
+
+
+async function postExternalServiceToMaintenanceEvent_API({ maintenance_event_tag, external_service_tag }) {
+    const res = await axios.post(`${config.baseURL}/maintenance/${maintenance_event_tag}/externalservice/${external_service_tag}`,
+    )
+    return res.data 
+}
+
+export const usePostExternalServiceToMaintenanceEvent = (useMutationOptions = {}) => {
+    return useMutation((APIParams) => postExternalServiceToMaintenanceEvent_API({...APIParams}), useMutationOptions)
+}   
+
+/**
+ * @description
+ * @param {Object} props
+ * @param {String} props.maintenance_event_tag
+ */
+
+async function deleteExternalServiceFromMaintenanceEvent_API({ maintenance_event_tag, external_service_tag }) {
+    const res = await axios.delete(`${config.baseURL}/maintenance/${maintenance_event_tag}/externalservice/${external_service_tag}`,
+    )
+    return res.data 
+}
+
+export const useDeleteExternalServiceFromMaintenanceEvent = (useMutationOptions = {}) => {
+    return useMutation((APIParams) => deleteExternalServiceFromMaintenanceEvent_API({...APIParams}), useMutationOptions)
+}   
+
