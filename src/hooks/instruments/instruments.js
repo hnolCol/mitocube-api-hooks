@@ -4,7 +4,7 @@ import config from "../../../config";
 
 /**
  * @description Retrieves the types of instruments tags that are present in the database. Instruments can be 
- * any attributes that has the type InstrumentType. In our case, we have mass spectrometers and liquid chromatography
+ * any attributes that are connected to the AttributeGroup -> tag instrumenttype. In our case, we have mass spectrometers and liquid chromatography
  * systems as a instrument type. 
  * @returns {String[]} - The tags of the attributes that are Instrument types. 
  */
@@ -16,7 +16,6 @@ async function getInstrumentTypes_API({}) {
 export const useGetInstrumentTypes = (APIParams = {}, useQueryOptions = {stateTime : Infinity}) => {
     return useQuery(["getInstrumentTypes"],() =>  getInstrumentTypes_API({...APIParams}), useQueryOptions)
 }
-
 
 
 
@@ -36,7 +35,7 @@ export const useGetInstrumentsByType = (APIParams = {tag}, useQueryOptions = {st
 }
 
 /**
- * @description Returns the states of an instrument.
+ * @description Returns the states of an instrument. Order by most recent.
  * @returns {Object[]} - The state responses of the instrument. 
  */
 async function getStatesOfAnInstrument_API({tag, limit}) {
@@ -44,11 +43,9 @@ async function getStatesOfAnInstrument_API({tag, limit}) {
     return res.data 
 }
 
-export const useGetStatesOfAnInstrument = (APIParams = {tag}, useQueryOptions = {stateTime : Infinity}) => {
-    return useQuery(["getStatesOfAnInstrument", APIParams.tag],() =>  getStatesOfAnInstrument_API({...APIParams}), useQueryOptions)
+export const useGetStatesOfAnInstrument = (APIParams = {tag, limit}, useQueryOptions = {stateTime : Infinity}) => {
+    return useQuery(["getStatesOfAnInstrument", APIParams.tag, APIParams.limit],() =>  getStatesOfAnInstrument_API({...APIParams}), useQueryOptions)
 }
-
-
 
 
 /**
@@ -65,7 +62,9 @@ export const useGetInstrument = (APIParams = {tag}, useQueryOptions = {stateTime
 }
 
 /**
- * @description  
+ * @description Retrieves the current state of an instrument
+ * @param {Object} props
+ * @param {String} props.tag The instrument tag
  * @returns {import("./types").InstrumentState} - The instrument state
  */
 async function getInstrumentState_API({ tag }) {

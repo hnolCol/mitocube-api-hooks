@@ -23,6 +23,25 @@ export const useGetSubmissionConditionApplication = (APIParams = {tag, group_by_
 }
 
 
+/**
+ * @description Returns the condition applications defined for the submission
+ * @param {Object} props 
+ * @param {String} props.tag The submission tag.
+ * @param {Boolean} props.group_by_attribute - If true, the results are grouped by attribute.
+ * @returns {Object} The condition applications for the submission
+ */
+export async function getSubmissionSamplesCA_API({ tag }) {
+    const res = await axios.get(`${config.baseURL}/submissions/${tag}/samples/ca`)
+    return res.data
+}
+
+export const useGetSubmissionSampleConditionApplications = (APIParams = {tag }, useQueryOptions = { staleTime: 500}) => {
+    return useQuery(["getSubmissionSamplesConditionApplication", APIParams.tag],
+        () => getSubmissionSamplesCA_API({ ...APIParams }), useQueryOptions)
+}
+
+
+
 
 /**
  * @description Returns the condition applications attributes for a submission
