@@ -17,13 +17,14 @@ export const useGetAnnotationsByTag = (APIParams = { tag: "" }, useQueryOptions 
     return useQuery(["getAnnotationsByTag", APIParams.tag], () => getAnnotationsByTag_API({ ...APIParams }), useQueryOptions)
 }
 
+
 /**
  * @description Get annotation by search string.
  * @return {Object} - The annotation matching thhe search string. 
  */
 
-async function getAnnotationsBySearchString_API({ search_string, limit }) {
-    const res = await axios.get(`${config.baseURL}/annotations/q`, { params: { search_string, limit}})
+async function getAnnotationsBySearchString_API({ search_string, group_tag, protein_tag,limit }) {
+    const res = await axios.get(`${config.baseURL}/annotations/q`, { params: { search_string, group_tag, protein_tag, limit}})
     return res.data
 }
 
@@ -80,7 +81,7 @@ export const usePostAnnotations = (useMutationOptions = {}) => {
  */
 
 async function getAnnotationProteinCount_API({ tag }) {
-    const res = await axios.get(`${config.baseURL}/annotations/${tag}/protein/count`)
+    const res = await axios.get(`${config.baseURL}/annotations/${tag}/proteins/count`)
     return res.data
 }       
 
@@ -138,13 +139,12 @@ export const usePostAnnotationGroup = (useMutationOptions = {}) => {
  * @returns
  */
 
-async function getAnnotationCountInGroup_API({ tag }) {
-    const res = await axios.get(`${config.baseURL}/annotations/groups/${tag}/annotation/count`)
+async function getAnnotationGroupCount_API({ tag }) {
+    const res = await axios.get(`${config.baseURL}/annotations/groups/${tag}/annotations/count`)
     return res.data
 }       
 
-export const useGetAnnotationCountInGroup = (APIParams = { tag: "" }, useQueryOptions = { stateTime: 200000 }) => {
-    return useQuery(["getAnnotationCountInGroup", APIParams.tag], () => getAnnotationCountInGroup_API({ ...APIParams }), useQueryOptions)
+export const useGetAnnotationGroupCount = (APIParams = { tag: "" }, useQueryOptions = { stateTime: 200000 }) => {
+    return useQuery(["getAnnotationGroupCount", APIParams.tag], () => getAnnotationGroupCount_API({ ...APIParams }), useQueryOptions)
 }   
-
 
