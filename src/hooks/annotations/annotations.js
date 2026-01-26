@@ -66,13 +66,42 @@ export const useGetAnnotationsByGroupTag = (APIParams = { tag: "" }, useQueryOpt
  * @return {Boolean}
  */
 
-async function postAnnotations_API({ text, description, publication, pubmed_id, protein_tags, group_tag}) {
-    const res = await axios.post(`${config.baseURL}/annotations/`, { text, description, publication, pubmed_id, protein_tags, group_tag})
+async function postAnnotations_API({ text, description, publication, pubmed_id, source, protein_tags, group_tag}) {
+    const res = await axios.post(`${config.baseURL}/annotations/`, { text, description, publication, pubmed_id, source, protein_tags, group_tag})
     return res.data
 }
 
 export const usePostAnnotations = (useMutationOptions = {}) => {
     return useMutation((APIParams) => postAnnotations_API ({ ...APIParams}), useMutationOptions)
+}
+
+/**
+ * @description Updates annotations.
+ * @return {Boolean}
+ */
+
+async function updateAnnotations_API({ tag, text, description, publication, pubmed_id, source, protein_tags, group_tag}) {
+    const res = await axios.put(`${config.baseURL}/annotations/${tag}`, { tag, text, description, publication, pubmed_id, source, protein_tags, group_tag})
+    return res.data
+}
+
+export const useUpdateAnnotations = (useMutationOptions = {}) => {
+    return useMutation((APIParams) => updateAnnotations_API ({ ...APIParams}), useMutationOptions)
+}
+
+/**
+ * @description Deletes an annotation by its tag.
+ * @param {Object} props
+ * @param {String} props.tag - The annotation tag
+ */
+
+async function deleteAnnotations_API({ tag }) {
+    const res = await axios.delete(`${config.baseURL}/annotations/${tag}`)
+    return res.data
+}
+
+export const useDeleteAnnotations = (useMutationOptions = {}) => {
+    return useMutation((APIParams) => deleteAnnotations_API({...APIParams}), useMutationOptions)
 }
 
 /**
@@ -123,8 +152,8 @@ export const useGetAnnotationGroupByQuery = (APIParams = { search_string: "", li
  * @return {Boolean}
  */
 
-async function postAnnotationGroup_API({ text, description}) {
-    const res = await axios.post(`${config.baseURL}/annotations/groups/`, { text, description})
+async function postAnnotationGroup_API({ text, description, source, url }) {
+    const res = await axios.post(`${config.baseURL}/annotations/groups/`, { text, description, source, url })
     return res.data
 }
 
@@ -148,3 +177,16 @@ export const useGetAnnotationGroupCount = (APIParams = { tag: "" }, useQueryOpti
     return useQuery(["getAnnotationGroupCount", APIParams.tag], () => getAnnotationGroupCount_API({ ...APIParams }), useQueryOptions)
 }   
 
+/**
+ * @description Update annotation group.
+ * @returns 
+ */
+
+async function updateAnnotationGroup_API({ tag }) {
+    const res = await axios.post(`${config.baseURL}/annotations/groups/${tag}/update`)
+    return res.data
+}
+
+export const useUpdateAnnotationGroup = (useMutationOptions = {}) => {
+    return useMutation((APIParams) => updateAnnotationGroup_API ({ ...APIParams}), useMutationOptions)
+}
