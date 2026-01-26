@@ -3,6 +3,8 @@ import { useGetAttribute, usePostAttribute, usePostAttributeValues, useUpdateAtt
 import axios from "axios"
 import { useGetAttributesByQuery } from "./src/hooks/attributes/query_attributes";
 import { useDeleteFilter, useGetFilters, usePostFilter } from "./src/hooks/filters/filters";
+import { useGetAnnotationsByTag, useGetAnnotationsBySearchString, useGetAnnotationsByProteinTag, usePostAnnotations, useGetAnnotationGroupByTag, usePostAnnotationGroup, useGetAnnotationGroupByQuery, useGetAnnotationProteinCount, useGetAnnotationsByGroupTag, useGetAnnotationGroupCount, useDeleteAnnotations, useUpdateAnnotations, useUpdateAnnotationGroup } from "./src/hooks/annotations/annotations";
+import { useGetAnnotationPermissions } from "./src/hooks/annotations/permissions";
 import { useGetBackendVersion } from "./src/hooks/info/version";
 import { useGetTermsOfUse } from "./src/hooks/info/terms";
 import { useGetFeatureInfo } from "./src/hooks/features/info";
@@ -106,6 +108,24 @@ export default {
         useGetFilters,
         useDeleteFilter,
         usePostFilter
+    },
+    annotations: {
+        useGetAnnotationsByTag,
+        useGetAnnotationsBySearchString,
+        useGetAnnotationsByProteinTag,
+        usePostAnnotations,
+        useGetAnnotationGroupByTag,
+        usePostAnnotationGroup,
+        useGetAnnotationGroupByQuery,
+        useGetAnnotationGroupCount,
+        useGetAnnotationProteinCount,
+        useGetAnnotationsByGroupTag,
+        useDeleteAnnotations,
+        useUpdateAnnotations,
+        useUpdateAnnotationGroup
+    },
+    annotationspermissions: {
+        useGetAnnotationPermissions
     },
     info: {
         useGetBackendVersion,
