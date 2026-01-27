@@ -24,6 +24,13 @@
 */
 
 
+/**
+ * SubmissionSampleCounts
+ * @typedef {Object} SubmissionSampleCounts
+ * @property {String} tag - The sample tag. 
+ * @property {Number} count - The number of protein groups quantified for the sample.
+ * @summary Counts of protein groups and peptides for a given sample in a submission.
+ */
 
 
 export default {}
