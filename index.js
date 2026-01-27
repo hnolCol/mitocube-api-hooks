@@ -49,10 +49,10 @@ import { useGetSubmissionQuantificationExists, usePostPrecursorQuantification, u
 import { useGetCypherQuery, useGetPublicationSummaryForProtein } from "./src/hooks/openai/cypher";
 import { useGetResearchAim, usePatchResearchAim } from "./src/hooks/submissions/researchaim";
 import { useGetUserViews } from "./src/hooks/users/views";
-import { useGetSubmissionPeptideCount, useGetSubmissionProteinGroupCount } from "./src/hooks/submissions/count";
+import { useGetSubmissionPeptideCount, useGetSubmissionProteinGroupCount, useGetSubmissionSampleProteinGroupCount } from "./src/hooks/submissions/count";
 import { useGetFeaturesByQuery } from "./src/hooks/features/query";
 import { useGetFeatureDataForSubmission } from "./src/hooks/features/data";
-import { useGetSubmissionPCA } from "./src/hooks/submissions/analysis";
+import { useGetSubmissionPCA, useGetSubmissionVolcano } from "./src/hooks/submissions/analysis";
 import { useGetProteinFeatureByQuery } from "./src/hooks/features/proteins/query";
 import { useGetProteinByTag } from "./src/hooks/features/proteins/get";
 import { useGetSampleCount } from "./src/hooks/samples/count";
@@ -77,6 +77,7 @@ import { useGetSparepartPermissions } from "./src/hooks/maintenance/sparepartper
 import { useGetProcedurePermissions } from "./src/hooks/maintenance/procedurespermissions";
 import { useGetExternalServicePermissions } from "./src/hooks/maintenance/externalservicepermissions";
 import { useGetInstrumentPermissions } from "./src/hooks/instruments/permissions";
+import { useGetInstrumentSamplesCount } from "./src/hooks/instruments/samples";
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 
@@ -245,10 +246,12 @@ export default {
         counts: {
             useGetSubmissionProteinGroupCount,
             useGetSubmissionSampleCount, 
-            useGetSubmissionPeptideCount
+            useGetSubmissionPeptideCount,
+            useGetSubmissionSampleProteinGroupCount
         },
         analysis: {
-            useGetSubmissionPCA
+            useGetSubmissionPCA,
+            useGetSubmissionVolcano
         }
     },
     states: {
@@ -376,6 +379,9 @@ export default {
         },
         permissions: {
             useGetInstrumentPermissions
+        },
+        samples: {
+            useGetInstrumentSamplesCount
         }
         
     },
