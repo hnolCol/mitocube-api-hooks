@@ -23,13 +23,17 @@ export const useGetAnnotationsByTag = (APIParams = { tag: "" }, useQueryOptions 
  * @return {Object} - The annotation matching thhe search string. 
  */
 
-async function getAnnotationsBySearchString_API({ search_string, group_tag, protein_tag,limit }) {
-    const res = await axios.get(`${config.baseURL}/annotations/q`, { params: { search_string, group_tag, protein_tag, limit}})
+async function getAnnotationsBySearchString_API({ search_string, group_tags, protein_tags,limit, group_by_group }) {
+    const res = await axios.get(`${config.baseURL}/annotations/q`, { params: { search_string, group_tags, protein_tags, limit, group_by_group}})
     return res.data
 }
 
-export const useGetAnnotationsBySearchString = (APIParams = { search_string: "", limit: 10}, useQueryOptions = {stateTime: 200000}) => {
-    return useQuery(["getAnnotationsBySearchString", APIParams.search_string], () => getAnnotationsBySearchString_API({ ...APIParams }), useQueryOptions)
+export const useGetAnnotationsBySearchString = (APIParams = { search_string, limit: 10, group_by_group, group_tags, protein_tags}, useQueryOptions = {stateTime: 200000}) => {
+    return useQuery(["getAnnotationsBySearchString",
+        APIParams.search_string,
+        APIParams.group_by_group,
+        APIParams.limit,
+        APIParams.protein_tags], () => getAnnotationsBySearchString_API({ ...APIParams }), useQueryOptions)
 } 
 
 /**
