@@ -34,19 +34,58 @@ export const useGetSubmissionPCA = (APIParams = {tag, annotation_tag}, useQueryO
  * @param {Boolean} props.impute - Whether to impute missing values.
  * @returns {Object} The PCA data for the submission
  */
-export async function getSubmissionVolcano_API({ tag, ca_tag_left, ca_tag_right, annotation_tag,  impute }) {
+export async function getSubmissionVolcano_API({ tag, ca_tag_left, ca_tag_right, annotation_tag,  impute, equal_variance }) {
     const res = await axios.get(`${config.baseURL}/submissions/analysis/${tag}/volcano`, {
-        params: { ca_tag_left, ca_tag_right, annotation_tag, impute }
+        params: { ca_tag_left, ca_tag_right, annotation_tag, impute, equal_variance}
     })
     return res.data
 }
 
-export const useGetSubmissionVolcano = (APIParams = {tag, ca_tag_left, ca_tag_right, annotation_tag, impute : false}, useQueryOptions = { staleTime: 500}) => {
-    return useQuery(["getSubmissionVolcano", APIParams.tag, APIParams.ca_tag_left, APIParams.ca_tag_right, APIParams.annotation_tag, APIParams.impute],
+export const useGetSubmissionVolcano = (APIParams = {tag, ca_tag_left, ca_tag_right, annotation_tag, impute : false, equal_variance : false}, useQueryOptions = { staleTime: 500}) => {
+    return useQuery(["getSubmissionVolcano", APIParams.tag, APIParams.ca_tag_left, APIParams.ca_tag_right, APIParams.annotation_tag, APIParams.impute, APIParams.equal_variance],
         () => getSubmissionVolcano_API({ ...APIParams }), useQueryOptions)
 }
 
 
+
+
+
+export async function getSubmissionAnnotationNetwork_API({ tag, annotation_group_tag }) {
+    const res = await axios.get(`${config.baseURL}/submissions/analysis/${tag}/annotations/network`, {
+        params: { annotation_group_tag }
+    })
+    return res.data
+}
+
+
+export const useGetSubmissionAnnotationNetwork = (APIParams = {tag, annotation_group_tag}, useQueryOptions = { staleTime: 500}) => {
+    return useQuery(["getSubmissionAnnotationNetwork", APIParams.tag, APIParams.annotation_group_tag],
+        () => getSubmissionAnnotationNetwork_API({ ...APIParams }), useQueryOptions)
+}
+
+
+
+
+/**
+ * @description Returns the heatmap data for the submission
+ * @param {Object} props 
+ * @param {String} props.tag The submission tag.
+ * @param {String} props.annotation_tag - The annotation tag to use to filter features. Only features associated with this annotation tag will be included in the heatmap.
+ * @returns {Object} The heatmap data for the submission
+ */
+export async function getSubmissionHeatmap_API({ tag, annotation_tag }) {
+    console.log("CALLED???")
+    const res = await axios.get(`${config.baseURL}/submissions/analysis/${tag}/heatmap`, {
+        params: { annotation_tag }
+    })
+    return res.data
+}
+
+
+export const useGetSubmissionHeatmap = (APIParams = {tag, annotation_tag}, useQueryOptions = { staleTime: 50000}) => {
+    return useQuery(["getSubmissionHeatmap", APIParams.tag, APIParams.annotation_tag],
+        () => getSubmissionHeatmap_API({ ...APIParams }), useQueryOptions)
+}
 
 
 

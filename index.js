@@ -38,7 +38,7 @@ import { useGetUserIsActive } from "./src/hooks/users/active";
 import { useGetAttributeCount } from "./src/hooks/attributes/count";
 import { useGetAttributeMinState } from "./src/hooks/attributes/state";
 import { useGetSubmissionConditionApplication, useGetSubmissionConditionApplicationAttributes, useGetSubmissionSampleConditionApplications, useGetSubmissionSampleConditionApplicationAttributes } from "./src/hooks/submissions/ca";
-import { useGetConditionApplication, useGetConditionApplicationText } from "./src/hooks/condition_applications/condition_applications";
+import { useGetConditionApplication, useGetConditionApplicationByQuery, useGetConditionApplicationText } from "./src/hooks/condition_applications/condition_applications";
 import { useGetSample, useGetSampleConditionApplications, useGetSampleGenotype } from "./src/hooks/samples/samples";
 import { useDeleteMetatext, useGetMetatext, usePatchMetatext } from "./src/hooks/metatext/metatext";
 import { useGetSubmissionPermissions, useGetSubmissionPermissionsByTag } from "./src/hooks/submissions/permissions";
@@ -54,7 +54,7 @@ import { useGetUserViews } from "./src/hooks/users/views";
 import { useGetSubmissionPeptideCount, useGetSubmissionProteinGroupCount, useGetSubmissionSampleProteinGroupCount } from "./src/hooks/submissions/count";
 import { useGetFeaturesByQuery } from "./src/hooks/features/query";
 import { useGetFeatureDataForSubmission } from "./src/hooks/features/data";
-import { useGetSubmissionPCA, useGetSubmissionVolcano } from "./src/hooks/submissions/analysis";
+import { useGetSubmissionAnnotationNetwork, useGetSubmissionHeatmap, useGetSubmissionPCA, useGetSubmissionVolcano } from "./src/hooks/submissions/analysis";
 import { useGetProteinFeatureByQuery } from "./src/hooks/features/proteins/query";
 import { useGetProteinByTag } from "./src/hooks/features/proteins/get";
 import { useGetSampleCount } from "./src/hooks/samples/count";
@@ -80,6 +80,7 @@ import { useGetProcedurePermissions } from "./src/hooks/maintenance/procedurespe
 import { useGetExternalServicePermissions } from "./src/hooks/maintenance/externalservicepermissions";
 import { useGetInstrumentPermissions } from "./src/hooks/instruments/permissions";
 import { useGetInstrumentSamplesCount } from "./src/hooks/instruments/samples";
+import { useGetFeatureByTag } from "./src/hooks/features/features";
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 
@@ -103,7 +104,8 @@ export default {
     },
     condition_applications: {
         useGetConditionApplication,
-        useGetConditionApplicationText
+        useGetConditionApplicationText,
+        useGetConditionApplicationByQuery
     },
     filters: {
         useGetFilters,
@@ -181,6 +183,7 @@ export default {
         useGetFeaturesByQuery,
         useGetSequenceByFeatureKey,
         useGetFeatureInfo,
+        useGetFeatureByTag,
         correlations: {
             useGetFeatureCorrelation
         },
@@ -237,7 +240,8 @@ export default {
             useGetSubmissionConditionApplication,
             useGetSubmissionSampleConditionApplicationAttributes,
             useGetSubmissionConditionApplicationAttributes,
-            useGetSubmissionSampleConditionApplications
+            useGetSubmissionSampleConditionApplications,
+            
         },
         metatexts: {
             useGetMetatexts,
@@ -271,7 +275,9 @@ export default {
         },
         analysis: {
             useGetSubmissionPCA,
-            useGetSubmissionVolcano
+            useGetSubmissionVolcano,
+            useGetSubmissionAnnotationNetwork,
+            useGetSubmissionHeatmap
         }
     },
     states: {
