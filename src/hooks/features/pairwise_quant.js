@@ -1,5 +1,6 @@
 import axios from "axios"
 import { useQuery } from "react-query"
+import config from "../../../config"
 
 
 /**
@@ -10,7 +11,7 @@ import { useQuery } from "react-query"
  * @returns {Object[]} - Define type! 
  */
 async function featureFeatureCorrelation_API({ feature_tag_x, feature_tag_y }) {
-    const res = await axios.get(`/api/features/pairwise_quant`, {params : { feature_tag_x, feature_tag_y }})
+    const res = await axios.get(`${config.baseURL}/features/${feature_tag_x}/${feature_tag_y}/pairwise_quant`, {params : {  }})
     return res.data
 }
 export function useGetPairwiseFeatureQuant(APIParams = {feature_tag_x, feature_tag_y}, useQueryOptions = {}) {

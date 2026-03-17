@@ -81,6 +81,8 @@ import { useGetExternalServicePermissions } from "./src/hooks/maintenance/extern
 import { useGetInstrumentPermissions } from "./src/hooks/instruments/permissions";
 import { useGetInstrumentSamplesCount } from "./src/hooks/instruments/samples";
 import { useGetFeatureByTag } from "./src/hooks/features/features";
+import { useGetPairwiseFeatureQuant } from "./src/hooks/features/pairwise_quant";
+import { useGetSampleAbundance } from "./src/hooks/features/quantifications";
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 
@@ -188,11 +190,15 @@ export default {
             useGetFeatureCorrelation
         },
         data: {
-            useGetFeatureDataForSubmission
+            useGetFeatureDataForSubmission,
+            useGetPairwiseFeatureQuant
         },
         proteins: {
             useGetProteinFeatureByQuery,
             useGetProteinByTag
+        },
+        quantification: {
+            useGetSampleAbundance
         }
     },
     proteomes: {
