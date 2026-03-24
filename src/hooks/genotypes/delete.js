@@ -12,12 +12,12 @@ import config from "../../../config";
  */
 
 
-async function deleteGenotype_API({ genotype_tag }) {
-  const res = await axios.delete(`${config.baseURL}/genotypes/${genotype_tag}`);
+async function deleteGenotype_API({ tag }) {
+  const res = await axios.delete(`${config.baseURL}/genotypes/${tag}`);
     return res.data
 }
 
 
-export const useDeleteGenotype = (APIParams = { genotype_tag: "" },useMutationOptions = {}) => {
-  return useMutation(["deleteGenotype", APIParams.genotype_tag],() => deleteGenotype_API({ ...APIParams }), useMutationOptions);
+export const useDeleteGenotype = (useMutationOptions = {}) => {
+    return useMutation((APIParams) => deleteGenotype_API({ ...APIParams }), useMutationOptions)
 }

@@ -1,4 +1,4 @@
-import { useQuery } from "react-query"
+import { useQuery, useMutation } from "react-query"
 import axios from "axios"
 import config from "../../../config";
 /**
@@ -41,10 +41,64 @@ export const useGetSampleConditionApplications = (APIParams = {tag, group_by_att
  */
 
 async function getSampleGenotype_API({ tag }) {
-    const res = await axios.get(`${config.baseURL}/samples/${tag}/${genotype_tag}`)
+    const res = await axios.get(`${config.baseURL}/samples/${tag}/genotype`)
     return res.data
 }
 
 export const useGetSampleGenotype = (APIParams = { tag }, useQueryOptions = {staleTime : 3000000}) => {
     return useQuery(["getSampleGenotype", APIParams.tag], () => getSampleGenotype_API({...APIParams}), useQueryOptions)
 }
+
+
+
+/**
+ * @description Add genotype to a sample.
+ * @param {object} props
+ * @param {String} props.tag The tag of the sample 
+ * @param {String} props.genotype_tag The tag of the genotype to be added to the sample 
+ * @returns {Object} The updated sample information. 
+ */
+
+
+async function insertSampleGenotype_API({ sample_tags, genotype_tag }) {
+    const res = await axios.post(`${config.baseURL}/samples/genotype`, {sample_tags, genotype_tag })
+    return res.data
+}
+
+export const useInsertSampleGenotype = (useMutationOptions = {}) => {
+    return useMutation((APIParams) => insertSampleGenotype_API({...APIParams}), useMutationOptions)
+}
+
+/**
+ * @description Update the sample information.
+ * @param {Object} props
+ * @param {String} props.tag  The tag of the sample
+ * @returns {Object} The updated sample information.
+ */
+async function updateSample_API({ tag, data }) {
+    const res = await axios.put(`${config.baseURL}/samples/${tag}`, data)
+    return res.data
+}   
+
+export const useUpdateSample = (useMutationOptions = {}) => {
+    return useMutation(({ tag, data }) => updateSample_API({ tag, data }), useMutationOptions)
+}
+
+
+
+/**
+ * @description Add genotype to a sample.
+ * @param {object} props
+ * @param {String} props.tag The tag of the sample 
+ * @param {String} props.genotype_tag The tag of the genotype to be added to the sample 
+ * @returns {Object} The updated sample information. 
+ */
+
+async function addSampleGenotype_API({ sample_tag, genotype_tag }) {
+    const res = await axios.post( `${config.baseURL}/samples/${sample_tag}/genotype/${genotype_tag}`)
+    return res.data
+}
+
+export const useAddSampleGenotype = (useMutationOptions = {}) => {
+    return useMutation((APIParams) => addSampleGenotype_API({...APIParams}), useMutationOptions)
+}   

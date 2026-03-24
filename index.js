@@ -39,7 +39,7 @@ import { useGetAttributeCount } from "./src/hooks/attributes/count";
 import { useGetAttributeMinState } from "./src/hooks/attributes/state";
 import { useGetSubmissionConditionApplication, useGetSubmissionConditionApplicationAttributes, useGetSubmissionSampleConditionApplications, useGetSubmissionSampleConditionApplicationAttributes } from "./src/hooks/submissions/ca";
 import { useGetConditionApplication, useGetConditionApplicationByQuery, useGetConditionApplicationText } from "./src/hooks/condition_applications/condition_applications";
-import { useGetSample, useGetSampleConditionApplications, useGetSampleGenotype } from "./src/hooks/samples/samples";
+import { useInsertSampleGenotype, useGetSample, useGetSampleConditionApplications, useGetSampleGenotype, useUpdateSample, useAddSampleGenotype } from "./src/hooks/samples/samples";
 import { useDeleteMetatext, useGetMetatext, usePatchMetatext } from "./src/hooks/metatext/metatext";
 import { useGetSubmissionPermissions, useGetSubmissionPermissionsByTag } from "./src/hooks/submissions/permissions";
 import { useDeleteNews, useFindNews, useGetNewsByTag, usePostNews } from "./src/hooks/news/news";
@@ -69,7 +69,7 @@ import { useGetGenotypesBySearchString } from "./src/hooks/genotypes/query";
 import { useGetGenotypeText } from "./src/hooks/genotypes/text";
 import { useGetGenotypeDescription } from "./src/hooks/genotypes/description";
 import { useGetGenotypeItem } from "./src/hooks/genotypes/item";
-import { useGetGenotypeProteins } from "./src/hooks/genotypes/proteins";
+import { useGetGenotypeProteins, useGetGenotypeProteome } from "./src/hooks/genotypes/proteins";
 import { useGetGenotypeSampleCount } from "./src/hooks/genotypes/countsamples";
 import { useDeleteGenotype } from "./src/hooks/genotypes/delete";
 import { useGetGenotypePermissions } from "./src/hooks/genotypes/permission";
@@ -177,6 +177,7 @@ export default {
         useDeleteGenotype,
         useGetGenotypePermissions, 
         useEditGenotype,
+        useGetGenotypeProteome,
         condition_applications : {
             useGetGenotypeConditionApplications,
             useGetGenotypeConditionApplicationsData
@@ -217,10 +218,13 @@ export default {
         useGetProteomeCreatedAt
     },
     samples: {
-        useGetSample,
+        useGetSample,  
         useGetSampleConditionApplications,
         useGetSampleCount, 
         useGetSampleGenotype,
+        useInsertSampleGenotype,
+        useUpdateSample,
+        useAddSampleGenotype
     },
     submissions: {
         useGetSubmissionMetatextByTag,

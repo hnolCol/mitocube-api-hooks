@@ -12,7 +12,7 @@ async function getSparePartByQuery_API({search_string, limit}) {
     return res.data 
 }
 
-export const useGetSparePartByQuery = (APIParams = {search_string, limit}, useQueryOptions = {}) => {
+export const useGetSparePartByQuery = (APIParams = {search_string : "", limit : 10 }, useQueryOptions = {}) => {
     return useQuery(["getSparePartBySearchString", APIParams.search_string, APIParams.limit],() =>  getSparePartByQuery_API({...APIParams}), useQueryOptions)
 }
 
