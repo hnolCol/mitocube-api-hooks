@@ -13,22 +13,23 @@ import _ from "lodash"
  * @param {String} props.tag  The feature tag 
  * @param {string} props.annotation_tag - The annotation tag to filter the features by. This reduces the number of features that are correlated to the given feature.
  * @param {Number} props.limit  The maximum number of results to return.
- * @returns 
+ * @returns  
  */
-async function getFeatureCorrelation_API({tag, annotation_tags, limit, min_data_points, direction}) {
-    const res = await axios.get(`${config.baseURL}/features/${tag}/correlations`, {params : {limit, annotation_tags, min_data_points, direction}})
+async function getFeatureCorrelation_API({tag, annotation_tags, limit, min_data_points, direction, fdr}) {
+    const res = await axios.get(`${config.baseURL}/features/${tag}/correlations`, {params : {limit, annotation_tags, min_data_points, direction, fdr}})
     return res.data
 }
 
 
-export const useGetFeatureCorrelation = (APIParams = { tag, min_data_points, annotation_tags, limit, direction }, queryOptions = {placeHolderData: (prev) => prev, staleTime: 30000}) => {
+export const useGetFeatureCorrelation = (APIParams = { tag, min_data_points, annotation_tags, limit, direction, fdr }, queryOptions = {placeHolderData: (prev) => prev, staleTime: 30000}) => {
 
     return useQuery(["feature_spec_corr",
         APIParams.tag,
         _.join(APIParams.annotation_tags),
         APIParams.min_data_points,
         APIParams.limit,
-        APIParams.direction], () => getFeatureCorrelation_API({ ...APIParams }), queryOptions)
+        APIParams.direction,
+        APIParams.fdr], () => getFeatureCorrelation_API({ ...APIParams }), queryOptions)
 }
 
 

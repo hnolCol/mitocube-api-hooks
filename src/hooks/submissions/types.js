@@ -33,4 +33,15 @@
  */
 
 
+
+/**
+ * @typedef SubmissionProteinGroupQuantificationCount 
+ * @type {Object}
+ * @property {String} tag - The submission tag. 
+ * @property {Number} count - The number of protein groups quantified for the submission.
+ * @property {String} user_tag - The user tag of the submission.
+ * @summary Counts of protein groups quantified for a given submission.
+ */
+
+
 export default {}

@@ -3,11 +3,26 @@ import { useQuery } from "react-query"
 import config from "../../../config"
 import axios from "axios"
 
+
+
+/**
+ * @description Retruns if there are already quantification data for a given submission and quantification type.
+ * @param {Object} props 
+ * @returns {import("./types").SubmissionProteinGroupQuantificationCount[]} If quantification data exists 
+ */
+export async function getSubmissionProteinGroupQuantificationCount_API({ }) {
+    const res = await axios.get(`${config.baseURL}/submissions/quantifications/protein_groups/count`, {
+        params: {}
+    })
+    return res.data
+}
+
+
 /**
  * @description Returns the number of protein groups in a submission
  * @param {Object} props 
- * @param {String} props.tag The submission tag.
- * @returns {Object} Te number of protein groups quantified in the submission
+ * @param {String} props.tag The submission tag. If tag is not provided, the endpoint returns the number of protein groups quantified across all submissions.
+ * @returns {import("./types").SubmissionProteinGroupQuantificationCount[]} The number of protein groups quantified in the submission
  */
 export async function getSubmissionProteinCount_API({ tag }) {
     const res = await axios.get(`${config.baseURL}/submissions/counts/${tag}/protein_groups`, {
@@ -16,7 +31,14 @@ export async function getSubmissionProteinCount_API({ tag }) {
     return res.data
 }
 
-export const useGetSubmissionProteinGroupCount = (APIParams = {tag}, useQueryOptions = { staleTime: 500}) => {
+export const useGetSubmissionProteinGroupCount = (APIParams = { tag }, useQueryOptions = { staleTime: 500 }) => {
+    
+    if (!APIParams.tag) { 
+
+        return useQuery(["getSubmissionProteinGroupQuantificationCount"],
+        () => getSubmissionProteinGroupQuantificationCount_API({ ...APIParams }), useQueryOptions)
+    }
+
     return useQuery(["getSubmissionProteinCount", APIParams.tag],
         () => getSubmissionProteinCount_API({ ...APIParams }), useQueryOptions)
 }
@@ -51,14 +73,22 @@ export const useGetSubmissionPeptideCount = (APIParams = {tag}, useQueryOptions 
  * @returns {import("./types").SubmissionSampleCounts[]} The number protein groups quantified in the submission
  */
 export async function getSubmissionSampleProteinGroupCount_API({ tag }) {
+
     const res = await axios.get(`${config.baseURL}/submissions/counts/${tag}/samples/protein_groups`, {
         params: {  }
     })
     return res.data
 }
 
-export const useGetSubmissionSampleProteinGroupCount = (APIParams = {tag}, useQueryOptions = { staleTime: 500}) => {
+export const useGetSubmissionSampleProteinGroupCount = (APIParams = { tag }, useQueryOptions = { staleTime: 500 }) => {
+    
+    
     return useQuery(["getSubmissionSampleProteinGroupCount", APIParams.tag],
         () => getSubmissionSampleProteinGroupCount_API({ ...APIParams }), useQueryOptions)
 }
+
+
+
+
+
 

@@ -14,7 +14,7 @@ async function featureFeatureCorrelation_API({ feature_tag_x, feature_tag_y }) {
     const res = await axios.get(`${config.baseURL}/features/${feature_tag_x}/${feature_tag_y}/pairwise_quant`, {params : {  }})
     return res.data
 }
-export function useGetPairwiseFeatureQuant(APIParams = {feature_tag_x, feature_tag_y}, useQueryOptions = {}) {
+export function useGetPairwiseFeatureQuant(APIParams = {feature_tag_x, feature_tag_y, annotation_tags}, useQueryOptions = {}) {
     return useQuery(["featurePairQuant",
         APIParams.feature_tag_x,
         APIParams.feature_tag_y],

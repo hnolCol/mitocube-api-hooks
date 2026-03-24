@@ -17,6 +17,6 @@ async function getGenotypesBySearchString_API({search_string, limit, proteome_ta
 }
 
 export const useGetGenotypesBySearchString = (APIParams = { search_string, limit, proteome_tags }, useQueryOptions = {}) => {
-    const proteome_tag_string = _.isArray(proteome_tags) ? _.join(proteome_tags) : proteome_tags
+    const proteome_tag_string = _.isArray(APIParams.proteome_tags) ? _.join(APIParams.proteome_tags, ";") : APIParams.proteome_tags
     return useQuery(["getGenotypesBySearchString", APIParams.search_string, APIParams.limit, proteome_tag_string],() =>  getGenotypesBySearchString_API({...APIParams}), useQueryOptions)
 }

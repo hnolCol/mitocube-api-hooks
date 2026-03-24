@@ -83,6 +83,7 @@ import { useGetInstrumentSamplesCount } from "./src/hooks/instruments/samples";
 import { useGetFeatureByTag } from "./src/hooks/features/features";
 import { useGetPairwiseFeatureQuant } from "./src/hooks/features/pairwise_quant";
 import { useGetSampleAbundance } from "./src/hooks/features/quantifications";
+import { useGetProteinGroupSubmissionStats } from "./src/hooks/features/ranking";
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 
@@ -197,6 +198,9 @@ export default {
             useGetProteinFeatureByQuery,
             useGetProteinByTag
         },
+        protein_groups : {
+            useGetProteinGroupSubmissionStats
+        },
         quantification: {
             useGetSampleAbundance
         }
@@ -246,8 +250,7 @@ export default {
             useGetSubmissionConditionApplication,
             useGetSubmissionSampleConditionApplicationAttributes,
             useGetSubmissionConditionApplicationAttributes,
-            useGetSubmissionSampleConditionApplications,
-            
+            useGetSubmissionSampleConditionApplications
         },
         metatexts: {
             useGetMetatexts,
@@ -267,7 +270,7 @@ export default {
         quantifications: {
             usePostProteinQuantification,
             usePostPrecursorQuantification,
-            useGetSubmissionQuantificationExists
+            useGetSubmissionQuantificationExists,
         },
         researchaim: {
             useGetResearchAim,
@@ -277,7 +280,7 @@ export default {
             useGetSubmissionProteinGroupCount,
             useGetSubmissionSampleCount, 
             useGetSubmissionPeptideCount,
-            useGetSubmissionSampleProteinGroupCount
+            useGetSubmissionSampleProteinGroupCount,
         },
         analysis: {
             useGetSubmissionPCA,
