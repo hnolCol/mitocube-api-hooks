@@ -28,7 +28,6 @@ export const useGetConditionApplication = (APIParams = { tag }, useQueryOptions 
  */
 async function getConditionApplicationTextByTag_API({ tag }) {
     const res = await axios.get(`${config.baseURL}/condition_applications/${tag}/text`)
-    console.log(res)
     return res.data
 }
 
@@ -49,9 +48,10 @@ export const useGetConditionApplicationText = (APIParams = { tag }, useQueryOpti
  * @param {String} props.trait_tag - If provided, only condition applications that are linked to the given trait are returned. This link may occur in any level of the condition application hierarchy.
  *  * @returns {String[]} - The condition application tags that match the query
  */
-async function getConditionApplicationByQuery_API({ samples_only, submission_tag, attribute_tag, trait_tag, sort_by_frequency, limit }) {
+async function getConditionApplicationByQuery_API({ search_string, samples_only, submission_tag, attribute_tag, trait_tag, sort_by_frequency, limit }) {
     const res = await axios.get(`${config.baseURL}/condition_applications/q`, {
         params: {
+            search_string,
             samples_only,
             submission_tag,
             attribute_tag,
@@ -63,8 +63,8 @@ async function getConditionApplicationByQuery_API({ samples_only, submission_tag
     return res.data
 }
 
-export const useGetConditionApplicationByQuery = (APIParams = {samples_only : true, submission_tag, attribute_tag,  trait_tag, sort_by_frequency : true, limit}, useQueryOptions = {staleTime : 300000, placeholderData: (prev) => prev }) => {
-    return useQuery(["getConditionApplicationByQuery",APIParams.submission_tag, APIParams.attribute_tag, APIParams.samples_only, APIParams.trait_tag, APIParams.sort_by_frequency, APIParams.limit],
+export const useGetConditionApplicationByQuery = (APIParams = {search_string : undefined, samples_only : true, submission_tag, attribute_tag,  trait_tag, sort_by_frequency : true, limit}, useQueryOptions = {staleTime : 300000, placeholderData: (prev) => prev }) => {
+    return useQuery(["getConditionApplicationByQuery",APIParams.search_string,APIParams.submission_tag, APIParams.attribute_tag, APIParams.samples_only, APIParams.trait_tag, APIParams.sort_by_frequency, APIParams.limit],
         () => getConditionApplicationByQuery_API({ ...APIParams }), useQueryOptions)
 }
 

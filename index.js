@@ -18,7 +18,7 @@ import { useGetSubmissionComments } from "./src/hooks/submissions/comments";
 import { useGetPublicUserByTag, usePatchUser, usePostUser } from "./src/hooks/users/users";
 import { useGetAttributeChildren } from "./src/hooks/attributes/children";
 import { useGetTraitBySearchString, useGetTraitByTag, useGetTraitCount, useGetTraitsByAttributeTag, useGetTraitText, usePostTrait } from "./src/hooks/attributes/traits";
-import { useGetInstrument, useGetInstrumentsByType, useGetInstrumentState, useGetInstrumentStateByQuery, useGetInstrumentStateDurations, useGetInstrumentTypes, useGetSpecificInstrumentStateDurations, useGetStatesOfAnInstrument } from "./src/hooks/instruments/instruments";
+import { useGetInstrument, useGetInstrumentsByType, useGetInstrumentState, useGetInstrumentStateByQuery, useGetInstrumentStateDurations, useGetInstrumentTypes, useGetSpecificInstrumentStateDurations, useGetStatesOfAnInstrument, usePostInstrumentState } from "./src/hooks/instruments/instruments";
 import { useGetSymptomByQuery, useGetSymptomByTag, useCheckSymptomExists, useEditSymptom, useGetSymptoms, usePostSymptom, useDeleteSymptom, useGetSymptomDescription,useGetSymptomText, useGetSymptomPriority } from "./src/hooks/maintenance/symptoms";
 import { useGetSymptomsPermissions } from "./src/hooks/maintenance/symptomspermissions";
 import { useGetSubmissionByQuery } from "./src/hooks/submissions/query";
@@ -82,12 +82,20 @@ import { useGetInstrumentPermissions } from "./src/hooks/instruments/permissions
 import { useGetInstrumentSamplesCount } from "./src/hooks/instruments/samples";
 import { useGetFeatureByTag } from "./src/hooks/features/features";
 import { useGetPairwiseFeatureQuant } from "./src/hooks/features/pairwise_quant";
-import { useGetSampleAbundance } from "./src/hooks/features/quantifications";
+import { useGetSampleAbundance, useGetSampleFeatureAbundanceDistribution } from "./src/hooks/features/quantifications";
 import { useGetProteinGroupSubmissionStats } from "./src/hooks/features/ranking";
+import { useVerifyToken } from "./src/hooks/authorization/token/verify";
+import { useGetTokenValid } from "./src/hooks/authorization/token/check";
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 
 export default {
+    authorization: {
+        token: {
+            useVerifyToken,
+            useGetTokenValid
+        }
+    },
     attributes: {
         useGetAttribute,
         usePostAttribute,
@@ -203,7 +211,8 @@ export default {
             useGetProteinGroupSubmissionStats
         },
         quantification: {
-            useGetSampleAbundance
+            useGetSampleAbundance,
+            useGetSampleFeatureAbundanceDistribution
         }
     },
     proteomes: {
@@ -414,7 +423,8 @@ export default {
             useGetInstrumentStateDurations,
             useGetSpecificInstrumentStateDurations,
             useGetInstrumentState,
-            useGetInstrumentStateByQuery
+            useGetInstrumentStateByQuery,
+            usePostInstrumentState
         },
         permissions: {
             useGetInstrumentPermissions
