@@ -37,7 +37,7 @@ import { useGetUserCount } from "./src/hooks/users/counts";
 import { useGetUserIsActive } from "./src/hooks/users/active";
 import { useGetAttributeCount } from "./src/hooks/attributes/count";
 import { useGetAttributeMinState } from "./src/hooks/attributes/state";
-import { useGetSubmissionConditionApplication, useGetSubmissionConditionApplicationAttributes, useGetSubmissionSampleConditionApplications, useGetSubmissionSampleConditionApplicationAttributes } from "./src/hooks/submissions/ca";
+import { useGetSubmissionConditionApplication, useGetSubmissionConditionApplicationAttributes, useGetSubmissionSampleConditionApplications, useGetSubmissionSampleConditionApplicationAttributes, useGetSubmissionConditionApplicationData, useUpdateSubmissionCA } from "./src/hooks/submissions/ca";
 import { useGetConditionApplication, useGetConditionApplicationByQuery, useGetConditionApplicationText } from "./src/hooks/condition_applications/condition_applications";
 import { useInsertSampleGenotype, useGetSample, useGetSampleConditionApplications, useGetSampleGenotype, useUpdateSample, useAddSampleGenotype } from "./src/hooks/samples/samples";
 import { useDeleteMetatext, useGetMetatext, usePatchMetatext } from "./src/hooks/metatext/metatext";
@@ -263,7 +263,9 @@ export default {
             useGetSubmissionConditionApplication,
             useGetSubmissionSampleConditionApplicationAttributes,
             useGetSubmissionConditionApplicationAttributes,
-            useGetSubmissionSampleConditionApplications
+            useGetSubmissionSampleConditionApplications,
+            useGetSubmissionConditionApplicationData,
+            useUpdateSubmissionCA
         },
         metatexts: {
             useGetMetatexts,
