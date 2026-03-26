@@ -1,5 +1,5 @@
 // States and states changes of a submission 
-import { useQuery } from "react-query"
+import { useQuery, useMutation } from "react-query"
 import config from "../../../config"
 import axios from "axios"
 
@@ -79,3 +79,34 @@ export const useGetSubmissionSampleConditionApplicationAttributes = (APIParams =
     return useQuery(["getSubmissionSampleConditionApplicationAttributes", APIParams.tag],
         () => getSubmissionSampleCAAttributes_API({ ...APIParams }), useQueryOptions)
 }
+
+
+/**
+ * Query submission sample condition application data for the given submission tag and attribute tags
+ * @param {Object} props 
+ * @param {String} props.tag The submission tag.
+ * @param {String[]} props.attribute_tags The attribute tags to filter the condition applications.
+ * @returns {Object} The condition application data for the submission samples
+ */
+export async function getSubmissionConditionApplictionsData_API({ tag, attribute_tags }) {
+    const res = await axios.get(`${config.baseURL}/submissions/${tag}/ca/data`, {
+        params: { attribute_tags }
+    })
+    return res.data
+}
+
+export const useGetSubmissionConditionApplicationData = (APIParams = {tag, attribute_tags}, useQueryOptions = { staleTime: 500}) => {
+    return useQuery(["getSubmissionConditionApplicationData", APIParams.tag, APIParams.attribute_tags],
+        () => getSubmissionConditionApplictionsData_API({ ...APIParams }), useQueryOptions)   
+}
+
+
+export async function updateSubmissionCA_API({ tag, selected_traits }) {
+    const res = await axios.post(`${config.baseURL}/submissions/${tag}/ca/update`, selected_traits)
+    return res.data
+}
+
+export const useUpdateSubmissionCA = (useQueryOptions = {}) => {
+    return useMutation((data) => updateSubmissionCA_API(data),useQueryOptions)
+}
+
