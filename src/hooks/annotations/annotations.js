@@ -55,15 +55,16 @@ export const useGetAnnotationsByProteinTag = (APIParams = { protein_tag: "" }, u
  * @returns {Object} - The annotation matching the group tag.   
  */
 
-async function getAnnotationsByGroupTag_API ({ tag }) {
-    const res = await axios.get(`${config.baseURL}/annotations/groups/${tag}/annotations`)
+async function getAnnotationsByGroupTag_API ({ tag, limit = 20 }) {
+    const res = await axios.get(`${config.baseURL}/annotations/groups/${tag}/annotations`, {
+        params: { limit }
+    })
     return res.data
 }
 
-export const useGetAnnotationsByGroupTag = (APIParams = { tag: "" }, useQueryOptions = { stateTime: 200000 }) => {
-    return useQuery (["getAnnotationsByGroupTag", APIParams.tag], () => getAnnotationsByGroupTag_API ({ ...APIParams }), useQueryOptions)
+export const useGetAnnotationsByGroupTag = (APIParams = { tag: "", limit: 20 }, useQueryOptions = { stateTime: 200000 }) => {
+    return useQuery (["getAnnotationsByGroupTag", APIParams.tag, APIParams.limit], () => getAnnotationsByGroupTag_API ({ ...APIParams }), useQueryOptions)
 }
-
 
 /**
  * @description Creates a new annotation.
