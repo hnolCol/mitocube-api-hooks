@@ -11,7 +11,7 @@ import { useGetFeatureInfo } from "./src/hooks/features/info";
 import { useGetStateColor } from "./src/hooks/states/color";
 import { useGetStateName } from "./src/hooks/states/name";
 import { useGetStates, useGetSubmissionState, useGetSubmissionStateCount, usePatchSubmissionState } from "./src/hooks/submissions/state";
-import { useGetSubmissionSampleCount, useGetSubmissionSampleTags } from "./src/hooks/submissions/samples";
+import { useGetSubmissionSampleCount, useGetSubmissionSamplesFull, useGetSubmissionSampleTags } from "./src/hooks/submissions/samples";
 import { useGetMetatexts, useGetSubmissionMetatextByTag, usePostMetatext } from "./src/hooks/submissions/metatext";
 import { useGetUserRoleByTag, useGetUserRoles } from "./src/hooks/users/roles";
 import { useGetSubmissionComments } from "./src/hooks/submissions/comments";
@@ -251,7 +251,8 @@ export default {
         },
         samples: {
             useGetSubmissionSampleTags,
-            useGetSubmissionSampleCount
+            useGetSubmissionSampleCount,
+            useGetSubmissionSamplesFull
         },
         states: {
             usePatchSubmissionState,

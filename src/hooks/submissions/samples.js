@@ -52,3 +52,21 @@ export const useGetSubmissionSampleCount= (APIParams = {tag}, useQueryOptions = 
     return useQuery(["submission_samples_count", APIParams.tag],
         () => getSubmissionSampleCount_API({ ...APIParams }), useQueryOptions)
 }
+
+
+
+/**
+ * @description Returns the sample information of a submission.
+ * @param {Object} props
+ * @param {String} props.tag
+ * @returns {Object[]} - The submission sample information. 
+ */
+
+async function getSubmissionSamplesFull_API({ tag }) {
+    const res = await axios.get(`${config.baseURL}/submissions/${tag}/samples/full`)
+    return res.data
+}
+
+export const useGetSubmissionSamplesFull = (APIParams = { tag }, useQueryOptions = { staleTime: 0 }) => {
+    return useQuery(["getSubmissionSamplesFull", APIParams.tag], () => getSubmissionSamplesFull_API({ ...APIParams }), useQueryOptions)
+}
