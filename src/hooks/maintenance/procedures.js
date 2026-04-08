@@ -8,7 +8,6 @@ import config from "../../../config";
  */
 async function getMaintenanceProcedureByQuery_API({search_string, limit}) {
     const res = await axios.get(`${config.baseURL}/maintenance/procedures/q`, { params: { search_string, limit } })
-    console.log(res.data)
     return res.data 
 }
 
