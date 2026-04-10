@@ -44,4 +44,15 @@
  */
 
 
+/**
+ * @typedef ExclusivelyQuantifiedProteinGroup
+ * @type {Object}
+ * @property {String} tag - The submission tag. 
+ * @property {String} attribute_tag - The attribute tag for the exclusively quantified protein groups.
+ * @property {String} stats_tag - The stats tag for the exclusively quantified protein groups.
+ * @property {Number} mean - The mean abundance of the exclusively quantified protein groups across the samples in the submission.
+ * @summary Exclusively quantified protein groups for a given submission within an attribute group.
+ */
+
+
 export default {}

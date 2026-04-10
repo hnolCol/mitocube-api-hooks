@@ -86,6 +86,7 @@ import { useGetSampleAbundance, useGetSampleFeatureAbundanceDistribution } from 
 import { useGetProteinGroupSubmissionStats } from "./src/hooks/features/ranking";
 import { useVerifyToken } from "./src/hooks/authorization/token/verify";
 import { useGetTokenValid } from "./src/hooks/authorization/token/check";
+import { useGetSubmissionExclusivelyQuantifiedProteinGroups, useGetSubmissionRanking, useUpdateSubmissionStats } from "./src/hooks/submissions/ranking";
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 
@@ -212,6 +213,7 @@ export default {
         },
         protein_groups : {
             useGetProteinGroupSubmissionStats
+            
         },
         quantification: {
             useGetSampleAbundance,
@@ -240,7 +242,6 @@ export default {
     },
     submissions: {
         useGetSubmissionMetatextByTag,
-        
         useGetSubmissionStateCount,
         useGetSubmissionComments,
         useGetSubmissionCreatedAt,
@@ -306,6 +307,12 @@ export default {
             useGetSubmissionVolcano,
             useGetSubmissionAnnotationNetwork,
             useGetSubmissionHeatmap
+        },
+        statistics: {
+            useUpdateSubmissionStats,
+            useGetSubmissionRanking,
+            useGetSubmissionExclusivelyQuantifiedProteinGroups
+
         }
     },
     states: {
