@@ -17,8 +17,8 @@ import { useGetUserRoleByTag, useGetUserRoles } from "./src/hooks/users/roles";
 import { useGetSubmissionComments } from "./src/hooks/submissions/comments";
 import { useGetPublicUserByTag, usePatchUser, usePostUser } from "./src/hooks/users/users";
 import { useGetAttributeChildren } from "./src/hooks/attributes/children";
-import { useGetTraitBySearchString, useGetTraitByTag, useGetTraitCount, useGetTraitsByAttributeTag, useGetTraitText, usePostTrait } from "./src/hooks/attributes/traits";
-import { useGetInstrument, useGetInstrumentsByType, useGetInstrumentState, useGetInstrumentStateByQuery, useGetInstrumentStateDurations, useGetInstrumentTypes, useGetSpecificInstrumentStateDurations, useGetStatesOfAnInstrument } from "./src/hooks/instruments/instruments";
+import { useDeleteTrait, useGetTraitBySearchString, useGetTraitByTag, useGetTraitCount, useGetTraitDescription, useGetTraitPermissions, useGetTraitPriority, useGetTraitsByAttributeTag, useGetTraitText, usePostTrait, useUpdateTrait } from "./src/hooks/attributes/traits";
+import { useGetInstrument, useGetInstrumentsByType, useGetInstrumentState, useGetInstrumentStateByQuery, useGetInstrumentStateDurations, useGetInstrumentTypes, useGetSpecificInstrumentStateDurations, useGetStatesOfAnInstrument, usePostInstrumentState } from "./src/hooks/instruments/instruments";
 import { useGetSymptomByQuery, useGetSymptomByTag, useCheckSymptomExists, useEditSymptom, useGetSymptoms, usePostSymptom, useDeleteSymptom, useGetSymptomDescription,useGetSymptomText, useGetSymptomPriority } from "./src/hooks/maintenance/symptoms";
 import { useGetSymptomsPermissions } from "./src/hooks/maintenance/symptomspermissions";
 import { useGetSubmissionByQuery } from "./src/hooks/submissions/query";
@@ -311,7 +311,12 @@ export default {
         useGetTraitCount,
         useGetTraitsByAttributeTag,
         usePostTrait,
-        useGetTraitText
+        useGetTraitText,
+        useGetTraitDescription,
+        useGetTraitPriority,
+        useUpdateTrait,
+        useDeleteTrait,
+        useGetTraitPermissions
     },
     maintenance: {
         usePostMaintenanceEvent,
