@@ -3,7 +3,7 @@ import { useGetAttribute, usePostAttribute, usePostAttributeValues, useUpdateAtt
 import axios from "axios"
 import { useGetAttributesByQuery } from "./src/hooks/attributes/query_attributes";
 import { useDeleteFilter, useGetFilters, usePostFilter } from "./src/hooks/filters/filters";
-import { useGetAnnotationsByTag, useGetAnnotationsBySearchString, useGetAnnotationsByProteinTag, usePostAnnotations, useGetAnnotationGroupByTag, usePostAnnotationGroup, useGetAnnotationGroupByQuery, useGetAnnotationProteinCount, useGetAnnotationsByGroupTag, useGetAnnotationGroupCount, useDeleteAnnotations, useUpdateAnnotations, useUpdateAnnotationGroup } from "./src/hooks/annotations/annotations";
+import { useGetAnnotationsByTag, useGetAnnotationsBySearchString, useGetAnnotationsByProteinTag, usePostAnnotations, useGetAnnotationGroupByTag, usePostAnnotationGroup, useGetAnnotationGroupByQuery, useGetAnnotationProteinCount, useGetAnnotationsByGroupTag, useGetAnnotationGroupCount, useDeleteAnnotations, useUpdateAnnotations, useUpdateAnnotationGroup, useGetIsProteinInAnnotation } from "./src/hooks/annotations/annotations";
 import { useGetAnnotationPermissions } from "./src/hooks/annotations/permissions";
 import { useGetBackendVersion } from "./src/hooks/info/version";
 import { useGetTermsOfUse } from "./src/hooks/info/terms";
@@ -82,12 +82,21 @@ import { useGetInstrumentPermissions } from "./src/hooks/instruments/permissions
 import { useGetInstrumentSamplesCount } from "./src/hooks/instruments/samples";
 import { useGetFeatureByTag } from "./src/hooks/features/features";
 import { useGetPairwiseFeatureQuant } from "./src/hooks/features/pairwise_quant";
-import { useGetSampleAbundance } from "./src/hooks/features/quantifications";
+import { useGetSampleAbundance, useGetSampleFeatureAbundanceDistribution } from "./src/hooks/features/quantifications";
 import { useGetProteinGroupSubmissionStats } from "./src/hooks/features/ranking";
+import { useVerifyToken } from "./src/hooks/authorization/token/verify";
+import { useGetTokenValid } from "./src/hooks/authorization/token/check";
+import { useGetSubmissionExclusivelyQuantifiedProteinGroups, useGetSubmissionRanking, useUpdateSubmissionStats } from "./src/hooks/submissions/ranking";
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 
 export default {
+    authorization: {
+        token: {
+            useVerifyToken,
+            useGetTokenValid
+        }
+    },
     attributes: {
         useGetAttribute,
         usePostAttribute,
@@ -128,7 +137,10 @@ export default {
         useGetAnnotationsByGroupTag,
         useDeleteAnnotations,
         useUpdateAnnotations,
-        useUpdateAnnotationGroup
+        useUpdateAnnotationGroup,
+        proteins: {
+            useGetIsProteinInAnnotation
+        }
     },
     annotationspermissions: {
         useGetAnnotationPermissions
@@ -201,9 +213,11 @@ export default {
         },
         protein_groups : {
             useGetProteinGroupSubmissionStats
+            
         },
         quantification: {
-            useGetSampleAbundance
+            useGetSampleAbundance,
+            useGetSampleFeatureAbundanceDistribution
         }
     },
     proteomes: {
@@ -228,7 +242,6 @@ export default {
     },
     submissions: {
         useGetSubmissionMetatextByTag,
-        
         useGetSubmissionStateCount,
         useGetSubmissionComments,
         useGetSubmissionCreatedAt,
@@ -294,6 +307,12 @@ export default {
             useGetSubmissionVolcano,
             useGetSubmissionAnnotationNetwork,
             useGetSubmissionHeatmap
+        },
+        statistics: {
+            useUpdateSubmissionStats,
+            useGetSubmissionRanking,
+            useGetSubmissionExclusivelyQuantifiedProteinGroups
+
         }
     },
     states: {
@@ -422,7 +441,8 @@ export default {
             useGetInstrumentStateDurations,
             useGetSpecificInstrumentStateDurations,
             useGetInstrumentState,
-            useGetInstrumentStateByQuery
+            useGetInstrumentStateByQuery,
+            usePostInstrumentState
         },
         permissions: {
             useGetInstrumentPermissions

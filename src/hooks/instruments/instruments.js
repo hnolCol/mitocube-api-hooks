@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery, useMutation } from "react-query";
 import axios from "axios";
 import config from "../../../config";
 
@@ -16,9 +16,6 @@ async function getInstrumentTypes_API({}) {
 export const useGetInstrumentTypes = (APIParams = {}, useQueryOptions = {stateTime : Infinity}) => {
     return useQuery(["getInstrumentTypes"],() =>  getInstrumentTypes_API({...APIParams}), useQueryOptions)
 }
-
-
-
 
 /**
  * @description 
@@ -127,3 +124,27 @@ export const useGetSpecificInstrumentStateDurations = (APIParams = {tag, state_t
     return useQuery(["getSpecificInstrumentStateDurations", APIParams.tag, APIParams.state_tag, APIParams.limit, APIParams.timestamp_min, APIParams.timestamp_max],
         () => getSpecificInstrumentStateDurations_API({ ...APIParams }), useQueryOptions)
 }
+
+
+
+
+/**
+ * @description Adds a new instrument state to the database
+ * @param {Object} props
+ * @param {String} props.tag The instrument tag
+ * @param {String} props.instrument_state_tag The instrument state tag
+ * @returns 
+ */
+async function postInstrumentState_API({tag, instrument_state_tag}){
+    //fetch availabe features from the API. Reconsider /details 
+    const res = await axios.post(`${config.baseURL}/instruments/${tag}/states/${instrument_state_tag}`)
+    return res.data
+}
+
+export const usePostInstrumentState = (useMutationOptions = {}) => {
+    return useMutation((APIParams) => postInstrumentState_API({...APIParams}), useMutationOptions)
+}
+
+
+
+

@@ -7,18 +7,19 @@ import axios from "axios"
  * @description Returns the condition applications defined for the submission
  * @param {Object} props 
  * @param {String} props.tag The submission tag.
+ * @param {String} props.attribute_tags - The attribute tags to filter the condition applications. Multiple can be provided, separated by semicolons.
  * @param {Boolean} props.group_by_attribute - If true, the results are grouped by attribute.
  * @returns {Object} The condition applications for the submission
  */
-export async function getSubmissionCA_API({ tag, group_by_attribute = false }) {
+export async function getSubmissionCA_API({ tag, attribute_tags, group_by_attribute = false }) {
     const res = await axios.get(`${config.baseURL}/submissions/${tag}/ca`, {
-        params: { group_by_attribute }
+        params: { attribute_tags, group_by_attribute }
     })
     return res.data
 }
 
-export const useGetSubmissionConditionApplication = (APIParams = {tag, group_by_attribute}, useQueryOptions = { staleTime: 500}) => {
-    return useQuery(["getSubmissionConditionApplication", APIParams.tag, APIParams.group_by_attribute],
+export const useGetSubmissionConditionApplication = (APIParams = {tag, attribute_tags, group_by_attribute}, useQueryOptions = { staleTime: 500}) => {
+    return useQuery(["getSubmissionConditionApplication", APIParams.tag, APIParams.attribute_tags, APIParams.group_by_attribute],
         () => getSubmissionCA_API({ ...APIParams }), useQueryOptions)
 }
 
@@ -30,15 +31,15 @@ export const useGetSubmissionConditionApplication = (APIParams = {tag, group_by_
  * @param {String[]} props.attribute_tags - The attribute tags to filter the condition applications.
  * @returns {Object} The condition applications for the submission
  */
-export async function getSubmissionSamplesCA_API({ tag, attribute_tags }) {
+export async function getSubmissionSamplesCA_API({ tag, attribute_tags, return_unique = false }) {
     const res = await axios.get(`${config.baseURL}/submissions/${tag}/samples/ca`, {
-        params: { attribute_tags }
+        params: { attribute_tags, return_unique }
     })
     return res.data
 }
 
-export const useGetSubmissionSampleConditionApplications = (APIParams = {tag, attribute_tags }, useQueryOptions = { staleTime: 500}) => {
-    return useQuery(["getSubmissionSamplesConditionApplication", APIParams.tag, APIParams.attribute_tags],
+export const useGetSubmissionSampleConditionApplications = (APIParams = {tag, attribute_tags, return_unique}, useQueryOptions = { staleTime: 500}) => {
+    return useQuery(["getSubmissionSamplesConditionApplication", APIParams.tag, APIParams.attribute_tags, APIParams.return_unique],
         () => getSubmissionSamplesCA_API({ ...APIParams }), useQueryOptions)
 }
 

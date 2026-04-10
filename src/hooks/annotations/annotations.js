@@ -195,3 +195,24 @@ async function updateAnnotationGroup_API({ tag }) {
 export const useUpdateAnnotationGroup = (useMutationOptions = {}) => {
     return useMutation((APIParams) => updateAnnotationGroup_API ({ ...APIParams}), useMutationOptions)
 }
+
+
+
+
+
+/**
+ * @description Get bool if protein is in annotation 
+ * @returns
+ */
+
+async function getIsProteinInAnnotation_API({ tag, protein_tag }) {
+    const res = await axios.get(`${config.baseURL}/annotations/${tag}/annotates/${protein_tag}`)
+    return res.data
+}       
+
+export const useGetIsProteinInAnnotation = (APIParams = { tag, protein_tag }, useQueryOptions = { stateTime: 200000 }) => {
+    return useQuery(["getIsProteinInAnnotation", APIParams.tag, APIParams.protein_tag], () => getIsProteinInAnnotation_API({ ...APIParams }), useQueryOptions)
+}   
+
+
+

@@ -12,8 +12,7 @@ import axios from "axios"
  * @param {Array} props.quantifications The protein quantifications to insert.
  * @returns {Boolean} If insertion of view was successful
  */
-async function postProteinQuantification_API({ tag, quantifications }) {
-    console.log({ quantifications }, "IN POST!")
+async function postProteinQuantification_API({ tag, quantifications, apply_statistics = false }) {
     const res = await axios.post(`${config.baseURL}/submissions/${tag}/quantifications/proteins`, { quantifications })
     return res.data
 }
