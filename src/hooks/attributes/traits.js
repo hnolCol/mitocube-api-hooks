@@ -65,22 +65,38 @@ export const useGetTraitsByAttributeTag = (APIParams = {tag }, useQueryOptions) 
 }
 
 
+// /**
+//  * @description Adds trait for an attribute defined by its tag to the database. 
+//  * @param {Object} props
+//  * @param {String} props.attribute_tag 
+//  * @param {Object} props.attribute_value
+//  * @returns 
+//  */
+// async function postTrait_API({attribute_tag, attribute_value}){
+//     const res = await axios.post(`${config.baseURL}/attributes/${attribute_tag}/value`,attribute_value)
+//     return res.data
+// }
+
+// export const usePostTrait = (useMutationOptions = {}) => {
+//     return useMutation((APIParams) =>postTrait_API({...APIParams}), useMutationOptions)
+// }
+
+
 /**
- * @description Adds trait for an attribute defined by its tag to the database. 
+ * @description Adds a trait to an attribute.
  * @param {Object} props
- * @param {String} props.attribute_tag 
- * @param {Object} props.attribute_value
- * @returns 
+ * @param {String} props.attribute_tag
+ * @param {Object} props.trait - {value, text, description}
+ * @returns
  */
-async function postTrait_API({attribute_tag, attribute_value}){
-    const res = await axios.post(`${config.baseURL}/attributes/${attribute_tag}/value`,attribute_value)
+async function postTrait_API({ attribute_tag, trait }) {
+    const res = await axios.post(`${config.baseURL}/attributes/${attribute_tag}/traits`, { ...trait, attribute_tag })
     return res.data
 }
 
 export const usePostTrait = (useMutationOptions = {}) => {
-    return useMutation((APIParams) =>postTrait_API({...APIParams}), useMutationOptions)
+    return useMutation( (APIParams) => postTrait_API({ ...APIParams }),  useMutationOptions )
 }
-
 
 
 
@@ -115,4 +131,96 @@ async function getTraitText_API({ tag }) {
 
 export const useGetTraitText = (APIParams = { tag }, useQueryOptions = {staleTime : 3000000}) => {
     return useQuery(["traitText", APIParams.tag], () => getTraitText_API({ ...APIParams }), useQueryOptions)
+}
+
+/**
+ * @description Returns the description of a trait defined by its tag.
+ * @param {Object} props 
+ * @param {String} props.tag  The trait tag
+ * @returns {String} The trait description  
+ */
+
+async function getTraitDescription_API({ tag }) {
+    const res = await axios.get(`/api/attributes/traits/${tag}/description`)
+    return res.data
+}
+
+export const useGetTraitDescription = (APIParams = { tag }, useQueryOptions = {staleTime : 3000000}) => {
+    return useQuery(["traitDescription", APIParams.tag], () => getTraitDescription_API({ ...APIParams }), useQueryOptions)
+}   
+
+
+/**
+ * @description Return the priority of a trait defined by its tag. The priority is used to determine the order of the traits when displayed. The lower the priority, the higher the trait is displayed.
+ * @param {Object} props 
+ * @param {String} props.tag  The trait tag
+ * @returns {Number} The trait priority  
+ */
+
+async function getTraitPriority_API({ tag }) {
+    const res = await axios.get(`/api/attributes/traits/${tag}/priority`)
+    return res.data
+}
+
+export const useGetTraitPriority = (APIParams = { tag }, useQueryOptions = {staleTime : 3000000}) => {
+    return useQuery(["traitPriority", APIParams.tag], () => getTraitPriority_API({ ...APIParams }), useQueryOptions)
+}       
+
+
+/**
+ * @description Updates a trait's text, description, and/or priority.
+ * Tag and value are immutable.
+ * @param {Object} props
+ * @param {String} props.attribute_tag
+ * @param {String} props.trait_tag
+ * @param {Object} props.updates - {text?, description?, priority?}
+ */
+async function updateTrait_API({ attribute_tag, trait_tag, updates }) {
+    const res = await axios.patch(
+        `${config.baseURL}/attributes/${attribute_tag}/traits/${trait_tag}`,
+        updates
+    )
+    return res.data
+}
+
+export const useUpdateTrait = (useMutationOptions = {}) => {
+    return useMutation(
+        (APIParams) => updateTrait_API({ ...APIParams }),
+        useMutationOptions
+    )
+}
+
+
+/**
+ * @description Deletes a trait. The backend will reject the deletion with a 409
+ * if the trait is still connected to any ConditionApplication.
+ * @param {Object} props
+ * @param {String} props.attribute_tag
+ * @param {String} props.trait_tag
+ */
+async function deleteTrait_API({ attribute_tag, trait_tag }) {
+    const res = await axios.delete(`${config.baseURL}/attributes/${attribute_tag}/traits/${trait_tag}`)
+    return res.data
+}
+
+export const useDeleteTrait = (useMutationOptions = {}) => {
+    return useMutation((APIParams) => deleteTrait_API({ ...APIParams }),useMutationOptions)
+}
+
+
+/**
+ * @description Returns the current user's permissions for traits and attributes.
+ * @returns {Object} { user_tag, role, insert, delete, edit }
+ */
+async function getTraitPermissions_API() {
+    const res = await axios.get(`${config.baseURL}/attributes/traits/permissions`)
+    return res.data
+}
+
+export const useGetTraitPermissions = (useQueryOptions = { staleTime: 1000 * 60 * 5 }) => {
+    return useQuery(
+        ["getTraitPermissions"],
+        () => getTraitPermissions_API(),
+        useQueryOptions
+    )
 }

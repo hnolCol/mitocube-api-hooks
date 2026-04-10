@@ -8,7 +8,6 @@ import config from "../../../config";
  */
 async function getSparePartByQuery_API({search_string, limit}) {
     const res = await axios.get(`${config.baseURL}/maintenance/spareparts/q`, { params: { search_string, limit } })
-    console.log(res.data)
     return res.data 
 }
 

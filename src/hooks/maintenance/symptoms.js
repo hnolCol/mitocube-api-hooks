@@ -8,7 +8,6 @@ import config from "../../../config";
  */
 async function getSymptomByQuery_API({search_string, limit}) {
     const res = await axios.get(`${config.baseURL}/maintenance/symptoms/q`, { params: { search_string, limit } })
-    console.log(res.data)
     return res.data 
 }
 
