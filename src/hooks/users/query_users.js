@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query"
-import axios from "axios"
+import axios from "../axios-setup"
 
 /**
  * @description Returns the public information about the users. Still requires a valid token string. Public indicates here that it is available to all registered users. 

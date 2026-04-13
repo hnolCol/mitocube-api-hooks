@@ -1,7 +1,7 @@
 
 import { useQuery } from "@tanstack/react-query"
 import _ from "lodash"
-import axios from "axios"
+import axios from "../axios-setup"
 import config from "../../../config";
 
 /**

@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query"
 import config from "../../../config"
-import axios from "axios"
+import axios from "../axios-setup"
 /**
  * @description Fetch submissions based on filter criteria. If no filter is provided, it returns all submissions.
  * @param {Object} props 

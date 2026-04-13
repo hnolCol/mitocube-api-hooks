@@ -1,6 +1,5 @@
 import { useGetSequenceByFeatureKey } from "./src/hooks/features/sequence"
 import { useGetAttribute, usePostAttribute, usePostAttributeValues, useUpdateAttributeValue } from "./src/hooks/attributes/attributes";
-import axios from "axios"
 import { useGetAttributesByQuery } from "./src/hooks/attributes/query_attributes";
 import { useDeleteFilter, useGetFilters, usePostFilter } from "./src/hooks/filters/filters";
 import { useGetAnnotationsByTag, useGetAnnotationsBySearchString, useGetAnnotationsByProteinTag, usePostAnnotations, useGetAnnotationGroupByTag, usePostAnnotationGroup, useGetAnnotationGroupByQuery, useGetAnnotationProteinCount, useGetAnnotationsByGroupTag, useGetAnnotationGroupCount, useDeleteAnnotations, useUpdateAnnotations, useUpdateAnnotationGroup, useGetIsProteinInAnnotation } from "./src/hooks/annotations/annotations";
@@ -90,7 +89,7 @@ import { useGetSubmissionExclusivelyQuantifiedProteinGroups, useGetSubmissionRan
 import { useGetGenotypeExists } from "./src/hooks/genotypes/exists";
 import { useGetStatisticInfo } from "./src/hooks/info/statistics";
 import { useGetBackendInfo } from "./src/hooks/info/backend";
-axios.defaults.headers.common['Content-Type'] = 'application/json';
+// axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 
 export default {

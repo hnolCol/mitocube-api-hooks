@@ -1,7 +1,7 @@
 // States and states changes of a submission 
 import { useQuery, useMutation } from "@tanstack/react-query"
 import config from "../../../config"
-import axios from "axios"
+import axios from "../axios-setup"
 
 /**
  * @description Returns the current state of a submission.

@@ -3,7 +3,8 @@
 
 
 import { useQuery } from "@tanstack/react-query"
-import axios from "axios"
+
+import axios from "../axios-setup"
 /**
  * @description Returns the correlation result of a feature to any other feature
  * in the same proteome/samples . 
