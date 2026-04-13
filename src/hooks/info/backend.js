@@ -9,7 +9,7 @@ import config from "../../../config";
  * @returns {import("../../types/info").AppInfoAPIResponse} The API response for the information about the backend. 
  */
 async function getBackendInfo_API({}) {
-    const res = await axios.get(`${config.baseURL}/api/info/app`)
+    const res = await axios.get(`${config.baseURL}/info/app`)
     return res.data 
 }
 
