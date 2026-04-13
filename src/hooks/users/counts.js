@@ -1,4 +1,4 @@
-import { useQuery } from "react-query"
+import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 
 /**
@@ -12,5 +12,9 @@ async function getUserCount_API({ exclude_inactive }) {
 }
 
 export const useGetUserCount = (APIParams = {exclude_inactive : true}, useQueryOptions = {}) => {
-    return useQuery(["getUserCount"], () => getUserCount_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["getUserCount", APIParams.exclude_inactive],
+        queryFn: () => getUserCount_API({...APIParams}),
+        ...useQueryOptions
+    })
 }

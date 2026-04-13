@@ -1,5 +1,5 @@
 // States and states changes of a submission 
-import { useQuery, useMutation } from "react-query"
+import { useQuery, useMutation } from "@tanstack/react-query"
 import config from "../../../config"
 import axios from "axios"
 
@@ -19,6 +19,9 @@ export async function getSubmissionDurations_API({ state_01, state_02, aggregate
 }
 
 export const useGetSubmissionDuration = (APIParams = {state_01, state_02, aggregate }, useQueryOptions = { staleTime: 50000 }) => {
-    return useQuery(["getSubmissionDurations", APIParams.state_01, APIParams.state_02, APIParams.aggregate],
-        () => getSubmissionDurations_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getSubmissionDurations", APIParams.state_01, APIParams.state_02, APIParams.aggregate],
+        queryFn: () => getSubmissionDurations_API({ ...APIParams }),
+        ...useQueryOptions
+    })
 }   

@@ -2,7 +2,7 @@
 
 
 
-import { useQuery } from "react-query"
+import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 /**
  * @description Returns the correlation result of a feature to any other feature
@@ -20,9 +20,13 @@ async function getFeatureDataForSubmission_API({tag, submission_tag}) {
 
 export const useGetFeatureDataForSubmission = (APIParams = { tag, submission_tag }, queryOptions = {placeHolderData: (prev) => prev, staleTime: 30000}) => {
 
-    return useQuery(["feature_data",
-        APIParams.tag,
-        APIParams.submission_tag], () => getFeatureDataForSubmission_API({ ...APIParams }), queryOptions)
+    return useQuery({
+        queryKey: ["feature_data",
+            APIParams.tag,
+            APIParams.submission_tag],
+        queryFn: () => getFeatureDataForSubmission_API({ ...APIParams }),
+        ...queryOptions
+    });
 }
 
 

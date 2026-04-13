@@ -1,4 +1,4 @@
-import { useQuery } from "react-query"
+import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 
 /**
@@ -13,6 +13,10 @@ async function getPublicUsersByQuery_API({ search_string, limit }) {
 }
 
 export const useGetUserByQuery = (APIParams = {search_string, limit}, useQueryOptions = {staleTime: 500000, placeholderData: (prev) => prev ? prev : []}) => {
-    return useQuery(["getUserQuery",APIParams.search_string, APIParams.limit],() =>   getPublicUsersByQuery_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["getUserQuery", APIParams.search_string, APIParams.limit],
+        queryFn: () => getPublicUsersByQuery_API({...APIParams}),
+        ...useQueryOptions
+    })
 }
 

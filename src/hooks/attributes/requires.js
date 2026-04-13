@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import config from "../../../config"
 
@@ -15,6 +15,9 @@ async function getRequiredTraitsForAttribute_API({ tag }) {
 }
 
 export const useGetRequiredTraits = (APIParams = { tag }, useQueryOptions = { staleTime: 300000 }) => {
-    return useQuery(["getRequiredTraits", APIParams.tag],
-        () => getRequiredTraitsForAttribute_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getRequiredTraits", APIParams.tag],
+        queryFn: () => getRequiredTraitsForAttribute_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }

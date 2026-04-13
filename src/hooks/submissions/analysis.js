@@ -1,5 +1,5 @@
 // States and states changes of a submission 
-import { useQuery } from "react-query"
+import { useQuery } from "@tanstack/react-query"
 import config from "../../../config"
 import axios from "axios"
 
@@ -18,8 +18,11 @@ export async function getSubmissionPCA_API({ tag, annotation_tag }) {
 }
 
 export const useGetSubmissionPCA = (APIParams = {tag, annotation_tag}, useQueryOptions = { staleTime: 500}) => {
-    return useQuery(["getSubmissionPCA", APIParams.tag, APIParams.annotation_tag],
-        () => getSubmissionPCA_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getSubmissionPCA", APIParams.tag, APIParams.annotation_tag],
+        queryFn: () => getSubmissionPCA_API({ ...APIParams }),
+        ...useQueryOptions
+    })
 }
 
 
@@ -42,8 +45,11 @@ export async function getSubmissionVolcano_API({ tag, ca_tag_left, ca_tag_right,
 }
 
 export const useGetSubmissionVolcano = (APIParams = {tag, ca_tag_left, ca_tag_right, annotation_tag, impute : false, equal_variance : false}, useQueryOptions = { staleTime: 500}) => {
-    return useQuery(["getSubmissionVolcano", APIParams.tag, APIParams.ca_tag_left, APIParams.ca_tag_right, APIParams.annotation_tag, APIParams.impute, APIParams.equal_variance],
-        () => getSubmissionVolcano_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getSubmissionVolcano", APIParams.tag, APIParams.ca_tag_left, APIParams.ca_tag_right, APIParams.annotation_tag, APIParams.impute, APIParams.equal_variance],
+        queryFn: () => getSubmissionVolcano_API({ ...APIParams }),
+        ...useQueryOptions
+    })
 }
 
 
@@ -59,8 +65,11 @@ export async function getSubmissionAnnotationNetwork_API({ tag, annotation_group
 
 
 export const useGetSubmissionAnnotationNetwork = (APIParams = {tag, annotation_group_tag}, useQueryOptions = { staleTime: 500}) => {
-    return useQuery(["getSubmissionAnnotationNetwork", APIParams.tag, APIParams.annotation_group_tag],
-        () => getSubmissionAnnotationNetwork_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getSubmissionAnnotationNetwork", APIParams.tag, APIParams.annotation_group_tag],
+        queryFn: () => getSubmissionAnnotationNetwork_API({ ...APIParams }),
+        ...useQueryOptions
+    })
 }
 
 
@@ -74,7 +83,6 @@ export const useGetSubmissionAnnotationNetwork = (APIParams = {tag, annotation_g
  * @returns {Object} The heatmap data for the submission
  */
 export async function getSubmissionHeatmap_API({ tag, annotation_tag }) {
-    console.log("CALLED???")
     const res = await axios.get(`${config.baseURL}/submissions/analysis/${tag}/heatmap`, {
         params: { annotation_tag }
     })
@@ -83,8 +91,11 @@ export async function getSubmissionHeatmap_API({ tag, annotation_tag }) {
 
 
 export const useGetSubmissionHeatmap = (APIParams = {tag, annotation_tag}, useQueryOptions = { staleTime: 50000}) => {
-    return useQuery(["getSubmissionHeatmap", APIParams.tag, APIParams.annotation_tag],
-        () => getSubmissionHeatmap_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getSubmissionHeatmap", APIParams.tag, APIParams.annotation_tag],
+        queryFn: () => getSubmissionHeatmap_API({ ...APIParams }),
+        ...useQueryOptions
+    })
 }
 
 

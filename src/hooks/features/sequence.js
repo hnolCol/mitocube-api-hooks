@@ -1,4 +1,4 @@
-import { useQuery } from "react-query"
+import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import config from "../../../config"
 
@@ -23,8 +23,11 @@ export async function getSequenceByFeatureTag_API({ tag }) {
 }
 
 export function useGetSequenceByFeatureKey(APIParams = {}, useQueryOptions = { staleTime: Infinity}) {
-    return useQuery(["getFeatureSequence",
-        APIParams.tag], () => getSequenceByFeatureTag_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["getFeatureSequence", APIParams.tag],
+        queryFn: () => getSequenceByFeatureTag_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }
 
 
@@ -42,5 +45,9 @@ export async function getProteinSequenceCoverage_API({ tag }) {
 }
 
 export function useGetProteinSequenceCoverage(APIParams = { tag }, useQueryOptions = { staleTime: Infinity}) {
-    return useQuery(["getFeatureSequenceCoverage",
-        APIParams.tag], () => getProteinSequenceCoverage_API(({...APIParams}), useQueryOptions))}
+    return useQuery({
+        queryKey: ["getFeatureSequenceCoverage", APIParams.tag],
+        queryFn: () => getProteinSequenceCoverage_API({ ...APIParams }),
+        ...useQueryOptions
+    });
+}

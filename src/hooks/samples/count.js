@@ -1,4 +1,4 @@
-import { useQuery } from "react-query"
+import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import config from "../../../config";
 /**
@@ -30,15 +30,21 @@ export const useGetSampleCount = (APIParams = {
     trait_tag: undefined,
     genotype_tag: undefined,
 }, useQueryOptions = { staleTime: 3000000 }) => {
-    return useQuery(["getSampleCount",
-        APIParams.protein_group_tag,
-        APIParams.submission_tag,
-        APIParams.trait_tag,
-        APIParams.has_protein_quantification,
-        APIParams.has_peptide_quantification,
-        APIParams.genotype_tag], () => getSampleCount_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getSampleCount",
+            APIParams.protein_group_tag,
+            APIParams.submission_tag,
+            APIParams.trait_tag,
+            APIParams.has_protein_quantification,
+            APIParams.has_peptide_quantification,
+            APIParams.genotype_tag], 
+        queryFn : () => getSampleCount_API({ ...APIParams }), ...useQueryOptions
+    })
 }
 export const useGetSubmissionConditionApplication = (APIParams = {tag, group_by_attribute}, useQueryOptions = { staleTime: 500}) => {
-    return useQuery(["getSubmissionConditionApplication", APIParams.tag, APIParams.group_by_attribute],
-        () => getSubmissionCA_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getSubmissionConditionApplication", APIParams.tag, APIParams.group_by_attribute],
+        queryFn: () => getSubmissionCA_API({ ...APIParams }),
+        ...useQueryOptions
+    })
 }

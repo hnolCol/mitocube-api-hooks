@@ -1,4 +1,4 @@
-import { useQuery } from "react-query"
+import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import config from "../../../config";
 /**
@@ -13,5 +13,9 @@ async function getProteomePermissions_API({}) {
 }
 
 export const useGetProteomePermissions = (APIParams = {}, useQueryOptions = {}) => {
-    return useQuery(["getProteomePermissions"],() =>  getProteomePermissions_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["getProteomePermissions"],
+        queryFn: () => getProteomePermissions_API({...APIParams}),
+        ...useQueryOptions
+    })
 }

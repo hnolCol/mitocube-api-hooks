@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from "react-query"
+import { useQuery, useMutation } from "@tanstack/react-query"
 import config from "../../../config"
 import axios from "axios"
 /**
@@ -12,8 +12,11 @@ async function getSubmissionRanking_API({tag}) {
     return res.data 
 }
 export const useGetSubmissionRanking = (APIParams = {tag}, useQueryOptions = {staleTime : 300000, placeholderData: (prev) => prev}) => {
-    return useQuery(["submission_ranking", APIParams.tag],
-        () => getSubmissionRanking_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["submission_ranking", APIParams.tag],
+        queryFn: () => getSubmissionRanking_API({ ...APIParams }),
+        ...useQueryOptions
+    })
 }
 
 
@@ -30,8 +33,11 @@ async function getSubmissionExclusivelyQuantifiedProteinGroups_API({tag, attribu
     return res.data 
 }
 export const useGetSubmissionExclusivelyQuantifiedProteinGroups = (APIParams = {tag, attribute_tags, limit}, useQueryOptions = {staleTime : 300000, placeholderData: (prev) => prev}) => {
-    return useQuery(["submission_exclusively_quantified_protein_groups", APIParams.tag, APIParams.attribute_tags, APIParams.limit],
-        () => getSubmissionExclusivelyQuantifiedProteinGroups_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["submission_exclusively_quantified_protein_groups", APIParams.tag, APIParams.attribute_tags, APIParams.limit],
+        queryFn: () => getSubmissionExclusivelyQuantifiedProteinGroups_API({ ...APIParams }),
+        ...useQueryOptions
+    })
 }
 
 
@@ -47,6 +53,6 @@ async function patchSubmissionRanking_API({ tag }) {
 }
 
 export const useUpdateSubmissionStats = (useMutationOptions = {}) => {
-    return useMutation((APIParams) =>  patchSubmissionRanking_API({...APIParams}), useMutationOptions)
+    return useMutation({mutationFn: (APIParams) =>  patchSubmissionRanking_API({...APIParams}), ...useMutationOptions})
 }
 

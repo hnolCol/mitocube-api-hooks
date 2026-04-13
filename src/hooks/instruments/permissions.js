@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import config from "../../../config";
 /**
@@ -11,6 +11,10 @@ async function getInstrumentPermissions_API({}) {
     return res.data 
 }
 export const useGetInstrumentPermissions = (APIParams = {}, useQueryOptions = {staleTime : 30000}) => {
-    return useQuery(["permissionsForInstruments"], () => getInstrumentPermissions_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["permissionsForInstruments"],
+        queryFn: () => getInstrumentPermissions_API({...APIParams}),
+        ...useQueryOptions
+    });
 }
 

@@ -1,5 +1,5 @@
 
-import { useQuery } from "react-query"
+import { useQuery } from "@tanstack/react-query"
 import _ from "lodash"
 import axios from "axios"
 import config from "../../../config";
@@ -17,5 +17,9 @@ async function getGenotypeText_API({ genotype_tag }) {
 }
 
 export const useGetGenotypeText = (APIParams = { genotype_tag }, useQueryOptions = {}) => {
-    return useQuery(["getGenotypeText", APIParams.genotype_tag],() => getGenotypeText_API({ ...APIParams }),useQueryOptions)
+    return useQuery({
+        queryKey: ["getGenotypeText", APIParams.genotype_tag],
+        queryFn: () => getGenotypeText_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }

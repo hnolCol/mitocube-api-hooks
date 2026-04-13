@@ -1,5 +1,5 @@
 import axios from "axios"
-import { useQuery, useMutation } from "react-query"
+import { useQuery } from "@tanstack/react-query"
 import config from "../../../config";
 
 
@@ -14,7 +14,11 @@ async function getSpecificSubmissionPermissions_API({ tag }) {
     return res.data 
 }
 export const useGetSubmissionPermissionsByTag = (APIParams = {tag}, useQueryOptions = {staleTime : 30000}) => {
-    return useQuery(["permissionsForSubmissions", APIParams.tag], () => getSpecificSubmissionPermissions_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["permissionsForSubmissions", APIParams.tag],
+        queryFn: () => getSpecificSubmissionPermissions_API({...APIParams}),
+        ...useQueryOptions
+    })
 }
 
 
@@ -30,6 +34,10 @@ async function getSubmissionPermissions_API({}) {
     return res.data 
 }
 export const useGetSubmissionPermissions = (APIParams = {}, useQueryOptions = {staleTime : 30000}) => {
-    return useQuery(["permissionsForSubmissions"], () => getSubmissionPermissions_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["permissionsForSubmissions"],
+        queryFn: () => getSubmissionPermissions_API({...APIParams}),
+        ...useQueryOptions
+    })
 }
 

@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from "react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import config from "../../../config";
 
@@ -12,7 +12,11 @@ async function getSparePartByQuery_API({search_string, limit}) {
 }
 
 export const useGetSparePartByQuery = (APIParams = {search_string : "", limit : 10 }, useQueryOptions = {}) => {
-    return useQuery(["getSparePartBySearchString", APIParams.search_string, APIParams.limit],() =>  getSparePartByQuery_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["getSparePartBySearchString", APIParams.search_string, APIParams.limit],
+        queryFn: () => getSparePartByQuery_API({...APIParams}),
+        ...useQueryOptions
+    });
 }
 
 
@@ -26,7 +30,11 @@ async function getSparePartByTag_API({tag}) {
 }
 
 export const useGetSparePartByTag = (APIParams = { tag: "" }, useQueryOptions = {}) => {
-    return useQuery(["getSparePartByTag", APIParams.tag],() =>  getSparePartByTag_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["getSparePartByTag", APIParams.tag],
+        queryFn: () => getSparePartByTag_API({...APIParams}),
+        ...useQueryOptions
+    });
 }
 
 /**
@@ -39,7 +47,11 @@ async function getSparePartText_API({ tag }) {
 }
 
 export const useGetSparePartText = (APIParams = { tag }, useQueryOptions = { stateTime: 200000 }) => {
-    return useQuery(["getSparePartText", APIParams.tag], () => getSparePartText_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getSparePartText", APIParams.tag],
+        queryFn: () => getSparePartText_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }
 
 /**
@@ -52,7 +64,11 @@ async function getSparePartDescription_API({ tag }) {
 }
 
 export const useGetSparePartDescription = (APIParams = { tag }, useQueryOptions = { stateTime: 200000 }) => {
-    return useQuery(["getSparePartDescription", APIParams.tag], () => getSparePartDescription_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getSparePartDescription", APIParams.tag],
+        queryFn: () => getSparePartDescription_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }
 
 /**
@@ -65,7 +81,11 @@ async function getSparePartCompany_API({ tag }) {
 }
 
 export const useGetSparePartCompany = (APIParams = { tag }, useQueryOptions = { stateTime: 200000 }) => {
-    return useQuery(["getSparePartCompany", APIParams.tag], () => getSparePartCompany_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getSparePartCompany", APIParams.tag],
+        queryFn: () => getSparePartCompany_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }
 
 /**
@@ -78,7 +98,11 @@ async function getSparePartProductID_API({ tag }) {
 }
 
 export const useGetSparePartProductID = (APIParams = { tag }, useQueryOptions = { stateTime: 200000 }) => {
-    return useQuery(["getSparePartProductID", APIParams.tag], () => getSparePartProductID_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getSparePartProductID", APIParams.tag],
+        queryFn: () => getSparePartProductID_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }
 
 /**
@@ -91,7 +115,11 @@ async function getSparePartPrice_API({ tag }) {
 }
 
 export const useGetSparePartPrice = (APIParams = { tag }, useQueryOptions = { stateTime: 200000 }) => {
-    return useQuery(["getSparePartPrice", APIParams.tag], () => getSparePartPrice_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getSparePartPrice", APIParams.tag],
+        queryFn: () => getSparePartPrice_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }
 
 /**
@@ -104,7 +132,11 @@ async function getSparePartLink_API({ tag }) {
 }
 
 export const useGetSparePartLink = (APIParams = { tag }, useQueryOptions = { stateTime: 200000 }) => {
-    return useQuery(["getSparePartLink", APIParams.tag], () => getSparePartLink_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getSparePartLink", APIParams.tag],
+        queryFn: () => getSparePartLink_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }
 
 /**
@@ -117,7 +149,10 @@ async function postSparePart_API({ text, description, company, product_id, price
 }
 
 export const usePostSparePart = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => postSparePart_API({ ...APIParams}), useMutationOptions)
+    return useMutation({
+        mutationFn: (APIParams) => postSparePart_API({ ...APIParams }),
+        ...useMutationOptions
+    });
 }
 
 
@@ -131,7 +166,10 @@ async function updateSparePart_API({ tag, text, description, company, product_id
 }
 
 export const useUpdateSparePart = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => updateSparePart_API({ ...APIParams}), useMutationOptions)
+    return useMutation({
+        mutationFn: (APIParams) => updateSparePart_API({ ...APIParams }),
+        ...useMutationOptions
+    });
 }
 
 
@@ -145,7 +183,10 @@ async function deleteSparePart_API({ tag }) {
 }
 
 export const useDeleteSparePart = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => deleteSparePart_API({ ...APIParams}), useMutationOptions)
+    return useMutation({
+        mutationFn: (APIParams) => deleteSparePart_API({ ...APIParams }),
+        ...useMutationOptions
+    });
 }
 
 

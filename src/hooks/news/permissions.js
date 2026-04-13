@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from "react-query"
+import { useQuery, useMutation } from "@tanstack/react-query"
 import axios from "axios"
 import config from "../../../config";
 
@@ -14,5 +14,9 @@ async function getNewsPermission_API({}) {
 }
 
 export const useGetNewsPermissions = (APIParams = {}, useQueryOptions = {}) => {
-    return useQuery(["getNewsPermissions"], () => getNewsPermission_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["getNewsPermissions"],
+        queryFn: () => getNewsPermission_API({...APIParams}),
+        ...useQueryOptions
+    })
 }

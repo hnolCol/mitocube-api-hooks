@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from "react-query"
+import { useQuery, useMutation } from "@tanstack/react-query"
 import axios from "axios"
 import config from "../../../config"
 import { stubString } from "lodash"
@@ -14,7 +14,11 @@ async function getAnnotationsByTag_API({ tag }) {
 }
 
 export const useGetAnnotationsByTag = (APIParams = { tag: "" }, useQueryOptions = { stateTime: 200000 }) => {
-    return useQuery(["getAnnotationsByTag", APIParams.tag], () => getAnnotationsByTag_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getAnnotationsByTag", APIParams.tag],
+        queryFn: () => getAnnotationsByTag_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }
 
 
@@ -29,11 +33,15 @@ async function getAnnotationsBySearchString_API({ search_string, group_tags, pro
 }
 
 export const useGetAnnotationsBySearchString = (APIParams = { search_string, limit: 10, group_by_group, group_tags, protein_tags}, useQueryOptions = {stateTime: 200000}) => {
-    return useQuery(["getAnnotationsBySearchString",
-        APIParams.search_string,
-        APIParams.group_by_group,
-        APIParams.limit,
-        APIParams.protein_tags], () => getAnnotationsBySearchString_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getAnnotationsBySearchString",
+            APIParams.search_string,
+            APIParams.group_by_group,
+            APIParams.limit,
+            APIParams.protein_tags],
+        queryFn: () => getAnnotationsBySearchString_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 } 
 
 /**
@@ -47,7 +55,11 @@ async function getAnnotationsByProteinTag_API ({ protein_tag }) {
 }
 
 export const useGetAnnotationsByProteinTag = (APIParams = { protein_tag: "" }, useQueryOptions = { stateTime: 200000 }) => {
-    return useQuery (["getAnnotationsByProteinTag", APIParams.protein_tag], () => getAnnotationsByProteinTag_API ({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getAnnotationsByProteinTag", APIParams.protein_tag],
+        queryFn: () => getAnnotationsByProteinTag_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }
 
 /**
@@ -63,7 +75,11 @@ async function getAnnotationsByGroupTag_API ({ tag, limit = 20 }) {
 }
 
 export const useGetAnnotationsByGroupTag = (APIParams = { tag: "", limit: 20 }, useQueryOptions = { stateTime: 200000 }) => {
-    return useQuery (["getAnnotationsByGroupTag", APIParams.tag, APIParams.limit], () => getAnnotationsByGroupTag_API ({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getAnnotationsByGroupTag", APIParams.tag, APIParams.limit],
+        queryFn: () => getAnnotationsByGroupTag_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }
 
 /**
@@ -77,7 +93,10 @@ async function postAnnotations_API({ text, description, publication, pubmed_id, 
 }
 
 export const usePostAnnotations = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => postAnnotations_API ({ ...APIParams}), useMutationOptions)
+    return useMutation({
+        mutationFn: (APIParams) => postAnnotations_API ({ ...APIParams}),
+        ...useMutationOptions
+    });
 }
 
 /**
@@ -91,7 +110,10 @@ async function updateAnnotations_API({ tag, text, description, publication, pubm
 }
 
 export const useUpdateAnnotations = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => updateAnnotations_API ({ ...APIParams}), useMutationOptions)
+    return useMutation({
+        mutationFn: (APIParams) => updateAnnotations_API ({ ...APIParams}),
+        ...useMutationOptions
+    });
 }
 
 /**
@@ -106,7 +128,10 @@ async function deleteAnnotations_API({ tag }) {
 }
 
 export const useDeleteAnnotations = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => deleteAnnotations_API({...APIParams}), useMutationOptions)
+    return useMutation({
+        mutationFn: (APIParams) => deleteAnnotations_API({...APIParams}),
+        ...useMutationOptions
+    });
 }
 
 /**
@@ -120,8 +145,12 @@ async function getAnnotationProteinCount_API({ tag }) {
 }       
 
 export const useGetAnnotationProteinCount = (APIParams = { tag: "" }, useQueryOptions = { stateTime: 200000 }) => {
-    return useQuery(["getAnnotationProteinCount", APIParams.tag], () => getAnnotationProteinCount_API({ ...APIParams }), useQueryOptions)
-}   
+    return useQuery({
+        queryKey: ["getAnnotationProteinCount", APIParams.tag],
+        queryFn: () => getAnnotationProteinCount_API({ ...APIParams }),
+        ...useQueryOptions
+    });
+}
 
 
 /**
@@ -135,7 +164,11 @@ async function getAnnotationGroupByTag_API({ tag }) {
 }
 
 export const useGetAnnotationGroupByTag = (APIParams = { tag: "" }, useQueryOptions = { stateTime: 200000 }) => {
-    return useQuery(["getAnnotationGroupByTag", APIParams.tag], () => getAnnotationGroupByTag_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getAnnotationGroupByTag", APIParams.tag],
+        queryFn: () => getAnnotationGroupByTag_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }
 
 /**
@@ -149,8 +182,12 @@ async function getAnnotationGroupByQuery_API({ search_string, limit }) {
 }
 
 export const useGetAnnotationGroupByQuery = (APIParams = { search_string: "", limit: 10}, useQueryOptions = {stateTime: 200000}) => {
-    return useQuery(["getAnnotationGroupByQuery", APIParams.search_string], () => getAnnotationGroupByQuery_API({ ...APIParams }), useQueryOptions)
-}   
+    return useQuery({
+        queryKey: ["getAnnotationGroupByQuery", APIParams.search_string],
+        queryFn: () => getAnnotationGroupByQuery_API({ ...APIParams }),
+        ...useQueryOptions
+    });
+}
 
 /**
  * @description Creates a new annotation group.
@@ -163,7 +200,10 @@ async function postAnnotationGroup_API({ text, description, source, url }) {
 }
 
 export const usePostAnnotationGroup = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => postAnnotationGroup_API ({ ...APIParams}), useMutationOptions)
+    return useMutation({
+        mutationFn: (APIParams) => postAnnotationGroup_API ({ ...APIParams}),
+        ...useMutationOptions
+    });
 }   
     
 
@@ -179,8 +219,12 @@ async function getAnnotationGroupCount_API({ tag }) {
 }       
 
 export const useGetAnnotationGroupCount = (APIParams = { tag: "" }, useQueryOptions = { stateTime: 200000 }) => {
-    return useQuery(["getAnnotationGroupCount", APIParams.tag], () => getAnnotationGroupCount_API({ ...APIParams }), useQueryOptions)
-}   
+    return useQuery({
+        queryKey: ["getAnnotationGroupCount", APIParams.tag],
+        queryFn: () => getAnnotationGroupCount_API({ ...APIParams }),
+        ...useQueryOptions
+    });
+}
 
 /**
  * @description Update annotation group.
@@ -193,7 +237,10 @@ async function updateAnnotationGroup_API({ tag }) {
 }
 
 export const useUpdateAnnotationGroup = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => updateAnnotationGroup_API ({ ...APIParams}), useMutationOptions)
+    return useMutation({
+        mutationFn: (APIParams) => updateAnnotationGroup_API ({ ...APIParams}),
+        ...useMutationOptions
+    });
 }
 
 
@@ -211,7 +258,11 @@ async function getIsProteinInAnnotation_API({ tag, protein_tag }) {
 }       
 
 export const useGetIsProteinInAnnotation = (APIParams = { tag, protein_tag }, useQueryOptions = { stateTime: 200000 }) => {
-    return useQuery(["getIsProteinInAnnotation", APIParams.tag, APIParams.protein_tag], () => getIsProteinInAnnotation_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getIsProteinInAnnotation", APIParams.tag, APIParams.protein_tag],
+        queryFn: () => getIsProteinInAnnotation_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }   
 
 

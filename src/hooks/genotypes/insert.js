@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from "react-query"
+import { useQuery, useMutation } from "@tanstack/react-query"
 import axios from "axios"
 import config from "../../../config";
 
@@ -19,5 +19,8 @@ async function postGenotype_API({ text, description, publication, components }) 
 }
 
 export const usePostGenotype = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => postGenotype_API({...APIParams}), useMutationOptions)
+    return useMutation({
+        mutationFn: (APIParams) => postGenotype_API({...APIParams}),
+        ...useMutationOptions
+    });
 }

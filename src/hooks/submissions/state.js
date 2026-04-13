@@ -1,5 +1,5 @@
 // States and states changes of a submission 
-import { useQuery, useMutation } from "react-query"
+import { useQuery, useMutation } from "@tanstack/react-query"
 import config from "../../../config"
 import axios from "axios"
 
@@ -15,8 +15,11 @@ export async function getSubmissionState_API({ tag }) {
 }
         
 export const useGetSubmissionState = (APIParams = {tag}, useQueryOptions = { staleTime: 500}) => {
-    return useQuery(["getSubmissionState", APIParams.tag],
-        () => getSubmissionState_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getSubmissionState", APIParams.tag],
+        queryFn: () => getSubmissionState_API({ ...APIParams }),
+        ...useQueryOptions
+    })
 }
 
 
@@ -34,7 +37,7 @@ async function patchSubmissionState_API({ tag, state }) {
 }
 
 export const usePatchSubmissionState = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => patchSubmissionState_API({...APIParams}), useMutationOptions)
+    return useMutation({mutationFn: (APIParams) => patchSubmissionState_API({...APIParams}), ...useMutationOptions})
 }
 
 
@@ -50,8 +53,11 @@ export async function getSubmissionStateCount_API({ state }) {
 }
         
 export const useGetSubmissionStateCount = (APIParams = {state}, useQueryOptions = { staleTime: 2000}) => {
-    return useQuery(["getSubmissionStateNumber", APIParams.state],
-        () => getSubmissionState_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getSubmissionStateNumber", APIParams.state],
+        queryFn: () => getSubmissionStateCount_API({ ...APIParams }),
+        ...useQueryOptions
+    })
 }
 
 
@@ -65,5 +71,9 @@ async function getSubmissionStates_API() {
 }
 
 export const useGetStates = (APIParams = {}, useQueryOptions = {staleTime : Infinity}) => {
-    return useQuery(["submissionStates"], () => getSubmissionStates_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["submissionStates"],
+        queryFn: () => getSubmissionStates_API({...APIParams}),
+        ...useQueryOptions
+    })
 }

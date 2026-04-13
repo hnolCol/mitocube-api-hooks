@@ -1,5 +1,5 @@
 // States and states changes of a submission 
-import { useQuery } from "react-query"
+import { useQuery } from "@tanstack/react-query"
 import config from "../../../config"
 import axios from "axios"
 
@@ -13,7 +13,11 @@ export async function getCypherQuery_API({ prompt, session_id }) {
 }
 
 export const useGetCypherQuery = (APIParams = { prompt, session_id }, useQueryOptions = { staleTime: 5000 }) => {
-    return useQuery(["getCypherQuery", APIParams.prompt, APIParams.session_id], () => getCypherQuery_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getCypherQuery", APIParams.prompt, APIParams.session_id],
+        queryFn: () => getCypherQuery_API({ ...APIParams }),
+        ...useQueryOptions
+    })
 }
 
 
@@ -34,5 +38,9 @@ export async function getPubmedPublicationSummary_API({ tag, limit = 5, sort_by 
 }
 
 export const useGetPublicationSummaryForProtein = (APIParams = { tag, limit, sort_by }, useQueryOptions = { staleTime: 5000 }) => {
-    return useQuery(["getPublicationSummaryForProtein", APIParams.tag, APIParams.limit, APIParams.sort_by], () => getPubmedPublicationSummary_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getPublicationSummaryForProtein", APIParams.tag, APIParams.limit, APIParams.sort_by],
+        queryFn: () => getPubmedPublicationSummary_API({ ...APIParams }),
+        ...useQueryOptions
+    })
 }

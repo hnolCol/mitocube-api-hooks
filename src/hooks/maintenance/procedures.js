@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from "react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import config from "../../../config";
 
@@ -12,7 +12,11 @@ async function getMaintenanceProcedureByQuery_API({search_string, limit}) {
 }
 
 export const useGetMaintenanceProcedureByQuery = (APIParams = {search_string : "", limit : 10}, useQueryOptions = {stateTime : 200000, placeholderData: (prev) => prev}) => {
-    return useQuery(["getProcedureBySearchString", APIParams.search_string],() =>  getMaintenanceProcedureByQuery_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["getProcedureBySearchString", APIParams.search_string],
+        queryFn: () => getMaintenanceProcedureByQuery_API({...APIParams}),
+        ...useQueryOptions
+    });
 }
 
 
@@ -26,7 +30,11 @@ async function getSProcedureByTag_API({procedure_tag}) {
 }
 
 export const useGetMaintenanceProcedureByTag = (APIParams = { procedure_tag }, useQueryOptions = {stateTime : 200000}) => {
-    return useQuery(["getProcedureByTag", APIParams.procedure_tag],() =>  getSProcedureByTag_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["getProcedureByTag", APIParams.procedure_tag],
+        queryFn: () => getSProcedureByTag_API({...APIParams}),
+        ...useQueryOptions
+    });
 }
 
 /**
@@ -39,7 +47,11 @@ async function checkMaintenanceProcedureExists_API({ procedure_tag }) {
 }
 
 export const useCheckMaintenanceProcedureExists = (APIParams = { procedure_tag }, useQueryOptions = {stateTime : 200000}) => {
-    return useQuery(["checkMaintenanceProcedureExists", APIParams.procedure_tag],() =>  checkMaintenanceProcedureExists_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["checkMaintenanceProcedureExists", APIParams.procedure_tag],
+        queryFn: () => checkMaintenanceProcedureExists_API({...APIParams}),
+        ...useQueryOptions
+    });
 }
 
 /** 
@@ -52,7 +64,11 @@ async function getMaintenanceProcedures_API() {
     return res.data;
 }
 export const useGetMaintenanceProcedures = (useQueryOptions = { staleTime: 30000 }) => {
-    return useQuery(["getMaintenanceProcedures"], () => getMaintenanceProcedures_API(), useQueryOptions);
+    return useQuery({
+        queryKey: ["getMaintenanceProcedures"],
+        queryFn: () => getMaintenanceProcedures_API(),
+        ...useQueryOptions
+    });
 }
 
 
@@ -66,7 +82,11 @@ async function getMaintenanceProcedureText_API({ procedure_tag }) {
     return res.data;
 }
 export const useGetMaintenanceProcedureText = (APIParams={procedure_tag},useQueryOptions = { staleTime: 30000 }) => {
-    return useQuery(["getMaintenanceProcedureText",APIParams.procedure_tag], () => getMaintenanceProcedureText_API({...APIParams}), useQueryOptions);        
+    return useQuery({
+        queryKey: ["getMaintenanceProcedureText", APIParams.procedure_tag],
+        queryFn: () => getMaintenanceProcedureText_API({...APIParams}),
+        ...useQueryOptions
+    });
 }
 
 /**
@@ -78,7 +98,11 @@ async function getMaintenanceProcedureDescription_API({ procedure_tag }) {
     return res.data;
 }
 export const useGetMaintenanceProcedureDescription = (APIParams= {procedure_tag}, useQueryOptions = { staleTime: 30000 }) => {
-    return useQuery(["getMaintenanceProcedureDescription", APIParams.procedure_tag], () => getMaintenanceProcedureDescription_API({...APIParams}), useQueryOptions);        
+    return useQuery({
+        queryKey: ["getMaintenanceProcedureDescription", APIParams.procedure_tag],
+        queryFn: () => getMaintenanceProcedureDescription_API({...APIParams}),
+        ...useQueryOptions
+    });        
 }
 
 /**
@@ -90,7 +114,11 @@ async function getMaintenanceProcedurePriority_API({ procedure_tag }) {
     return res.data;
 }
 export const useGetMaintenanceProcedurePriority = (APIParams= {procedure_tag},useQueryOptions = { staleTime: 30000 }) => {
-    return useQuery(["getMaintenanceProcedurePriority", APIParams.procedure_tag], () => getMaintenanceProcedurePriority_API({...APIParams}), useQueryOptions);        
+    return useQuery({
+        queryKey: ["getMaintenanceProcedurePriority", APIParams.procedure_tag],
+        queryFn: () => getMaintenanceProcedurePriority_API({...APIParams}),
+        ...useQueryOptions
+    });        
 }
 
 /**
@@ -103,7 +131,10 @@ async function postMaintenanceProcedure_API({  text, description, priority }) {
 }
 
 export const usePostMaintenanceProcedure = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => postMaintenanceProcedure_API({ ...APIParams }), useMutationOptions)
+    return useMutation({
+        mutationFn: (APIParams) => postMaintenanceProcedure_API({ ...APIParams }),
+        ...useMutationOptions
+    });
 }
 
 /**
@@ -116,7 +147,10 @@ async function editMaintenanceProcedure_API({ tag, text, description, priority }
 }
 
 export const useEditMaintenanceProcedure = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => editMaintenanceProcedure_API({ ...APIParams }), useMutationOptions)
+    return useMutation({
+        mutationFn: (APIParams) => editMaintenanceProcedure_API({ ...APIParams }),
+        ...useMutationOptions
+    });
 }
 
 /**
@@ -129,7 +163,10 @@ async function deleteMaintenanceProcedure_API({ procedure_tag }) {
 }
 
 export const useDeleteMaintenanceProcedure = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => deleteMaintenanceProcedure_API({ ...APIParams }), useMutationOptions)
+    return useMutation({
+        mutationFn: (APIParams) => deleteMaintenanceProcedure_API({ ...APIParams }),
+        ...useMutationOptions
+    });
 }
 
 

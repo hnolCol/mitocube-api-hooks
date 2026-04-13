@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import config from "../../../config"
 
@@ -14,9 +14,13 @@ async function getConditionApplicationByTag_API({ tag }) {
     return res.data
 }
 
-export const useGetConditionApplication = (APIParams = { tag }, useQueryOptions = {staleTime : 300000}) => {
-    return useQuery(["getConditionApplication",APIParams.tag],
-        () => getConditionApplicationByTag_API({ ...APIParams }), useQueryOptions)
+export const useGetConditionApplication = (APIParams = { tag }, useQueryOptions = {}) => {
+    return useQuery({
+        queryKey: ["getConditionApplication", APIParams.tag],
+        queryFn: () => getConditionApplicationByTag_API({ ...APIParams }),
+        staleTime: 300000,
+        ...useQueryOptions
+    })
 }
 
 
@@ -31,12 +35,14 @@ async function getConditionApplicationTextByTag_API({ tag }) {
     return res.data
 }
 
-export const useGetConditionApplicationText = (APIParams = { tag }, useQueryOptions = {staleTime : 300000}) => {
-    return useQuery(["getConditionApplicationText",APIParams.tag],
-        () => getConditionApplicationTextByTag_API({ ...APIParams }), useQueryOptions)
+export const useGetConditionApplicationText = (APIParams = { tag }, useQueryOptions = {}) => {
+    return useQuery({
+        queryKey: ["getConditionApplicationText", APIParams.tag],
+        queryFn: () => getConditionApplicationTextByTag_API({ ...APIParams }),
+        staleTime: 300000,
+        ...useQueryOptions
+    })
 }
-
-
 
 
 /**
@@ -63,19 +69,23 @@ async function getConditionApplicationByQuery_API({ search_string, samples_only,
     return res.data
 }
 
-export const useGetConditionApplicationByQuery = (APIParams = {search_string : undefined, samples_only : true, submission_tag, attribute_tag,  trait_tag, sort_by_frequency : true, limit}, useQueryOptions = {staleTime : 300000, placeholderData: (prev) => prev }) => {
-    return useQuery(["getConditionApplicationByQuery",APIParams.search_string,APIParams.submission_tag, APIParams.attribute_tag, APIParams.samples_only, APIParams.trait_tag, APIParams.sort_by_frequency, APIParams.limit],
-        () => getConditionApplicationByQuery_API({ ...APIParams }), useQueryOptions)
+export const useGetConditionApplicationByQuery = (APIParams = {search_string: undefined, samples_only: true, submission_tag, attribute_tag, trait_tag, sort_by_frequency: true, limit}, useQueryOptions = {}) => {
+    return useQuery({
+        queryKey: ["getConditionApplicationByQuery", APIParams.search_string, APIParams.submission_tag, APIParams.attribute_tag, APIParams.samples_only, APIParams.trait_tag, APIParams.sort_by_frequency, APIParams.limit],
+        queryFn: () => getConditionApplicationByQuery_API({ ...APIParams }),
+        staleTime: 300000,
+        placeholderData: (prev) => prev,
+        ...useQueryOptions
+    })
 }
 
 
 export const useGetCATreeForUI = (params, options = {}) => {
-    return useQuery(
-      ["ca-tree-for-ui", params.tag],
-      () => axios
-        .get(`${config.baseURL}/condition_applications/${params.tag}/tree_for_ui`)
-        .then((res) => res.data),
-      options
-    );
-  };
-  
+    return useQuery({
+        queryKey: ["ca-tree-for-ui", params.tag],
+        queryFn: () => axios
+            .get(`${config.baseURL}/condition_applications/${params.tag}/tree_for_ui`)
+            .then((res) => res.data),
+        ...options
+    });
+};

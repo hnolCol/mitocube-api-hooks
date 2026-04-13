@@ -1,5 +1,5 @@
 
-import { useQuery } from "react-query"
+import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import config from "../../../config"
 
@@ -16,6 +16,9 @@ async function getAttributeMinState_API({ tag }) {
 }
 
 export const useGetAttributeMinState = (APIParams = { tag }, useQueryOptions = { staleTime: 300000 }) => {
-    return useQuery(["getAttributeMinState", APIParams.tag],
-        () => getAttributeMinState_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getAttributeMinState", APIParams.tag],
+        queryFn: () => getAttributeMinState_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }

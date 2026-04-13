@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import config from "../../../config";
 
@@ -12,6 +12,10 @@ async function getStateName_API({tag}) {
 }
 
 export const useGetStateName = (APIParams = {tag}, useQueryOptions = {staleTime : Infinity}) => {
-    return useQuery(["getStateName", APIParams.tag],() =>  getStateName_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["getStateName", APIParams.tag],
+        queryFn: () => getStateName_API({...APIParams}),
+        ...useQueryOptions
+    })
 }
 

@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from "react-query"
+import { useQuery, useMutation } from "@tanstack/react-query"
 import axios from "axios"
 import config from "../../../config";
 /**
@@ -13,7 +13,11 @@ async function getSampleInfo_API({ tag }) {
 }
 
 export const useGetSample = (APIParams = {tag}, useQueryOptions = {staleTime : 3000000}) => {
-    return useQuery(["getSampleInfo", APIParams.tag], () => getSampleInfo_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["getSampleInfo", APIParams.tag],
+        queryFn: () => getSampleInfo_API({...APIParams}),
+        ...useQueryOptions
+    })
 }
 
 
@@ -30,7 +34,11 @@ async function getSampleConditionApplication_API({ tag, group_by_attribute}) {
 }
 
 export const useGetSampleConditionApplications = (APIParams = {tag, group_by_attribute : false}, useQueryOptions = {staleTime : 3000000}) => {
-    return useQuery(["getSampleConditionApplications", APIParams.tag, APIParams.group_by_attribute], () => getSampleConditionApplication_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["getSampleConditionApplications", APIParams.tag, APIParams.group_by_attribute],
+        queryFn: () => getSampleConditionApplication_API({...APIParams}),
+        ...useQueryOptions
+    })
 }
 
 /**
@@ -46,7 +54,11 @@ async function getSampleGenotype_API({ tag }) {
 }
 
 export const useGetSampleGenotype = (APIParams = { tag }, useQueryOptions = {staleTime : 3000000}) => {
-    return useQuery(["getSampleGenotype", APIParams.tag], () => getSampleGenotype_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["getSampleGenotype", APIParams.tag],
+        queryFn: () => getSampleGenotype_API({...APIParams}),
+        ...useQueryOptions
+    })
 }
 
 
@@ -66,7 +78,10 @@ async function insertSampleGenotype_API({ sample_tags, genotype_tag }) {
 }
 
 export const useInsertSampleGenotype = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => insertSampleGenotype_API({...APIParams}), useMutationOptions)
+    return useMutation({
+        mutationFn: (APIParams) => insertSampleGenotype_API({...APIParams}),
+        ...useMutationOptions
+    })
 }
 
 /**
@@ -81,7 +96,10 @@ async function updateSample_API({ tag, data }) {
 }   
 
 export const useUpdateSample = (useMutationOptions = {}) => {
-    return useMutation(({ tag, data }) => updateSample_API({ tag, data }), useMutationOptions)
+    return useMutation({
+        mutationFn: ({ tag, data }) => updateSample_API({ tag, data }),
+        ...useMutationOptions
+    })
 }
 
 
@@ -100,5 +118,8 @@ async function addSampleGenotype_API({ sample_tag, genotype_tag }) {
 }
 
 export const useAddSampleGenotype = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => addSampleGenotype_API({...APIParams}), useMutationOptions)
+    return useMutation({
+        mutationFn: (APIParams) => addSampleGenotype_API({...APIParams}),
+        ...useMutationOptions
+    })
 }   

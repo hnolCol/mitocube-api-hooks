@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import _ from "lodash";
 import axios from "axios";
 import config from "../../../config";
@@ -15,5 +15,9 @@ async function getSparepartPermissions_API({}) {
 }
 
 export const useGetSparepartPermissions = (APIParams = { }, useQueryOptions = {}) => {
-  return useQuery(["getSparepartPermissions"],() => getSparepartPermissions_API({ ...APIParams }), useQueryOptions);
+  return useQuery({
+    queryKey: ["getSparepartPermissions"],
+    queryFn: () => getSparepartPermissions_API({ ...APIParams }),
+    ...useQueryOptions
+  });
 };

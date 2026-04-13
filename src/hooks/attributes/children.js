@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import config from "../../../config"
 
@@ -14,12 +14,13 @@ async function getAttributeChildrenByTag_API({ tag }) {
     return res.data 
 }
 
-export const useGetAttributeChildren = (APIParams = { tag }, useQueryOptions = {staleTime : 300000}) => {
-    return useQuery(["getAttributeChildren",APIParams.tag],
-        () => getAttributeChildrenByTag_API({ ...APIParams }), useQueryOptions)
+export const useGetAttributeChildren = (APIParams = { tag }, useQueryOptions = {}) => {
+    return useQuery({
+        queryKey: ["getAttributeChildren", APIParams.tag],
+        queryFn: () => getAttributeChildrenByTag_API({ ...APIParams }),
+        staleTime: 300000,
+        ...useQueryOptions
+    })
 }
-
-
-
 
 

@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios"
 import config from "../../../config";
 
@@ -12,6 +12,10 @@ async function getStateColor_API({tag}) {
 }
 
 export const useGetStateColor = (APIParams = {tag}, useQueryOptions = {staleTime : Infinity}) => {
-    return useQuery(["getStateColor", APIParams.tag],() =>  getStateColor_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["getStateColor", APIParams.tag],
+        queryFn: () => getStateColor_API({...APIParams}),
+        ...useQueryOptions
+    })
 }
 

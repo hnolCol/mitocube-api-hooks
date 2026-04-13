@@ -1,7 +1,7 @@
 
 
 
-import { useMutation, useQuery } from "react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import config from "../../../config"
 
@@ -19,8 +19,11 @@ async function getAttributeByGroup_API({ tag, min_state }) {
 }
 
 export const useGetAttributeByGroup = (APIParams = { tag, min_state }, useQueryOptions = {staleTime : 30000}) => {
-    return useQuery(["getAttributeGroup",APIParams.tag, APIParams.min_state],
-        () => getAttributeByGroup_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getAttributeGroup", APIParams.tag, APIParams.min_state],
+        queryFn: () => getAttributeByGroup_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }
 
 
@@ -37,6 +40,9 @@ async function getAttributeGroups_API({ limit }) {
 }
 
 export const useGetAttributeGroups = (APIParams = { limit }, useQueryOptions = { staleTime: 30000 }) => {
-    return useQuery(["getAttributeGroups", APIParams.limit],
-        () => getAttributeGroups_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getAttributeGroups", APIParams.limit],
+        queryFn: () => getAttributeGroups_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }

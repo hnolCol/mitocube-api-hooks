@@ -1,5 +1,5 @@
 import axios from "axios"
-import { useQuery, useMutation } from "react-query"
+import { useQuery, useMutation } from "@tanstack/react-query"
 import config from "../../../config";
 /**
  * @description Returns the title of the submission.
@@ -15,8 +15,12 @@ export async function getSubmissionTitle_API({ tag }) {
 }
         
 export const useGetSubmissionTitle = (APIParams = {tag}, useQueryOptions = { staleTime: 200000}) => {
-    return useQuery(["getSubmissionTitle", APIParams.tag],
-        () => getSubmissionTitle_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getSubmissionTitle", APIParams.tag],
+        queryFn: () => getSubmissionTitle_API({ ...APIParams }),
+        staleTime: 200000,
+        ...useQueryOptions
+    })
 }
 
 
@@ -34,5 +38,8 @@ async function patchSubmissionTitle_API({ tag, title }) {
 }
 
 export const usePatchSubmissionTitle = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => patchSubmissionTitle_API({...APIParams}), useMutationOptions)
+    return useMutation({
+        mutationFn: (APIParams) => patchSubmissionTitle_API({...APIParams}),
+        ...useMutationOptions
+    })
 }

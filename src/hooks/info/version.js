@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
 /**
@@ -11,5 +11,11 @@ async function getVersion_API({}) {
 }
 
 export const useGetBackendVersion = (APIParams = {}, useQueryOptions = {staleTime : Infinity}) => {
-    return useQuery(["getVersion"],() =>  getVersion_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["getVersion"],
+        queryFn: () => getVersion_API({...APIParams}),
+        ...useQueryOptions
+    });
 }
+
+

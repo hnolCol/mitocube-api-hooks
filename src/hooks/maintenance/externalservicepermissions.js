@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import _ from "lodash";
 import axios from "axios";
 import config from "../../../config";
@@ -15,5 +15,9 @@ async function getExternalServicePermissions_API({}) {
 }
 
 export const useGetExternalServicePermissions = (APIParams = { }, useQueryOptions = {}) => {
-  return useQuery(["getExternalServicePermissions"],() => getExternalServicePermissions_API({ ...APIParams }), useQueryOptions);
+  return useQuery({
+    queryKey: ["getExternalServicePermissions"],
+    queryFn: () => getExternalServicePermissions_API({ ...APIParams }),
+    ...useQueryOptions
+  });
 };

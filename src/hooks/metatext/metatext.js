@@ -1,9 +1,5 @@
-
-
-
-
 import axios from "axios"
-import { useQuery, useMutation } from "react-query"
+import { useQuery, useMutation } from "@tanstack/react-query"
 import config from "../../../config";
 
 
@@ -13,7 +9,11 @@ async function getMetatextByTag_API({ tag }) {
     return res.data 
 }
 export const useGetMetatext = (APIParams = {tag}, useQueryOptions = {}) => {
-    return useQuery(["metatextByTag", APIParams.tag], () => getMetatextByTag_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["metatextByTag", APIParams.tag],
+        queryFn: () => getMetatextByTag_API({...APIParams}),
+        ...useQueryOptions
+    })
 }
 
 
@@ -32,7 +32,10 @@ async function patchMetatext_API({tag, title, text}){
 }
 
 export const usePatchMetatext = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => patchMetatext_API({...APIParams}), useMutationOptions)
+    return useMutation({
+        mutationFn: (APIParams) => patchMetatext_API({...APIParams}),
+        ...useMutationOptions
+    })
 }
 
 
@@ -50,6 +53,9 @@ async function deleteMetatext_API({tag}){
 }
 
 export const useDeleteMetatext = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => deleteMetatext_API({...APIParams}), useMutationOptions)
+    return useMutation({
+        mutationFn: (APIParams) => deleteMetatext_API({...APIParams}),
+        ...useMutationOptions
+    })
 }
 

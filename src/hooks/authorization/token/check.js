@@ -1,6 +1,6 @@
 import axios from "axios"
 import config from "../../../../config"
-import { useQuery } from "react-query"
+import { useQuery } from "@tanstack/react-query"
 
 
 /**
@@ -22,7 +22,9 @@ async function checkToken_API({ tokenString }) {
 }
 
 export const useGetTokenValid = (APIParams = { tokenString }, queryOptions = {}) => {
-  return useQuery(["isTokenValid", APIParams.tokenString], () => checkToken_API({...APIParams}), queryOptions)
+  return useQuery({
+    queryKey: ["isTokenValid", APIParams.tokenString],
+    queryFn: () => checkToken_API({...APIParams}),
+    ...queryOptions
+  })
 }
-
-

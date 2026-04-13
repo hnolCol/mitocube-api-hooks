@@ -1,5 +1,5 @@
 
-import { useQuery } from "react-query"
+import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import config from "../../../config"
 
@@ -29,8 +29,8 @@ export const useGetAttributesByQuery = (APIParams = {
     group_by,
     include_traits: true
 }, useQueryOptions = { staleTime: 300000, placeholderData: (prev) => prev }) => {
-    return useQuery(
-        [
+    return useQuery({
+        queryKey: [
             "attributes_traits_by_query",
             APIParams.search_string,
             APIParams.min_state,
@@ -39,7 +39,9 @@ export const useGetAttributesByQuery = (APIParams = {
             APIParams.limit,
             APIParams.group_by,
         ],
-        () => getAttributesAndValuesByQuery_API({ ...APIParams }), useQueryOptions)
+        queryFn: () => getAttributesAndValuesByQuery_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 
 
 }

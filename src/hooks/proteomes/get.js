@@ -1,4 +1,4 @@
-import { useQuery } from "react-query"
+import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import config from "../../../config";
 
@@ -15,7 +15,11 @@ async function getProteome_API({tag}) {
 }
 
 export const useGetProteome = (APIParams = {tag}, useQueryOptions = {}) => {
-    return useQuery(["getProteome", APIParams.tag],() =>  getProteome_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["getProteome", APIParams.tag],
+        queryFn: () => getProteome_API({...APIParams}),
+        ...useQueryOptions
+    })
 }
 
 
@@ -31,7 +35,11 @@ async function getProteomeText_API({tag}) {
 }
 
 export const useGetProteomeText = (APIParams = {tag}, useQueryOptions = {}) => {
-    return useQuery(["getProteomeText", APIParams.tag],() =>  getProteomeText_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["getProteomeText", APIParams.tag],
+        queryFn: () => getProteomeText_API({...APIParams}),
+        ...useQueryOptions
+    })
 }
 
 
@@ -48,7 +56,11 @@ async function getProteomeCreatedAt_API({tag}) {
 }
 
 export const useGetProteomeCreatedAt = (APIParams = {tag}, useQueryOptions = {}) => {
-    return useQuery(["getProteomeCreatedAt", APIParams.tag],() =>  getProteomeCreatedAt_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["getProteomeCreatedAt", APIParams.tag],
+        queryFn: () => getProteomeCreatedAt_API({...APIParams}),
+        ...useQueryOptions
+    })
 }
 
 
@@ -65,5 +77,9 @@ async function getProteomeIsUpdating_API({tag}) {
 }
 
 export const useGetProteomeIsUpdating = (APIParams = {tag}, useQueryOptions = {}) => {
-    return useQuery(["getProteomeIsUpdating", APIParams.tag],() =>  getProteomeIsUpdating_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["getProteomeIsUpdating", APIParams.tag],
+        queryFn: () => getProteomeIsUpdating_API({...APIParams}),
+        ...useQueryOptions
+    })
 }

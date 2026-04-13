@@ -1,6 +1,6 @@
 
 import axios from "axios"
-import { useQuery } from "react-query"
+import { useQuery } from "@tanstack/react-query"
 import config from "../../../config"
 
 
@@ -15,9 +15,11 @@ async function getSampleAbundance_API({ tag }) {
     return res.data
 }
 export function useGetSampleAbundance(APIParams = {tag}, useQueryOptions = {}) {
-    return useQuery(["quant_feature_per_sample",
-        APIParams.tag],
-        () => getSampleAbundance_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["quant_feature_per_sample", APIParams.tag],
+        queryFn: () => getSampleAbundance_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }
 
 
@@ -37,9 +39,12 @@ async function getSampleFeatureAbundanceDistribution_API({ tag, attribute_tag, v
     return res.data
 }
 export function  useGetSampleFeatureAbundanceDistribution(APIParams = {tag, attribute_tag, value}, useQueryOptions = {}) {
-    return useQuery(["quant_feature_distribution",
-        APIParams.tag,
-        APIParams.attribute_tag,
-        APIParams.value],
-        () => getSampleFeatureAbundanceDistribution_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["quant_feature_distribution",
+            APIParams.tag,
+            APIParams.attribute_tag,
+            APIParams.value],
+        queryFn: () => getSampleFeatureAbundanceDistribution_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }

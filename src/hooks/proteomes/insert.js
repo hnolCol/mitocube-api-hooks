@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from "react-query"
+import { useQuery, useMutation } from "@tanstack/react-query"
 import axios from "axios"
 import config from "../../../config";
 
@@ -13,11 +13,14 @@ import config from "../../../config";
  */
 async function postProteome_API({tag, reviewed = true}){
     //fetch availabe features from the API. Reconsider /details 
-    const res = await axios.post("/api/proteomes",{},{params : {proteome_tag : tag, reviewed}} )
+    const res = await axios.post(`${config.baseURL}/proteomes`,{}, {params : {proteome_tag : tag, reviewed}} )
     return res.data
 }
 
 export const usePostProteome = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => postProteome_API({...APIParams}), useMutationOptions)
+    return useMutation({
+        mutationFn: (APIParams) => postProteome_API({...APIParams}),
+        ...useMutationOptions
+    })
 }
 

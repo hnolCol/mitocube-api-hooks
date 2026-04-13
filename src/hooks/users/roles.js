@@ -1,10 +1,5 @@
-import { useQuery } from "react-query"
+import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
-
-
-
-
-
 
 /**
  * @description Retrieves the available user roles. Endpoint: '/api/users/roles'
@@ -17,9 +12,12 @@ async function getUserRoles_API({ }) {
 }
 
 export const useGetUserRoles = (APIParams = {}, useQueryOptions = {}) => {
-    return useQuery(["getUserRoles"], () => getUserRoles_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["getUserRoles"],
+        queryFn: () => getUserRoles_API({...APIParams}),
+        ...useQueryOptions
+    })
 }
-
 
 /**
  * @description Retrieves the role of a given user (tag). Endpoint: `/api/users/roles/${tag}`
@@ -33,5 +31,9 @@ async function getUserRoleByTag_API({ tag }) {
 }
 
 export const useGetUserRoleByTag = (APIParams = { tag }, useQueryOptions = {}) => {
-    return useQuery(["getUserRoles", APIParams.tag], () => getUserRoleByTag_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["getUserRoles", APIParams.tag],
+        queryFn: () => getUserRoleByTag_API({...APIParams}),
+        ...useQueryOptions
+    })
 }

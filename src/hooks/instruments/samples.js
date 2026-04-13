@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import config from "../../../config";
 
@@ -14,5 +14,9 @@ async function getInstrumentSamplesCount_API({tag}) {
 }
 
 export const useGetInstrumentSamplesCount = (APIParams = {tag}, useQueryOptions = {staleTime : 60000}) => {
-    return useQuery(["getInstrumentSamplesCount"],() =>  getInstrumentSamplesCount_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["getInstrumentSamplesCount", APIParams.tag],
+        queryFn: () => getInstrumentSamplesCount_API({...APIParams}),
+        ...useQueryOptions
+    });
 }

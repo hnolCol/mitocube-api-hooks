@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from "react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import config from "../../../config";
 
@@ -15,7 +15,11 @@ async function getMaintenanceEventsByTag_API({ tag }) {
 }
 
 export const useGetMaintenanceEventByTag = (APIParams = { tag }, useQueryOptions = {stateTime : 200000}) => {
-    return useQuery(["getMaintenanceEventByTag", APIParams.tag], () => getMaintenanceEventsByTag_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getMaintenanceEventByTag", APIParams.tag],
+        queryFn: () => getMaintenanceEventsByTag_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }
 
 /**
@@ -32,7 +36,10 @@ async function postMaintenanceEventState_API({ maintenance_event_tag, event_stat
     return res.data 
 }
 export const usePostMaintenanceEventState = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => postMaintenanceEventState_API({...APIParams}), useMutationOptions)
+    return useMutation({
+        mutationFn: (APIParams) => postMaintenanceEventState_API({...APIParams}),
+        ...useMutationOptions
+    });
 }
 
 /**
@@ -51,7 +58,11 @@ async function getMaintenanceEventState_API({ maintenance_event_tag }) {
 }   
 
 export const useGetMaintenanceEventState = (APIParams = { maintenance_event_tag }, useQueryOptions = {stateTime : 2000, placeholderData : prev => prev}) => {
-    return useQuery(["getMaintenanceEventState", APIParams.maintenance_event_tag], () => getMaintenanceEventState_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getMaintenanceEventState", APIParams.maintenance_event_tag],
+        queryFn: () => getMaintenanceEventState_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }
 
 
@@ -71,13 +82,18 @@ async function getMaintenanceEventsByQuery_API({ instrument_tag, timestamp_min, 
 }
 
 export const useGetQueryMaintenanceEvents = (APIParams = {instrument_tag, timestamp_min, timestamp_max, user_tag, limit}, useQueryOptions = {stateTime : 200000, placeholderData: (prev) => prev}) => {
-    return useQuery(["getMaintenanceEventsQuery",
-        APIParams.instrument_tag,
-        APIParams.timestamp_max,
-        APIParams.timestamp_min,
-        APIParams.limit,
-        APIParams.user_tag], () => getMaintenanceEventsByQuery_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getMaintenanceEventsQuery",
+            APIParams.instrument_tag,
+            APIParams.timestamp_max,
+            APIParams.timestamp_min,
+            APIParams.limit,
+            APIParams.user_tag],
+        queryFn: () => getMaintenanceEventsByQuery_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }
+
 
 
 
@@ -96,11 +112,15 @@ async function getMaintenanceEventsCount_API({ instrument_tag, timestamp_min, ti
 }
 
 export const useGetMaintenanceEventCount = (APIParams = {instrument_tag, timestamp_min, timestamp_max, user_tag}, useQueryOptions = {stateTime : 200000, placeholderData: (prev) => prev}) => {
-    return useQuery(["getMaintenanceEventsQuery",
-        APIParams.instrument_tag,
-        APIParams.timestamp_max,
-        APIParams.timestamp_min,
-        APIParams.user_tag], () => getMaintenanceEventsCount_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getMaintenanceEventsQuery",
+            APIParams.instrument_tag,
+            APIParams.timestamp_max,
+            APIParams.timestamp_min,
+            APIParams.user_tag],
+        queryFn: () => getMaintenanceEventsCount_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }
 
 
@@ -115,7 +135,11 @@ async function getMaintenanceCosts_API({ instrument_tag, timestamp_min, timestam
 }
 
 export const useGetMaintenanceCosts = (APIParams = {instrument_tag, timestamp_min, timestamp_max}, useQueryOptions = {stateTime : 200000}) => {
-    return useQuery(["getMaintenanceCosts", APIParams.instrument_tag],() =>  getMaintenanceCosts_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["getMaintenanceCosts", APIParams.instrument_tag],
+        queryFn: () => getMaintenanceCosts_API({...APIParams}),
+        ...useQueryOptions
+    });
 }
 
 
@@ -137,7 +161,10 @@ async function postMaintenanceEvent_API({ description, instrument_tag, instrumen
 }   
 
 export const usePostMaintenanceEvent = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => postMaintenanceEvent_API({...APIParams}), useMutationOptions)
+    return useMutation({
+        mutationFn: (APIParams) => postMaintenanceEvent_API({...APIParams}),
+        ...useMutationOptions
+    });
 }
 
 
@@ -157,7 +184,10 @@ async function postMaintenanceProcedureToMaintenanceEvent_API({ maintenance_even
 
 
 export const usePostMaintenanceProcedureToMaintenanceEvent = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => postMaintenanceProcedureToMaintenanceEvent_API({...APIParams}), useMutationOptions)
+    return useMutation({
+        mutationFn: (APIParams) => postMaintenanceProcedureToMaintenanceEvent_API({...APIParams}),
+        ...useMutationOptions
+    });
 }
 
 
@@ -177,7 +207,10 @@ async function postSparePartToMaintenanceEvent_API({ maintenance_event_tag, spar
 
 
 export const usePostSparePartToMaintenanceEvent = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => postSparePartToMaintenanceEvent_API({...APIParams}), useMutationOptions)
+    return useMutation({
+        mutationFn: (APIParams) => postSparePartToMaintenanceEvent_API({...APIParams}),
+        ...useMutationOptions
+    });
 }
 
 /**
@@ -195,7 +228,11 @@ async function getSparePartCountByMaintenanceEvent_API({ maintenance_event_tag, 
 
 
 export const useGetSparePartCountByMaintenanceEvent = (APIParams = { maintenance_event_tag, sparepart_tag }, useQueryOptions = { placeholderData : prev => prev }) => {
-    return useQuery(["getMaintenanceSparePartCount", APIParams.maintenance_event_tag, APIParams.sparepart_tag], () => getSparePartCountByMaintenanceEvent_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getMaintenanceSparePartCount", APIParams.maintenance_event_tag, APIParams.sparepart_tag],
+        queryFn: () => getSparePartCountByMaintenanceEvent_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }
 
 /**
@@ -214,7 +251,10 @@ async function deleteSparePartToMaintenanceEvent_API({ maintenance_event_tag, sp
 
 
 export const useDeleteSparePartToMaintenanceEvent = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => deleteSparePartToMaintenanceEvent_API({...APIParams}), useMutationOptions)
+    return useMutation({
+        mutationFn: (APIParams) => deleteSparePartToMaintenanceEvent_API({...APIParams}),
+        ...useMutationOptions
+    });
 }
 
 
@@ -234,7 +274,10 @@ async function deleteProcedureOfMaintenanceEvent_API({ maintenance_event_tag, pr
 }
 
 export const useDeleteMaintenanceProcedureToMaintenanceEvent = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => deleteProcedureOfMaintenanceEvent_API({...APIParams}), useMutationOptions)
+    return useMutation({
+        mutationFn: (APIParams) => deleteProcedureOfMaintenanceEvent_API({...APIParams}),
+        ...useMutationOptions
+    });
 }
 
 
@@ -253,7 +296,10 @@ async function postSymptomToMaintenanceEvent_API({ maintenance_event_tag, sympto
 }
 
 export const usePostSymptomToMaintenanceEvent = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => postSymptomToMaintenanceEvent_API({...APIParams}), useMutationOptions)
+    return useMutation({
+        mutationFn: (APIParams) => postSymptomToMaintenanceEvent_API({...APIParams}),
+        ...useMutationOptions
+    });
 }
 
 
@@ -271,7 +317,10 @@ async function deleteSymptomToMaintenanceEvent_API({ maintenance_event_tag, symp
 }
 
 export const useDeleteSymptomToMaintenanceEvent = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => deleteSymptomToMaintenanceEvent_API({...APIParams}), useMutationOptions)
+    return useMutation({
+        mutationFn: (APIParams) => deleteSymptomToMaintenanceEvent_API({...APIParams}),
+        ...useMutationOptions
+    });
 }
 
 
@@ -287,7 +336,11 @@ async function getMaintenanceEventCosts_API({ maintenance_event_tag }) {
 }
 
 export const useGetMaintenanceEventCosts = (APIParams = { maintenance_event_tag }, useQueryOptions = { placeholderData : prev => prev }) => {
-    return useQuery(["getMaintenanceEventCosts", APIParams.maintenance_event_tag], () => getMaintenanceEventCosts_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getMaintenanceEventCosts", APIParams.maintenance_event_tag],
+        queryFn: () => getMaintenanceEventCosts_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }   
 
 /**
@@ -304,7 +357,10 @@ async function postExternalServiceToMaintenanceEvent_API({ maintenance_event_tag
 }
 
 export const usePostExternalServiceToMaintenanceEvent = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => postExternalServiceToMaintenanceEvent_API({...APIParams}), useMutationOptions)
+    return useMutation({
+        mutationFn: (APIParams) => postExternalServiceToMaintenanceEvent_API({...APIParams}),
+        ...useMutationOptions
+    });
 }   
 
 /**
@@ -320,6 +376,9 @@ async function deleteExternalServiceFromMaintenanceEvent_API({ maintenance_event
 }
 
 export const useDeleteExternalServiceFromMaintenanceEvent = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => deleteExternalServiceFromMaintenanceEvent_API({...APIParams}), useMutationOptions)
+    return useMutation({
+        mutationFn: (APIParams) => deleteExternalServiceFromMaintenanceEvent_API({...APIParams}),
+        ...useMutationOptions
+    });
 }   
 

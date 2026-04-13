@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from "react-query"
+import { useQuery  } from "@tanstack/react-query"
 import axios from "axios"
 import config from "../../../config";
 
@@ -15,5 +15,9 @@ async function getProteomeBySearchString_API({search_string, limit}) {
 }
 
 export const useGetProteomeBySearchString = (APIParams = {search_string, limit}, useQueryOptions = {}) => {
-    return useQuery(["getProteome", APIParams.search_string, APIParams.limit],() =>  getProteomeBySearchString_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["getProteome", APIParams.search_string, APIParams.limit],
+        queryFn: () => getProteomeBySearchString_API({...APIParams}),
+        ...useQueryOptions
+    })
 }

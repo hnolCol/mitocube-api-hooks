@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios"
 
 
@@ -13,7 +13,11 @@ async function getTerms_API({}) {
 }
 
 export const useGetTermsOfUse = (APIParams = {}, useQueryOptions = {}) => {
-    return useQuery(["getTermsOfUse"],() =>  getTerms_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["getTermsOfUse"],
+        queryFn: () => getTerms_API({...APIParams}),
+        ...useQueryOptions
+    });
 }
 
 

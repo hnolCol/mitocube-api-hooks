@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import config from "../../../config"
 import _ from "lodash"
@@ -17,8 +17,11 @@ async function getTraitByTag_API({ tag }) {
 }
 
 export const useGetTraitByTag = (APIParams = { tag }, useQueryOptions = { staleTime: Infinity }) => {
-    return useQuery(["getTraitByTag", APIParams.tag],
-        () => getTraitByTag_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getTraitByTag", APIParams.tag],
+        queryFn: () => getTraitByTag_API({ ...APIParams }),
+        ...useQueryOptions
+    })
 }
 
 
@@ -43,8 +46,11 @@ async function getTraitBySearchString_API({ search_string, attribute_tag, limit 
 }
 
 export const useGetTraitBySearchString = (APIParams = { search_string, attribute_tag, limit }, useQueryOptions = {staleTime : 30000}) => {
-    return useQuery(["getTraitBySearch",APIParams.attribute_tag, APIParams.limit, APIParams.search_string],
-        () => getTraitBySearchString_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getTraitBySearch", APIParams.attribute_tag, APIParams.limit, APIParams.search_string],
+        queryFn: () => getTraitBySearchString_API({ ...APIParams }),
+        ...useQueryOptions
+    })
 }
 
 
@@ -61,25 +67,12 @@ async function getTraitsByAttributeTag_API({ tag }) {
 }
 
 export const useGetTraitsByAttributeTag = (APIParams = {tag }, useQueryOptions) => {
-    return useQuery(["traitsByTag",APIParams.tag], () => getTraitsByAttributeTag_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["traitsByTag", APIParams.tag],
+        queryFn: () => getTraitsByAttributeTag_API({...APIParams}),
+        ...useQueryOptions
+    })
 }
-
-
-// /**
-//  * @description Adds trait for an attribute defined by its tag to the database. 
-//  * @param {Object} props
-//  * @param {String} props.attribute_tag 
-//  * @param {Object} props.attribute_value
-//  * @returns 
-//  */
-// async function postTrait_API({attribute_tag, attribute_value}){
-//     const res = await axios.post(`${config.baseURL}/attributes/${attribute_tag}/value`,attribute_value)
-//     return res.data
-// }
-
-// export const usePostTrait = (useMutationOptions = {}) => {
-//     return useMutation((APIParams) =>postTrait_API({...APIParams}), useMutationOptions)
-// }
 
 
 /**
@@ -95,7 +88,10 @@ async function postTrait_API({ attribute_tag, trait }) {
 }
 
 export const usePostTrait = (useMutationOptions = {}) => {
-    return useMutation( (APIParams) => postTrait_API({ ...APIParams }),  useMutationOptions )
+    return useMutation({
+        mutationFn: (APIParams) => postTrait_API({ ...APIParams }),
+        ...useMutationOptions
+    })
 }
 
 
@@ -112,7 +108,11 @@ async function getTraitCountByAttributeTag_API({ tag }) {
 }
 
 export const useGetTraitCount = (APIParams = { tag }, useQueryOptions) => {
-    return useQuery(["traitCountByAttributeTag", APIParams.tag], () => getTraitCountByAttributeTag_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["traitCountByAttributeTag", APIParams.tag],
+        queryFn: () => getTraitCountByAttributeTag_API({ ...APIParams }),
+        ...useQueryOptions
+    })
 }
 
 
@@ -130,7 +130,11 @@ async function getTraitText_API({ tag }) {
 }
 
 export const useGetTraitText = (APIParams = { tag }, useQueryOptions = {staleTime : 3000000}) => {
-    return useQuery(["traitText", APIParams.tag], () => getTraitText_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["traitText", APIParams.tag],
+        queryFn: () => getTraitText_API({ ...APIParams }),
+        ...useQueryOptions
+    })
 }
 
 /**
@@ -146,7 +150,11 @@ async function getTraitDescription_API({ tag }) {
 }
 
 export const useGetTraitDescription = (APIParams = { tag }, useQueryOptions = {staleTime : 3000000}) => {
-    return useQuery(["traitDescription", APIParams.tag], () => getTraitDescription_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["traitDescription", APIParams.tag],
+        queryFn: () => getTraitDescription_API({ ...APIParams }),
+        ...useQueryOptions
+    })
 }   
 
 
@@ -163,7 +171,11 @@ async function getTraitPriority_API({ tag }) {
 }
 
 export const useGetTraitPriority = (APIParams = { tag }, useQueryOptions = {staleTime : 3000000}) => {
-    return useQuery(["traitPriority", APIParams.tag], () => getTraitPriority_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["traitPriority", APIParams.tag],
+        queryFn: () => getTraitPriority_API({ ...APIParams }),
+        ...useQueryOptions
+    })
 }       
 
 
@@ -184,10 +196,10 @@ async function updateTrait_API({ attribute_tag, trait_tag, updates }) {
 }
 
 export const useUpdateTrait = (useMutationOptions = {}) => {
-    return useMutation(
-        (APIParams) => updateTrait_API({ ...APIParams }),
-        useMutationOptions
-    )
+    return useMutation({
+        mutationFn: (APIParams) => updateTrait_API({ ...APIParams }),
+        ...useMutationOptions
+    })
 }
 
 
@@ -204,7 +216,10 @@ async function deleteTrait_API({ attribute_tag, trait_tag }) {
 }
 
 export const useDeleteTrait = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => deleteTrait_API({ ...APIParams }),useMutationOptions)
+    return useMutation({
+        mutationFn: (APIParams) => deleteTrait_API({ ...APIParams }),
+        ...useMutationOptions
+    })
 }
 
 
@@ -218,9 +233,9 @@ async function getTraitPermissions_API() {
 }
 
 export const useGetTraitPermissions = (useQueryOptions = { staleTime: 1000 * 60 * 5 }) => {
-    return useQuery(
-        ["getTraitPermissions"],
-        () => getTraitPermissions_API(),
-        useQueryOptions
-    )
+    return useQuery({
+        queryKey: ["getTraitPermissions"],
+        queryFn: () => getTraitPermissions_API(),
+        ...useQueryOptions
+    })
 }

@@ -1,4 +1,4 @@
-import { useQuery } from "react-query"
+import { useQuery } from "@tanstack/react-query"
 import config from "../../../config"
 import axios from "axios"
 /**
@@ -15,6 +15,9 @@ async function getSubmissionBySearchString_API({search_string, state, limit, ord
     return res.data 
 }
 export const useGetSubmissionByQuery = (APIParams = {search_string, state, limit, ordered, group_by_state}, useQueryOptions = {staleTime : 300000, placeholderData: (prev) => prev}) => {
-    return useQuery(["submission_query", APIParams.search_string, APIParams.state, APIParams.limit, APIParams.ordered, APIParams.group_by_state],
-        () => getSubmissionBySearchString_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["submission_query", APIParams.search_string, APIParams.state, APIParams.limit, APIParams.ordered, APIParams.group_by_state],
+        queryFn: () => getSubmissionBySearchString_API({ ...APIParams }),
+        ...useQueryOptions
+    })
 }

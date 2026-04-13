@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import _ from "lodash";
 import axios from "axios";
 import config from "../../../config";
@@ -15,5 +15,9 @@ async function getAnnotationPermissions_API({}) {
 }
 
 export const useGetAnnotationPermissions = (APIParams = { }, useQueryOptions = {}) => {
-  return useQuery(["getAnnotationPermissions"],() => getAnnotationPermissions_API({ ...APIParams }), useQueryOptions);
+  return useQuery({
+    queryKey: ["getAnnotationPermissions"],
+    queryFn: () => getAnnotationPermissions_API({ ...APIParams }),
+    ...useQueryOptions
+  });
 };

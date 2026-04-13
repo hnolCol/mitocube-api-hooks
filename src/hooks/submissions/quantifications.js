@@ -1,5 +1,5 @@
 // States and states changes of a submission 
-import { useQuery, useMutation } from "react-query"
+import { useQuery, useMutation } from "@tanstack/react-query"
 import config from "../../../config"
 import axios from "axios"
 
@@ -18,7 +18,7 @@ async function postProteinQuantification_API({ tag, quantifications, apply_stati
 }
 
 export const usePostProteinQuantification = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => postProteinQuantification_API({...APIParams}), useMutationOptions)
+    return useMutation({mutationFn: (APIParams) => postProteinQuantification_API({...APIParams}), ...useMutationOptions})
 }
 
 
@@ -35,7 +35,7 @@ async function postPrecursorQuantification_API({ tag, quantifications }) {
 }
 
 export const usePostPrecursorQuantification = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => postPrecursorQuantification_API({...APIParams}), useMutationOptions)
+    return useMutation({mutationFn: (APIParams) => postPrecursorQuantification_API({...APIParams}), ...useMutationOptions})
 }
 
 
@@ -57,8 +57,11 @@ export async function getSubmissionQuantificationExists_API({ tag, quantificatio
 }
 
 export const useGetSubmissionQuantificationExists = (APIParams = {tag, quantification_type}, useQueryOptions = { staleTime: 500}) => {
-    return useQuery(["getSubmissionQuantificationExists", APIParams.tag, APIParams.quantification_type],
-        () => getSubmissionQuantificationExists_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getSubmissionQuantificationExists", APIParams.tag, APIParams.quantification_type],
+        queryFn: () => getSubmissionQuantificationExists_API({ ...APIParams }),
+        ...useQueryOptions
+    })
 }
 
 

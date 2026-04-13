@@ -1,5 +1,5 @@
 import axios from "axios"
-import { useQuery } from "react-query"
+import { useQuery } from "@tanstack/react-query"
 
 
 /**
@@ -14,5 +14,9 @@ async function getProteinByTag_API({ tag }) {
 }
 
 export function useGetProteinByTag(APIParams = {tag}, useQueryOptions = { }) {
-    return useQuery(["protein",APIParams.tag],() =>  getProteinByTag_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["protein", APIParams.tag],
+        queryFn: () => getProteinByTag_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }

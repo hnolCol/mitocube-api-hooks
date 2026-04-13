@@ -1,4 +1,4 @@
-import { useQuery } from "react-query"
+import { useQuery } from "@tanstack/react-query"
 import _ from "lodash"
 import axios from "axios"
 import config from "../../../config"; 
@@ -16,5 +16,9 @@ async function getGenotypeExists_API({ tag }) {
 }
 
 export const useGetGenotypeExists = (APIParams = { tag }, useQueryOptions = {}) => {
-    return useQuery(["getGenotypeExists", APIParams.tag],() => getGenotypeExists_API({ ...APIParams }),useQueryOptions)
+    return useQuery({
+        queryKey: ["getGenotypeExists", APIParams.tag],
+        queryFn: () => getGenotypeExists_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }

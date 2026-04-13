@@ -1,5 +1,5 @@
 import axios from "axios"
-import { useQuery } from "react-query"
+import { useQuery } from "@tanstack/react-query"
 import config from "../../../config";
 /**
  * @description Returns the title of the submission.
@@ -15,6 +15,9 @@ export async function getSubmissionCreatedAt_API({ tag }) {
 }
 
 export const useGetSubmissionCreatedAt = (APIParams = {tag}, useQueryOptions = { staleTime: Infinity}) => {
-    return useQuery(["getSubmissionCreatedAt", APIParams.tag],
-        () => getSubmissionCreatedAt_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getSubmissionCreatedAt", APIParams.tag],
+        queryFn: () => getSubmissionCreatedAt_API({ ...APIParams }),
+        ...useQueryOptions
+    })
 }

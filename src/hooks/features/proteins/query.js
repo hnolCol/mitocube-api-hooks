@@ -1,5 +1,5 @@
 import axios from "axios"
-import { useQuery } from "react-query"
+import { useQuery } from "@tanstack/react-query"
 
 
 /**
@@ -15,5 +15,9 @@ async function getProteinFeatureByQuery_API({ search_string, limit }) {
 }
 
 export function useGetProteinFeatureByQuery(APIParams = {search_string, limit}, useQueryOptions = { }) {
-    return useQuery(["proteinFeatures_query",APIParams.search_string, APIParams.limit],() =>  getProteinFeatureByQuery_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["proteinFeatures_query", APIParams.search_string, APIParams.limit],
+        queryFn: () => getProteinFeatureByQuery_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }

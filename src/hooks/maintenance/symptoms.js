@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from "react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import config from "../../../config";
 
@@ -12,7 +12,11 @@ async function getSymptomByQuery_API({search_string, limit}) {
 }
 
 export const useGetSymptomByQuery = (APIParams = {search_string : "", limit : 10}, useQueryOptions = {}) => {
-    return useQuery(["getSymptomBySearchString", APIParams.search_string, APIParams.limit],() =>  getSymptomByQuery_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["getSymptomBySearchString", APIParams.search_string, APIParams.limit],
+        queryFn: () => getSymptomByQuery_API({...APIParams}),
+        ...useQueryOptions
+    })
 }
 
 /**
@@ -24,8 +28,12 @@ async function getSymptomByTag_API({tag}) {
     return res.data 
 }
 
-export const useGetSymptomByTag = (APIParams = { tag: "" }, useQueryOptions = {stateTime : 200000}) => {
-    return useQuery(["getSymptomByTag", APIParams.tag],() =>  getSymptomByTag_API({...APIParams}), useQueryOptions)
+export const useGetSymptomByTag = (APIParams = { tag: "" }, useQueryOptions = {staleTime : 200000}) => {
+    return useQuery({
+        queryKey: ["getSymptomByTag", APIParams.tag],
+        queryFn: () => getSymptomByTag_API({...APIParams}),
+        ...useQueryOptions
+    })
 }
 
 /**
@@ -37,8 +45,12 @@ async function checkSymptomExists_API({ tag }) {
     return res.data 
 }
 
-export const useCheckSymptomExists = (APIParams = { tag }, useQueryOptions = {stateTime : 200000}) => {
-    return useQuery(["checkSymptomExists", APIParams.tag],() =>  checkSymptomExists_API({...APIParams}), useQueryOptions)
+export const useCheckSymptomExists = (APIParams = { tag }, useQueryOptions = {staleTime : 200000}) => {
+    return useQuery({
+        queryKey: ["checkSymptomExists", APIParams.tag],
+        queryFn: () => checkSymptomExists_API({...APIParams}),
+        ...useQueryOptions
+    })
 }
 
 /** 
@@ -51,7 +63,11 @@ async function getSymptoms_API() {
     return res.data;
 }
 export const useGetSymptoms = (useQueryOptions = { staleTime: 30000 }) => {
-    return useQuery(["getSymptoms"], () => getSymptoms_API(), useQueryOptions);
+    return useQuery({
+        queryKey: ["getSymptoms"],
+        queryFn: () => getSymptoms_API(),
+        ...useQueryOptions
+    });
 }
 
 
@@ -65,7 +81,11 @@ async function getSymptomText_API({ tag }) {
     return res.data;
 }
 export const useGetSymptomText = (APIParams={tag},useQueryOptions = { staleTime: 30000 }) => {
-    return useQuery(["getSymptomText",APIParams.tag], () => getSymptomText_API({...APIParams}), useQueryOptions);        
+    return useQuery({
+        queryKey: ["getSymptomText", APIParams.tag],
+        queryFn: () => getSymptomText_API({...APIParams}),
+        ...useQueryOptions
+    });
 }
 
 /**
@@ -77,7 +97,11 @@ async function getSymptomDescription_API({ tag }) {
     return res.data;
 }
 export const useGetSymptomDescription = (APIParams= {tag}, useQueryOptions = { staleTime: 30000 }) => {
-    return useQuery(["getSymptomDescription", APIParams.tag], () => getSymptomDescription_API({...APIParams}), useQueryOptions);        
+    return useQuery({
+        queryKey: ["getSymptomDescription", APIParams.tag],
+        queryFn: () => getSymptomDescription_API({...APIParams}),
+        ...useQueryOptions
+    });        
 }
 
 /**
@@ -89,7 +113,11 @@ async function getSymptomPriority_API({ tag }) {
     return res.data;
 }
 export const useGetSymptomPriority = (APIParams= {tag},useQueryOptions = { staleTime: 30000 }) => {
-    return useQuery(["getSymptomPriority", APIParams.tag], () => getSymptomPriority_API({...APIParams}), useQueryOptions);        
+    return useQuery({
+        queryKey: ["getSymptomPriority", APIParams.tag],
+        queryFn: () => getSymptomPriority_API({...APIParams}),
+        ...useQueryOptions
+    });        
 }
 
 /**
@@ -102,7 +130,10 @@ async function postSymptom_API({  text, description, priority }) {
 }
 
 export const usePostSymptom = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => postSymptom_API({ ...APIParams }), useMutationOptions)
+    return useMutation({
+        mutationFn: (APIParams) => postSymptom_API({ ...APIParams }),
+        ...useMutationOptions
+    })
 }
 
 /**
@@ -115,7 +146,10 @@ async function editSymptom_API({ tag, text, description,  priority }) {
 }
 
 export const useEditSymptom = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => editSymptom_API({ ...APIParams }), useMutationOptions)
+    return useMutation({
+        mutationFn: (APIParams) => editSymptom_API({ ...APIParams }),
+        ...useMutationOptions
+    })
 }
 
 /**
@@ -128,7 +162,10 @@ async function deleteSymptom_API({ tag }) {
 }
 
 export const useDeleteSymptom = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => deleteSymptom_API({ ...APIParams }), useMutationOptions)
+    return useMutation({
+        mutationFn: (APIParams) => deleteSymptom_API({ ...APIParams }),
+        ...useMutationOptions
+    })
 }
 
 
@@ -147,4 +184,4 @@ async function postMaintenanceEvent_API({ description, instrument_tag, instrumen
     )
     return res.data 
 }   
-
+    

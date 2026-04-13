@@ -1,4 +1,4 @@
-import { useQuery } from "react-query"
+import { useQuery } from "@tanstack/react-query"
 import _ from "lodash"
 import axios from "axios"
 import config from "../../../config"; 
@@ -19,7 +19,11 @@ async function getGenotypeSampleCount_API({ genotype_tag }) {
 
 
 export const useGetGenotypeSampleCount = (APIParams = { genotype_tag: "" },useQueryOptions = {}) => {
-  return useQuery(["getGenotypeSampleCount", APIParams.genotype_tag],() => getGenotypeSampleCount_API(APIParams),useQueryOptions);
+  return useQuery({
+    queryKey: ["getGenotypeSampleCount", APIParams.genotype_tag],
+    queryFn: () => getGenotypeSampleCount_API(APIParams),
+    ...useQueryOptions
+  });
 };
 
 

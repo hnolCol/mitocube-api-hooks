@@ -1,10 +1,6 @@
-
-import { useMutation, useQuery } from "react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import config from "../../../config"
-
-
-
 
 /**
  * @description Returns the attribute. The default stale time is 30000 ms.
@@ -17,77 +13,61 @@ async function getAttributeByTag_API({ tag }) {
     return res.data 
 }
 
-export const useGetAttribute = (APIParams = { tag }, useQueryOptions = {staleTime : 30000}) => {
-    return useQuery(["getAttribute",APIParams.tag],
-        () => getAttributeByTag_API({ ...APIParams }), useQueryOptions)
+export const useGetAttribute = (APIParams = { tag }, useQueryOptions = {}) => {
+    return useQuery({
+        queryKey: ["getAttribute", APIParams.tag],
+        queryFn: () => getAttributeByTag_API({ ...APIParams }),
+        staleTime: 30000,
+        ...useQueryOptions
+    })
 }
 
-/**
- * @description Adds attributes to the database 
- * @param {Object} props
- * @param {String} props
- * @returns 
- */
 async function postAttribute_API({}){
-    //fetch availabe features from the API. Reconsider /details 
     const res = await axios.post(`${config.baseURL}/attributes`,{})
     return res.data
 }
 
 export const usePostAttribute = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => postAttribute_API({...APIParams}), useMutationOptions)
+    return useMutation({
+        mutationFn: (APIParams) => postAttribute_API({...APIParams}),
+        ...useMutationOptions
+    })
 }
 
-
-
-/**
- * @deprecated Deprecated, please use the usePostTrait
- * @description Adds attribute values for an attribute defined by its tag to the database. 
- * @param {Object} props
- * @param {String} props.attribute_tag The attribute tag to add values for
- * @returns 
- */
 async function postAttributeValues_API({attribute_tag}){
-    const res = await axios.post(`${config.baseURL}/attributes/${attribute_tag}/values`,) // add data
+    const res = await axios.post(`${config.baseURL}/attributes/${attribute_tag}/values`)
     return res.data
 }
 
 export const usePostAttributeValues = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => postAttributeValues_API({...APIParams}), useMutationOptions)
+    return useMutation({
+        mutationFn: (APIParams) => postAttributeValues_API({...APIParams}),
+        ...useMutationOptions
+    })
 }
 
-/**
- * @description Deletes attribute values for an attribute defined by its tag from the database. 
- * @param {Object} props
- * @param {String} props.attribute_tag 
- * @param {Object} props.attribute_value
- * @returns 
- */
 async function deleteAttributeValue_API({attribute_tag, attribute_value_tag}){
-    const res = await axios.delete(`${config.baseURL}/attributes/${attribute_tag}/values/${attribute_value_tag}`,)
+    const res = await axios.delete(`${config.baseURL}/attributes/${attribute_tag}/values/${attribute_value_tag}`)
     return res.data
 }
 
 export const useDeleteAttributeValue = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => deleteAttributeValue_API({...APIParams}), useMutationOptions)
+    return useMutation({
+        mutationFn: (APIParams) => deleteAttributeValue_API({...APIParams}),
+        ...useMutationOptions
+    })
 }
 
-
-/**
- * @description Update an attribute value in the database. 
- * @param {Object} props 
- * @param {String} props.attribute_tag
- * @param {Object} props.attribute_value_props
- * @returns 
- */
 async function patchAttributeValue_API({ attribute_tag, attribute_value_props }) {
     const res = await axios.patch(`${config.baseURL}/attributes/${attribute_tag}/values/${attribute_value_props.tag}`,
-        attribute_value_props //updated data 
+        attribute_value_props
     )
-    return res 
+    return res.data
 }
 
 export const useUpdateAttributeValue = (useMutationOptions = {}) => {
-    return useMutation((APIParams) =>  patchAttributeValue_API({...APIParams}), useMutationOptions)
+    return useMutation({
+        mutationFn: (APIParams) => patchAttributeValue_API({...APIParams}),
+        ...useMutationOptions
+    })
 }
-

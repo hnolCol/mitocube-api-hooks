@@ -1,4 +1,4 @@
-import { useQuery } from "react-query"
+import { useQuery } from "@tanstack/react-query"
 import _ from "lodash"
 import axios from "axios"
 import config from "../../../config";
@@ -16,8 +16,11 @@ async function getGenotypeConditionApplications_API({ genotype_tag }) {
 }
 
 export const useGetGenotypeConditionApplications = (APIParams = { genotype_tag }, useQueryOptions = {}) => {
-    return useQuery(["getGenotypeConditionApplication", APIParams.genotype_tag],
-        () => getGenotypeConditionApplications_API({ ...APIParams }),useQueryOptions)
+    return useQuery({
+        queryKey: ["getGenotypeConditionApplication", APIParams.genotype_tag],
+        queryFn: () => getGenotypeConditionApplications_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }
 
 
@@ -35,7 +38,10 @@ async function getGenotypeConditionApplicationsData_API({ tag }) {
 }
 
 export const useGetGenotypeConditionApplicationsData = (APIParams = { tag }, useQueryOptions = {}) => {
-    return useQuery(["getGenotypeConditionApplicationsData", APIParams.tag],
-        () => getGenotypeConditionApplicationsData_API({ ...APIParams }),useQueryOptions)
+    return useQuery({
+        queryKey: ["getGenotypeConditionApplicationsData", APIParams.tag],
+        queryFn: () => getGenotypeConditionApplicationsData_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }
 

@@ -1,4 +1,4 @@
-import { useQuery } from "react-query"
+import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import config from "../../../config"
 /**
@@ -14,8 +14,11 @@ async function getSubmissionSampleNames_API({ tag }) {
 }
 
 export const useGetSubmissionSampleTags = (APIParams = {tag}, useQueryOptions = {}) => {
-    return useQuery(["submission_samples_tags", APIParams.tag],
-        () => getSubmissionSampleNames_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["submission_samples_tags", APIParams.tag],
+        queryFn: () => getSubmissionSampleNames_API({ ...APIParams }),
+        ...useQueryOptions
+    })
 }
 
 
@@ -30,8 +33,8 @@ async function deleteSubmissionSample_API({ tag, sample_index }) {
     const res = await axios.delete(`/api/submissions/${tag}/samples/${sample_index}`)
     return res.data 
 }
-export const useDeleteSample = (APIParams = {}, useQueryOptions = {}) => {
-    return 
+export const useDeleteSample = (APIParams = {}, useMutationOptions = {}) => {
+    return useMutation({mutationFn: (APIParams) => deleteSubmissionSample_API({...APIParams}), ...useMutationOptions})
 }
 
 
@@ -49,8 +52,11 @@ async function getSubmissionSampleCount_API({ tag }) {
 }
 
 export const useGetSubmissionSampleCount= (APIParams = {tag}, useQueryOptions = {}) => {
-    return useQuery(["submission_samples_count", APIParams.tag],
-        () => getSubmissionSampleCount_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["submission_samples_count", APIParams.tag],
+        queryFn: () => getSubmissionSampleCount_API({ ...APIParams }),
+        ...useQueryOptions
+    })
 }
 
 
@@ -68,5 +74,9 @@ async function getSubmissionSamplesFull_API({ tag }) {
 }
 
 export const useGetSubmissionSamplesFull = (APIParams = { tag }, useQueryOptions = { staleTime: 0 }) => {
-    return useQuery(["getSubmissionSamplesFull", APIParams.tag], () => getSubmissionSamplesFull_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getSubmissionSamplesFull", APIParams.tag],
+        queryFn: () => getSubmissionSamplesFull_API({ ...APIParams }),
+        ...useQueryOptions
+    })
 }

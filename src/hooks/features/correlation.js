@@ -2,7 +2,7 @@
 
 import axios from "axios"
 import config from "../../../config"
-import { useQuery } from "react-query"
+import { useQuery } from "@tanstack/react-query"
 import _ from "lodash"
 
 
@@ -23,13 +23,15 @@ async function getFeatureCorrelation_API({tag, annotation_tags, limit, min_data_
 
 export const useGetFeatureCorrelation = (APIParams = { tag, min_data_points, annotation_tags, limit, direction, fdr }, queryOptions = {placeHolderData: (prev) => prev, staleTime: 30000}) => {
 
-    return useQuery(["feature_spec_corr",
-        APIParams.tag,
-        _.join(APIParams.annotation_tags),
-        APIParams.min_data_points,
-        APIParams.limit,
-        APIParams.direction,
-        APIParams.fdr], () => getFeatureCorrelation_API({ ...APIParams }), queryOptions)
+    return useQuery({
+        queryKey: ["feature_spec_corr",
+            APIParams.tag,
+            _.join(APIParams.annotation_tags),
+            APIParams.min_data_points,
+            APIParams.limit,
+            APIParams.direction,
+        APIParams.fdr], queryFn: () => getFeatureCorrelation_API({ ...APIParams }), ...queryOptions
+    });
 }
 
 

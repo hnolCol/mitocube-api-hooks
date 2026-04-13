@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import _ from "lodash";
 import axios from "axios";
 import config from "../../../config";
@@ -12,5 +12,9 @@ async function getStatisticInfo_API({}) {
 }
 
 export const useGetStatisticInfo = (APIParams = {}, useQueryOptions = {staleTime : Infinity}) => {
-    return useQuery(["getStatisticInfo"],() =>  getStatisticInfo_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["getStatisticInfo"],
+        queryFn: () => getStatisticInfo_API({...APIParams}),
+        ...useQueryOptions
+    });
 }

@@ -1,4 +1,4 @@
-import { useMutation } from "react-query"
+import { useMutation } from "@tanstack/react-query"
 import axios from "axios"
 import config from "../../../config";
 
@@ -11,7 +11,6 @@ import config from "../../../config";
  */
 
 async function editGenotype_API({ tag, text, description, publication, components }) {
-    console.log(tag, text, description, publication, components)
     const res = await axios.put(`${config.baseURL}/genotypes/${tag}`, {text, description, publication, components })
     
     return res.data
@@ -19,5 +18,8 @@ async function editGenotype_API({ tag, text, description, publication, component
 
 export const useEditGenotype = (useMutationOptions = {}) => {
     
-    return useMutation((APIParams) => editGenotype_API({ ...APIParams }), useMutationOptions)
+    return useMutation({
+        mutationFn: (APIParams) => editGenotype_API({ ...APIParams }),
+        ...useMutationOptions
+    });
 }

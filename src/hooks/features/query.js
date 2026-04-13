@@ -1,5 +1,5 @@
 import axios from "axios"
-import { useQuery } from "react-query"
+import { useQuery } from "@tanstack/react-query"
 
 
 /**
@@ -18,5 +18,9 @@ async function featureInfoByTag_API({ search_string, submission_tag, include_typ
 }
 
 export function useGetFeaturesByQuery(APIParams = {search_string, submission_tag, include_types, exclude_types, limit}, useQueryOptions = { }) {
-    return useQuery(["infoFeature",APIParams.search_string, APIParams.submission_tag, APIParams.include_types, APIParams.exclude_types, APIParams.limit],() =>  featureInfoByTag_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["infoFeature", APIParams.search_string, APIParams.submission_tag, APIParams.include_types, APIParams.exclude_types, APIParams.limit],
+        queryFn: () => featureInfoByTag_API({ ...APIParams }),
+        ...useQueryOptions
+    }); 
 }

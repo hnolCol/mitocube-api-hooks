@@ -1,4 +1,4 @@
-import { useQuery } from "react-query"
+import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 
 /**
@@ -15,10 +15,12 @@ async function getUserViews_API({ tag, type, limit }) {
 }
 
 export const useGetUserViews = (APIParams = { tag, type, limit: 20 }, useQueryOptions = {}) => {
-    return useQuery(["getUserViews", APIParams.tag, APIParams.type, APIParams.limit], () => getUserViews_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getUserViews", APIParams.tag, APIParams.type, APIParams.limit],
+        queryFn: () => getUserViews_API({ ...APIParams }),
+        ...useQueryOptions
+    })
 }
-
-
 
 
 

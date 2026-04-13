@@ -1,4 +1,4 @@
-import { useMutation } from "react-query"
+import { useMutation } from "@tanstack/react-query"
 import _ from "lodash"
 import axios from "axios"
 import config from "../../../config"; 
@@ -19,5 +19,8 @@ async function deleteGenotype_API({ tag }) {
 
 
 export const useDeleteGenotype = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => deleteGenotype_API({ ...APIParams }), useMutationOptions)
+    return useMutation({
+        mutationFn: (APIParams) => deleteGenotype_API({ ...APIParams }),
+        ...useMutationOptions
+    });
 }

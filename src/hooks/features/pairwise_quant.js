@@ -1,5 +1,5 @@
 import axios from "axios"
-import { useQuery } from "react-query"
+import { useQuery } from "@tanstack/react-query"
 import config from "../../../config"
 
 
@@ -15,8 +15,11 @@ async function featureFeatureCorrelation_API({ feature_tag_x, feature_tag_y }) {
     return res.data
 }
 export function useGetPairwiseFeatureQuant(APIParams = {feature_tag_x, feature_tag_y, annotation_tags}, useQueryOptions = {}) {
-    return useQuery(["featurePairQuant",
-        APIParams.feature_tag_x,
-        APIParams.feature_tag_y],
-        () => featureFeatureCorrelation_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["featurePairQuant",
+            APIParams.feature_tag_x,
+            APIParams.feature_tag_y],
+        queryFn: () => featureFeatureCorrelation_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }

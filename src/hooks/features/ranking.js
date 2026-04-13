@@ -4,7 +4,7 @@
 
 
 
-import { useQuery } from "react-query"
+import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import config from "../../../config"
 
@@ -44,8 +44,11 @@ export async function getProteinGroupSubmissionStats_API({ tag, limit }) {
 }
 
 export function useGetProteinGroupSubmissionStats(APIParams = {tag, limit}, useQueryOptions = { staleTime: Infinity}) {
-    return useQuery(["getProteinGroupSubmissionStats",
-        APIParams.tag, APIParams.limit], () => getProteinGroupSubmissionStats_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["getProteinGroupSubmissionStats", APIParams.tag, APIParams.limit],
+        queryFn: () => getProteinGroupSubmissionStats_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }
 
 

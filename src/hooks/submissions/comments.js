@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from "react-query"
+import { useQuery, useMutation } from "@tanstack/react-query"
 import axios from "axios"
 import config from "../../../config"
 /**
@@ -13,8 +13,11 @@ async function getSubmissionComments_API({ tag }) {
 }
 
 export const useGetSubmissionComments = (APIParams = {tag}, useQueryOptions = {}) => {
-    return useQuery(["submission_samples", APIParams.tag],
-        () => getSubmissionComments_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["submission_samples", APIParams.tag],
+        queryFn: () => getSubmissionComments_API({ ...APIParams }),
+        ...useQueryOptions
+    })
 }
 
 
@@ -36,5 +39,5 @@ async function postComment_API({ tag, content, tags }) {
 }
 
 export const usePostComment = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => postComment_API({...APIParams}), useMutationOptions)
+    return useMutation({mutationFn: (APIParams) => postComment_API({...APIParams}), ...useMutationOptions})
 }

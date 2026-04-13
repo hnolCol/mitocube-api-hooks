@@ -1,5 +1,5 @@
 import axios from "axios"
-import { useQuery } from "react-query"
+import { useQuery } from "@tanstack/react-query"
 import config from "../../../config";
 /**
  * @description Returns if the submission exists in the database.
@@ -14,6 +14,9 @@ export async function getSubmissionExists_API({ tag }) {
 }
 
 export const useGetSubmissionExists = (APIParams = {tag}, useQueryOptions = { staleTime: 2000000}) => {
-    return useQuery(["getSubmissionExists", APIParams.tag],
-        () => getSubmissionExists_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getSubmissionExists", APIParams.tag],
+        queryFn: () => getSubmissionExists_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }

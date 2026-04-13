@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import _ from "lodash";
 import axios from "axios";
 import config from "../../../config";
@@ -15,5 +15,9 @@ async function getSymptomsPermissions_API({  }) {
 }
 
 export const useGetSymptomsPermissions = (APIParams = {  }, useQueryOptions = {}) => {
-  return useQuery(["getSymptomsPermissions"],() => getSymptomsPermissions_API({ ...APIParams }), useQueryOptions);
+  return useQuery({
+    queryKey: ["getSymptomsPermissions"],
+    queryFn: () => getSymptomsPermissions_API({ ...APIParams }),
+    ...useQueryOptions
+  });
 };

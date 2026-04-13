@@ -1,5 +1,5 @@
 import axios from "axios"
-import { useQuery, useMutation } from "react-query"
+import { useQuery, useMutation } from "@tanstack/react-query"
 import config from "../../../config";
 
 async function getSubmissionMetatexts_API({ }) {
@@ -7,7 +7,11 @@ async function getSubmissionMetatexts_API({ }) {
     return res.data 
 }
 export const useGetMetatext = (APIParams = {}, useQueryOptions = {staleTime : Infinity}) => {
-    return useQuery(["metatextForSubmissions"], () => getSubmissionMetatexts_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["metatextForSubmissions"],
+        queryFn: () => getSubmissionMetatexts_API({...APIParams}),
+        ...useQueryOptions
+    });
 }
 
 
@@ -18,7 +22,11 @@ async function getSubmissionMetatextTags_API({ submission_tag }) {
     return res.data 
 }
 export const useGetMetatexts = (APIParams = {submission_tag}, useQueryOptions = {staleTime : 300000}) => {
-    return useQuery(["metatextForSubmissions", APIParams.submission_tag], () => getSubmissionMetatextTags_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["metatextForSubmissions", APIParams.submission_tag],
+        queryFn: () => getSubmissionMetatextTags_API({...APIParams}),
+        ...useQueryOptions
+    });
 }
 
 
@@ -35,8 +43,11 @@ async function getSpecificSubmissionMetatextsByTag_API({tag, metatext_tag}) {
     return res.data 
 }
 export const useGetSubmissionMetatextByTag = (APIParams = {tag, metatext_tag}, useQueryOptions = {staleTime : 30000000}) => {
-    return useQuery(["submissionMetaText", APIParams.tag, APIParams.metatext_tag],
-        () => getSpecificSubmissionMetatextsByTag_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["submissionMetaText", APIParams.tag, APIParams.metatext_tag],
+        queryFn: () => getSpecificSubmissionMetatextsByTag_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }
 
 
@@ -54,7 +65,7 @@ async function postMetatext_API({submission_tag, title, text}){
 }
 
 export const usePostMetatext = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => postMetatext_API({...APIParams}), useMutationOptions)
+    return useMutation({mutationFn: (APIParams) => postMetatext_API({...APIParams}), ...useMutationOptions})
 }
 
 

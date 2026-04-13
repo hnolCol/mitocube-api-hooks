@@ -1,6 +1,6 @@
 import axios from "axios"
 import config from "../../../../config"
-import { useQuery } from "react-query"
+import { useQuery } from "@tanstack/react-query"
 
 /**
  * @description Verifies the token. Returns an object. TO DO: useMutation instead of useQuery.
@@ -23,7 +23,9 @@ async function verifyToken({tokenString, verificationCode}) {
 }
 
 export const useVerifyToken = (APIParams = {}, queryOptions = {}) => {
-  return useQuery(["verifyToken",APIParams.tokenString, APIParams.verificationCode], () => verifyToken({...APIParams}), queryOptions)
+  return useQuery({
+    queryKey: ["verifyToken", APIParams.tokenString, APIParams.verificationCode],
+    queryFn: () => verifyToken({...APIParams}),
+    ...queryOptions
+  })
 }
-
-

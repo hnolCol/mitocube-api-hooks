@@ -1,5 +1,5 @@
 // States and states changes of a submission 
-import { useQuery } from "react-query"
+import { useQuery } from "@tanstack/react-query"
 import config from "../../../config"
 import axios from "axios"
 
@@ -17,6 +17,9 @@ export async function getSubmissionUsers_API({ tag }) {
 }
 
 export const useGetSubmissionUsers = (APIParams = {tag }, useQueryOptions = { staleTime: 50000, placeHolderData : prev => prev || []}) => {
-    return useQuery(["getSubmissionUsers", APIParams.tag],
-        () => getSubmissionUsers_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getSubmissionUsers", APIParams.tag],
+        queryFn: () => getSubmissionUsers_API({ ...APIParams }),
+        ...useQueryOptions
+    })
 }

@@ -1,5 +1,5 @@
 // States and states changes of a submission 
-import { useQuery, useMutation } from "react-query"
+import { useQuery, useMutation } from "@tanstack/react-query"
 import config from "../../../config"
 import axios from "axios"
 
@@ -15,8 +15,11 @@ export async function getSubmissionViews_API({ tag }) {
 }
 
 export const useGetSubmissionViews = (APIParams = {tag }, useQueryOptions = { staleTime: 50000, placeHolderData : prev => prev || 0}) => {
-    return useQuery(["getSubmissionViews", APIParams.tag],
-        () => getSubmissionViews_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getSubmissionViews", APIParams.tag],
+        queryFn: () => getSubmissionViews_API({ ...APIParams }),
+        ...useQueryOptions
+    })
 }   
 
 
@@ -32,5 +35,5 @@ async function postSubmissionView_API({ tag }) {
 }
 
 export const usePostSubmissionView = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => postSubmissionView_API({...APIParams}), useMutationOptions)
+    return useMutation({mutationFn: (APIParams) => postSubmissionView_API({...APIParams}), ...useMutationOptions})
 }

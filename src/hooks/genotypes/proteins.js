@@ -1,4 +1,4 @@
-import { useQuery } from "react-query"
+import { useQuery } from "@tanstack/react-query"
 import _ from "lodash"
 import axios from "axios"
 import config from "../../../config"; 
@@ -16,7 +16,11 @@ async function getGenotypeProteins_API({ genotype_tag }) {
 }
 
 export const useGetGenotypeProteins = (APIParams = { genotype_tag }, useQueryOptions = {}) => {
-    return useQuery(["getGenotypeProteins", APIParams.genotype_tag],() => getGenotypeProteins_API({ ...APIParams }),useQueryOptions)
+    return useQuery({
+        queryKey: ["getGenotypeProteins", APIParams.genotype_tag],
+        queryFn: () => getGenotypeProteins_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }
 
 
@@ -32,9 +36,9 @@ async function getGenotypeProteome_API({ genotype_tag }) {
     return res.data
 }
 export const useGetGenotypeProteome = (APIParams = { genotype_tag }, useQueryOptions = {}) => {
-    return useQuery(
-        ["getGenotypeProteome", APIParams.genotype_tag],
-        () => getGenotypeProteome_API({ ...APIParams }),
-        useQueryOptions
-    )
+    return useQuery({
+        queryKey: ["getGenotypeProteome", APIParams.genotype_tag],
+        queryFn: () => getGenotypeProteome_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }

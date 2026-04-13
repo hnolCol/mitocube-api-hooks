@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from "react-query"
+import { useQuery, useMutation } from "@tanstack/react-query"
 import axios from "axios"
 import _ from "lodash"
 
@@ -16,13 +16,16 @@ async function getFilters_API({proteome_tag, protein_tag, submission_tag}){
 }
 
 export function useGetFilters (APIParams = {proteome_tag, protein_tag, submission_tag}, useQueryOptions = {}) {
-    return useQuery(["getFilters",
-        APIParams.proteome_tag,
-        APIParams.protein_tag,
-        APIParams.submission_tag],
-
-        () => getFilters_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getFilters",
+            APIParams.proteome_tag,
+            APIParams.protein_tag,
+            APIParams.submission_tag],
+        queryFn: () => getFilters_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }
+
 
 
 /**
@@ -49,7 +52,10 @@ async function postFilter_API({proteome_tag, protein_tags, description, text, pu
 }
 
 export const usePostFilter = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => postFilter_API({...APIParams}), useMutationOptions)
+    return useMutation({
+        mutationFn: (APIParams) => postFilter_API({ ...APIParams }),
+        ...useMutationOptions
+    });
 }
 
 
@@ -65,7 +71,10 @@ async function deleteFilter_API({ tag }) {
 }
 
 export const useDeleteFilter = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => deleteFilter_API({...APIParams}), useMutationOptions)
+    return useMutation({
+        mutationFn: (APIParams) => deleteFilter_API({ ...APIParams }),
+        ...useMutationOptions
+    });
 }
 
 

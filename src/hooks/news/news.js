@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from "react-query"
+import { useQuery, useMutation } from "@tanstack/react-query"
 import axios from "axios"
 import config from "../../../config";
 
@@ -16,7 +16,11 @@ async function findNews_API({limit, order = 'desc'}) {
 }
 
 export const useFindNews = (APIParams = {limit, order: 'desc'}, useQueryOptions = {}) => {
-    return useQuery(["getNews"],() =>  findNews_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["getNews"],
+        queryFn: () => findNews_API({...APIParams}),
+        ...useQueryOptions
+    })
 }
 
 
@@ -32,7 +36,11 @@ async function getNewsByTag_API({tag}) {
 }
 
 export const useGetNewsByTag = (APIParams = {tag}, useQueryOptions = {}) => {
-    return useQuery(["getNewsByTag", APIParams.tag],() =>  getNewsByTag_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["getNewsByTag", APIParams.tag],
+        queryFn: () => getNewsByTag_API({...APIParams}),
+        ...useQueryOptions
+    })
 }
 
 
@@ -60,7 +68,10 @@ async function postNews_API({ title, content, submission_tags, feature_tags }) {
 }
 
 export const usePostNews = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => postNews_API({...APIParams}), useMutationOptions)
+    return useMutation({
+        mutationFn: (APIParams) => postNews_API({...APIParams}),
+        ...useMutationOptions
+    })
 }
 
 
@@ -77,5 +88,8 @@ async function deleteNews_API({ tag }) {
 }
 
 export const useDeleteNews = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => deleteNews_API({...APIParams}), useMutationOptions)
+    return useMutation({
+        mutationFn: (APIParams) => deleteNews_API({...APIParams}),
+        ...useMutationOptions
+    })
 }

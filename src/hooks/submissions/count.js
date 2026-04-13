@@ -1,5 +1,5 @@
 // States and states changes of a submission 
-import { useQuery } from "react-query"
+import { useQuery } from "@tanstack/react-query"
 import config from "../../../config"
 import axios from "axios"
 
@@ -35,12 +35,18 @@ export const useGetSubmissionProteinGroupCount = (APIParams = { tag }, useQueryO
     
     if (!APIParams.tag) { 
 
-        return useQuery(["getSubmissionProteinGroupQuantificationCount"],
-        () => getSubmissionProteinGroupQuantificationCount_API({ ...APIParams }), useQueryOptions)
+        return useQuery({
+            queryKey: ["getSubmissionProteinGroupQuantificationCount"],
+            queryFn: () => getSubmissionProteinGroupQuantificationCount_API({ ...APIParams }),
+            ...useQueryOptions
+        });
     }
 
-    return useQuery(["getSubmissionProteinCount", APIParams.tag],
-        () => getSubmissionProteinCount_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getSubmissionProteinCount", APIParams.tag],
+        queryFn: () => getSubmissionProteinCount_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }
 
 
@@ -59,8 +65,11 @@ export async function getSubmissionPeptideCount_API({ tag }) {
 }
 
 export const useGetSubmissionPeptideCount = (APIParams = {tag}, useQueryOptions = { staleTime: 500}) => {
-    return useQuery(["getSubmissionPeptideCount", APIParams.tag],
-        () => getSubmissionPeptideCount_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getSubmissionPeptideCount", APIParams.tag],
+        queryFn: () => getSubmissionPeptideCount_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }
 
 
@@ -83,8 +92,11 @@ export async function getSubmissionSampleProteinGroupCount_API({ tag }) {
 export const useGetSubmissionSampleProteinGroupCount = (APIParams = { tag }, useQueryOptions = { staleTime: 500 }) => {
     
     
-    return useQuery(["getSubmissionSampleProteinGroupCount", APIParams.tag],
-        () => getSubmissionSampleProteinGroupCount_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getSubmissionSampleProteinGroupCount", APIParams.tag],
+        queryFn: () => getSubmissionSampleProteinGroupCount_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }
 
 

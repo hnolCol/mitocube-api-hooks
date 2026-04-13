@@ -1,5 +1,5 @@
 import axios from "axios"
-import { useQuery } from "react-query"
+import { useQuery } from "@tanstack/react-query"
 
 
 /**
@@ -13,6 +13,9 @@ async function getRunlist_API({tag}) {
     return res.data
 }
 export const useGetRunlist = (APIParams = {}, useQueryOptions = {staleTime : 3000000}) => {
-    return useQuery(["submissionStates", APIParams.tag],
-        () => getRunlist_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["submissionRunlist", APIParams.tag],
+        queryFn: () => getRunlist_API({ ...APIParams }),
+        ...useQueryOptions
+    })
 }

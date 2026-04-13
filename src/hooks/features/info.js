@@ -1,5 +1,5 @@
 import axios from "axios"
-import { useQuery } from "react-query"
+import { useQuery } from "@tanstack/react-query"
 
 
 /**
@@ -14,5 +14,9 @@ async function featureInfoByTag_API({ tag }) {
 }
 
 export function useGetFeatureInfo(APIParams = {tag}, useQueryOptions = { }) {
-    return useQuery(["infoFeature",APIParams.tag],() =>  featureInfoByTag_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["infoFeature", APIParams.tag],
+        queryFn: () => featureInfoByTag_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }

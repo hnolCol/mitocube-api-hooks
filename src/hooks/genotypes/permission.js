@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import _ from "lodash";
 import axios from "axios";
 import config from "../../../config";
@@ -16,5 +16,9 @@ async function getGenotypePermissions_API({ }) {
 }
 
 export const useGetGenotypePermissions = (APIParams = {  }, useQueryOptions = {}) => {
-  return useQuery(["getGenotypePermissions"],() => getGenotypePermissions_API({ ...APIParams }), useQueryOptions);
+  return useQuery({
+    queryKey: ["getGenotypePermissions"],
+    queryFn: () => getGenotypePermissions_API({ ...APIParams }),
+    ...useQueryOptions
+  });
 };

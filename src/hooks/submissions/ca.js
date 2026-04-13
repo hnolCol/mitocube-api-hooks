@@ -1,5 +1,5 @@
 // States and states changes of a submission 
-import { useQuery, useMutation } from "react-query"
+import { useQuery, useMutation } from "@tanstack/react-query"
 import config from "../../../config"
 import axios from "axios"
 
@@ -19,8 +19,11 @@ export async function getSubmissionCA_API({ tag, attribute_tags, group_by_attrib
 }
 
 export const useGetSubmissionConditionApplication = (APIParams = {tag, attribute_tags, group_by_attribute}, useQueryOptions = { staleTime: 500}) => {
-    return useQuery(["getSubmissionConditionApplication", APIParams.tag, APIParams.attribute_tags, APIParams.group_by_attribute],
-        () => getSubmissionCA_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getSubmissionConditionApplication", APIParams.tag, APIParams.attribute_tags, APIParams.group_by_attribute],
+        queryFn: () => getSubmissionCA_API({ ...APIParams }),
+        ...useQueryOptions
+    })
 }
 
 
@@ -39,8 +42,11 @@ export async function getSubmissionSamplesCA_API({ tag, attribute_tags, return_u
 }
 
 export const useGetSubmissionSampleConditionApplications = (APIParams = {tag, attribute_tags, return_unique}, useQueryOptions = { staleTime: 500}) => {
-    return useQuery(["getSubmissionSamplesConditionApplication", APIParams.tag, APIParams.attribute_tags, APIParams.return_unique],
-        () => getSubmissionSamplesCA_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getSubmissionSamplesConditionApplication", APIParams.tag, APIParams.attribute_tags, APIParams.return_unique],
+        queryFn: () => getSubmissionSamplesCA_API({ ...APIParams }),
+        ...useQueryOptions
+    })
 }
 
 
@@ -58,8 +64,11 @@ export async function getSubmissionCAAttributes_API({ tag }) {
 }
 
 export const useGetSubmissionConditionApplicationAttributes = (APIParams = {tag }, useQueryOptions = { staleTime: 500}) => {
-    return useQuery(["getSubmissionConditionApplicationAttributes", APIParams.tag],
-        () => getSubmissionCAAttributes_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getSubmissionConditionApplicationAttributes", APIParams.tag],
+        queryFn: () => getSubmissionCAAttributes_API({ ...APIParams }),
+        ...useQueryOptions
+    })
 }
 
 
@@ -77,8 +86,11 @@ export async function getSubmissionSampleCAAttributes_API({ tag }) {
 }
 
 export const useGetSubmissionSampleConditionApplicationAttributes = (APIParams = {tag }, useQueryOptions = { staleTime: 500}) => {
-    return useQuery(["getSubmissionSampleConditionApplicationAttributes", APIParams.tag],
-        () => getSubmissionSampleCAAttributes_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getSubmissionSampleConditionApplicationAttributes", APIParams.tag],
+        queryFn: () => getSubmissionSampleCAAttributes_API({ ...APIParams }),
+        ...useQueryOptions
+    })
 }
 
 
@@ -97,8 +109,11 @@ export async function getSubmissionConditionApplictionsData_API({ tag, attribute
 }
 
 export const useGetSubmissionConditionApplicationData = (APIParams = {tag, attribute_tags}, useQueryOptions = { staleTime: 500}) => {
-    return useQuery(["getSubmissionConditionApplicationData", APIParams.tag, APIParams.attribute_tags],
-        () => getSubmissionConditionApplictionsData_API({ ...APIParams }), useQueryOptions)   
+    return useQuery({
+        queryKey: ["getSubmissionConditionApplicationData", APIParams.tag, APIParams.attribute_tags],
+        queryFn: () => getSubmissionConditionApplictionsData_API({ ...APIParams }),
+        ...useQueryOptions
+    })   
 }
 
 
@@ -108,6 +123,6 @@ export async function updateSubmissionCA_API({ tag, selected_traits }) {
 }
 
 export const useUpdateSubmissionCA = (useQueryOptions = {}) => {
-    return useMutation((data) => updateSubmissionCA_API(data),useQueryOptions)
+    return useMutation({mutationFn: (data) => updateSubmissionCA_API(data), ...useQueryOptions})
 }
 

@@ -1,4 +1,4 @@
-import { useQuery } from "react-query"
+import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 
 /**
@@ -12,6 +12,10 @@ async function getUserActive_API({ tag }) {
     return res.data
 }
 
-export const useGetUserIsActive = (APIParams = {tag}, useQueryOptions = {}) => {
-    return useQuery(["getUserActive", APIParams.tag], () => getUserActive_API({...APIParams}), useQueryOptions)
+export const useGetUserIsActive = (APIParams = { tag: "" }, useQueryOptions = {}) => {
+    return useQuery({
+        queryKey: ["getUserActive", APIParams.tag],
+        queryFn: () => getUserActive_API({ ...APIParams }),
+        ...useQueryOptions
+    })
 }

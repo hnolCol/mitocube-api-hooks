@@ -89,6 +89,7 @@ import { useGetTokenValid } from "./src/hooks/authorization/token/check";
 import { useGetSubmissionExclusivelyQuantifiedProteinGroups, useGetSubmissionRanking, useUpdateSubmissionStats } from "./src/hooks/submissions/ranking";
 import { useGetGenotypeExists } from "./src/hooks/genotypes/exists";
 import { useGetStatisticInfo } from "./src/hooks/info/statistics";
+import { useGetBackendInfo } from "./src/hooks/info/backend";
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 
@@ -149,7 +150,8 @@ export default {
     },
     info: {
         useGetBackendVersion,
-        useGetTermsOfUse
+        useGetTermsOfUse,
+        useGetBackendInfo
     },
     metatexts: {
         useGetMetatext,
@@ -456,7 +458,8 @@ export default {
         
     },
     info: {
-        useGetStatisticInfo
+        useGetStatisticInfo,
+        useGetBackendInfo
     }
     
 

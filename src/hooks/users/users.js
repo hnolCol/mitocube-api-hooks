@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import config from "../../../config"
 
@@ -15,7 +15,10 @@ async function postUser_API({ firstname, lastname, email, role, research_group, 
 }
 
 export const usePostUser = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => postUser_API({...APIParams}), useMutationOptions)
+    return useMutation({
+        mutationFn: (APIParams) => postUser_API({...APIParams}),
+        ...useMutationOptions
+    })
 }
 
 
@@ -33,7 +36,10 @@ async function patchUser_API({ firstname, lastname, email, role, research_group,
 }
 
 export const usePatchUser = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => patchUser_API({...APIParams}), useMutationOptions)
+    return useMutation({
+        mutationFn: (APIParams) => patchUser_API({...APIParams}),
+        ...useMutationOptions
+    })
 }
 
 
@@ -49,5 +55,9 @@ async function getPublicUsersByTag_API({tag}) {
 }
 
 export const useGetPublicUserByTag = (APIParams = {}, useQueryOptions = {staleTime: Infinity}) => {
-    return useQuery(["getPublicUserByLabel", APIParams.tag],() =>  getPublicUsersByTag_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["getPublicUserByLabel", APIParams.tag],
+        queryFn: () => getPublicUsersByTag_API({...APIParams}),
+        ...useQueryOptions
+    })
 }

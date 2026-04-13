@@ -1,5 +1,5 @@
 import axios from "axios"
-import { useQuery, useMutation } from "react-query"
+import { useQuery, useMutation } from "@tanstack/react-query"
 import config from "../../../config";
 
 
@@ -9,7 +9,11 @@ async function getResearchAim_API({ tag }) {
     return res.data 
 }
 export const useGetResearchAim = (APIParams = {tag}, useQueryOptions = {}) => {
-    return useQuery(["researchAimByTag", APIParams.tag], () => getResearchAim_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["researchAimByTag", APIParams.tag],
+        queryFn: () => getResearchAim_API({...APIParams}),
+        ...useQueryOptions
+    })
 }
 
 
@@ -27,7 +31,7 @@ async function postResearchAim_API({submission_tag, research_aim}){
 }
 
 export const usePostResearchAim = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => postResearchAim_API({...APIParams}), useMutationOptions)
+    return useMutation({mutationFn: (APIParams) => postResearchAim_API({...APIParams}), ...useMutationOptions})
 }
 
 
@@ -44,5 +48,5 @@ async function patchResearchAim_API({submission_tag, research_aim}){
 }
 
 export const usePatchResearchAim = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => patchResearchAim_API({...APIParams}), useMutationOptions)
+    return useMutation({mutationFn: (APIParams) => patchResearchAim_API({...APIParams}), ...useMutationOptions})
 }

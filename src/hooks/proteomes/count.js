@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from "react-query"
+import { useQuery, useMutation } from "@tanstack/react-query"
 import axios from "axios"
 import config from "../../../config";
 
@@ -14,7 +14,11 @@ async function getProteomeCount_API() {
 }
 
 export const useGetProteomeCount = (APIParams = {}, useQueryOptions = {}) => {
-    return useQuery(["getProteomeCount",],() =>  getProteomeCount_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["getProteomeCount"],
+        queryFn: () => getProteomeCount_API({...APIParams}),
+        ...useQueryOptions
+    })
 }
 
 
@@ -32,5 +36,9 @@ async function getProteomeProteinCount_API({tag}) {
 }
 
 export const useGetProteomeProteinCount = (APIParams = {tag}, useQueryOptions = {}) => {
-    return useQuery(["getProteomeProteinCount",APIParams.tag],() =>  getProteomeProteinCount_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["getProteomeProteinCount", APIParams.tag],
+        queryFn: () => getProteomeProteinCount_API({...APIParams}),
+        ...useQueryOptions
+    })
 }

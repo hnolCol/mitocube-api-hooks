@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import _ from "lodash";
 import axios from "axios";
 import config from "../../../config";
@@ -15,5 +15,9 @@ async function getProcedurePermissions_API({ }) {
 }
 
 export const useGetProcedurePermissions = (APIParams = { }, useQueryOptions = {}) => {
-  return useQuery(["getProcedurePermissions"],() => getProcedurePermissions_API({ ...APIParams }), useQueryOptions);
+  return useQuery({
+    queryKey: ["getProcedurePermissions"],
+    queryFn: () => getProcedurePermissions_API({ ...APIParams }),
+    ...useQueryOptions
+  });
 };

@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from "react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import config from "../../../config";
 
@@ -14,7 +14,11 @@ async function getInstrumentTypes_API({}) {
 }
 
 export const useGetInstrumentTypes = (APIParams = {}, useQueryOptions = {stateTime : Infinity}) => {
-    return useQuery(["getInstrumentTypes"],() =>  getInstrumentTypes_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["getInstrumentTypes"],
+        queryFn: () => getInstrumentTypes_API({...APIParams}),
+        ...useQueryOptions
+    });
 }
 
 /**
@@ -28,7 +32,11 @@ async function getInstrumentsByType_API({tag}) {
 }
 
 export const useGetInstrumentsByType = (APIParams = {tag}, useQueryOptions = {stateTime : Infinity}) => {
-    return useQuery(["getInstrumentByType",APIParams.tag],() =>  getInstrumentsByType_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["getInstrumentByType", APIParams.tag],
+        queryFn: () => getInstrumentsByType_API({...APIParams}),
+        ...useQueryOptions
+    });
 }
 
 /**
@@ -41,7 +49,11 @@ async function getStatesOfAnInstrument_API({tag, limit}) {
 }
 
 export const useGetStatesOfAnInstrument = (APIParams = {tag, limit}, useQueryOptions = {stateTime : Infinity}) => {
-    return useQuery(["getStatesOfAnInstrument", APIParams.tag, APIParams.limit],() =>  getStatesOfAnInstrument_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["getStatesOfAnInstrument", APIParams.tag, APIParams.limit],
+        queryFn: () => getStatesOfAnInstrument_API({...APIParams}),
+        ...useQueryOptions
+    });
 }
 
 
@@ -55,7 +67,11 @@ async function getInstrument_API({tag}) {
 }
 
 export const useGetInstrument = (APIParams = {tag}, useQueryOptions = {stateTime : Infinity}) => {
-    return useQuery(["getInstrument",APIParams.tag],() =>  getInstrument_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["getInstrument", APIParams.tag],
+        queryFn: () => getInstrument_API({...APIParams}),
+        ...useQueryOptions
+    });
 }
 
 /**
@@ -70,7 +86,11 @@ async function getInstrumentState_API({ tag }) {
 }
 
 export const useGetInstrumentState = (APIParams = {tag}, useQueryOptions = {stateTime : Infinity}) => {
-    return useQuery(["getInstrumentState",APIParams.tag],() =>  getInstrumentState_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["getInstrumentState", APIParams.tag],
+        queryFn: () => getInstrumentState_API({...APIParams}),
+        ...useQueryOptions
+    });
 }
 
 
@@ -89,8 +109,11 @@ async function getInstrumentStateByQuery_API({search_string, limit}) {
 }
 
 export const useGetInstrumentStateByQuery = (APIParams = {search_string : "", limit : 20}, useQueryOptions = {stateTime : Infinity, placeholderData: (prev) => prev}) => {
-    return useQuery(["getInstrumentStateByQuery", APIParams.search_string],
-        () => getInstrumentStateByQuery_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getInstrumentStateByQuery", APIParams.search_string],
+        queryFn: () => getInstrumentStateByQuery_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }
 
 
@@ -105,8 +128,11 @@ async function getInstrumentStateDurations_API({tag, limit, timestamp_min, times
 }
 
 export const useGetInstrumentStateDurations = (APIParams = {tag, limit, timestamp_min, timestamp_max}, useQueryOptions = {stateTime : Infinity}) => {
-    return useQuery(["getInstrumentStateDurations", APIParams.tag, APIParams.limit, APIParams.timestamp_min, APIParams.timestamp_max],
-        () => getInstrumentStateDurations_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getInstrumentStateDurations", APIParams.tag, APIParams.limit, APIParams.timestamp_min, APIParams.timestamp_max],
+        queryFn: () => getInstrumentStateDurations_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }
 
 
@@ -121,8 +147,11 @@ async function getSpecificInstrumentStateDurations_API({tag, state_tag, limit, t
 }
 
 export const useGetSpecificInstrumentStateDurations = (APIParams = {tag, state_tag, limit, timestamp_min, timestamp_max}, useQueryOptions = {stateTime : Infinity}) => {
-    return useQuery(["getSpecificInstrumentStateDurations", APIParams.tag, APIParams.state_tag, APIParams.limit, APIParams.timestamp_min, APIParams.timestamp_max],
-        () => getSpecificInstrumentStateDurations_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getSpecificInstrumentStateDurations", APIParams.tag, APIParams.state_tag, APIParams.limit, APIParams.timestamp_min, APIParams.timestamp_max],
+        queryFn: () => getSpecificInstrumentStateDurations_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }
 
 
@@ -142,7 +171,10 @@ async function postInstrumentState_API({tag, instrument_state_tag}){
 }
 
 export const usePostInstrumentState = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => postInstrumentState_API({...APIParams}), useMutationOptions)
+    return useMutation({
+        mutationFn: (APIParams) => postInstrumentState_API({...APIParams}),
+        ...useMutationOptions
+    });
 }
 
 

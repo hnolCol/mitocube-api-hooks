@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from "react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import config from "../../../config";
 
@@ -13,7 +13,11 @@ async function getExternalServiceByTag_API({tag}) {
 }
 
 export const useGetExternalServiceByTag = (APIParams = {tag: ""}, useQueryOptions = {}) => {
-    return useQuery(["getExternalServiceByTag", APIParams.tag], () => getExternalServiceByTag_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["getExternalServiceByTag", APIParams.tag],
+        queryFn: () => getExternalServiceByTag_API({...APIParams}),
+        ...useQueryOptions
+    });
 } 
 
 /**
@@ -27,7 +31,11 @@ async function getExternalServiceByQuery_API({search_string, limit}) {
 }
 
 export const useGetExternalServiceByQuery = (APIParams = {search_string : "", limit : 10}, useQueryOptions = {stateTime : 200000, placeholderData: (prev) => prev}) => {
-    return useQuery(["getExternalServiceBySearchString", APIParams.search_string],() =>  getExternalServiceByQuery_API({...APIParams}), useQueryOptions)
+    return useQuery({
+        queryKey: ["getExternalServiceBySearchString", APIParams.search_string],
+        queryFn: () => getExternalServiceByQuery_API({...APIParams}),
+        ...useQueryOptions
+    });
 }
 /**
  * @description Creates a new External Service.
@@ -39,7 +47,10 @@ async function postExternalService_API({ description, name, company, email, cost
 }
 
 export const usePostExternalService = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => postExternalService_API({ ...APIParams}), useMutationOptions)
+    return useMutation({
+        mutationFn: (APIParams) => postExternalService_API({ ...APIParams }),
+        ...useMutationOptions
+    });
 }
 
 
@@ -53,7 +64,10 @@ async function updateExternalService_API({ tag, description, name, company, emai
 }
 
 export const useUpdateExternalService = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => updateExternalService_API({ ...APIParams}), useMutationOptions)
+    return useMutation({
+        mutationFn: (APIParams) => updateExternalService_API({ ...APIParams }),
+        ...useMutationOptions
+    });
 }
 
 
@@ -67,7 +81,10 @@ async function deleteExternalService_API({ tag }) {
 }
 
 export const useDeleteExternalService = (useMutationOptions = {}) => {
-    return useMutation((APIParams) => deleteExternalService_API({ ...APIParams}), useMutationOptions)
+    return useMutation({
+        mutationFn: (APIParams) => deleteExternalService_API({ ...APIParams }),
+        ...useMutationOptions
+    });
 }
 
 
@@ -81,7 +98,11 @@ async function getExternalServiceDescription_API({ tag }) {
 }
 
 export const useGetExternalServiceDescription = (APIParams = { tag }, useQueryOptions = { stateTime: 200000 }) => {
-    return useQuery(["getExternalServiceDescription", APIParams.tag], () => getExternalServiceDescription_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getExternalServiceDescription", APIParams.tag],
+        queryFn: () => getExternalServiceDescription_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }
 
 /**
@@ -94,7 +115,11 @@ async function getExternalServiceName_API({ tag }) {
 }
 
 export const useGetExternalServiceName = (APIParams = { tag }, useQueryOptions = { stateTime: 200000 }) => {
-    return useQuery(["getExternalServiceName", APIParams.tag], () => getExternalServiceName_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getExternalServiceName", APIParams.tag],
+        queryFn: () => getExternalServiceName_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }
 
 /**
@@ -107,7 +132,11 @@ async function getExternalServiceCompany_API({ tag }) {
 }
 
 export const useGetExternalServiceCompany = (APIParams = { tag }, useQueryOptions = { stateTime: 200000 }) => {
-    return useQuery(["getExternalServiceCompany", APIParams.tag], () => getExternalServiceCompany_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getExternalServiceCompany", APIParams.tag],
+        queryFn: () => getExternalServiceCompany_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }
 
 /**
@@ -120,7 +149,11 @@ async function getExternalServiceEmail_API({ tag }) {
 }
 
 export const useGetExternalServiceEmail = (APIParams = { tag }, useQueryOptions = { stateTime: 200000 }) => {
-    return useQuery(["getExternalServiceEmail", APIParams.tag], () => getExternalServiceEmail_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getExternalServiceEmail", APIParams.tag],
+        queryFn: () => getExternalServiceEmail_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }
 
 /**
@@ -133,7 +166,11 @@ async function getExternalServiceCosts_API({ tag }) {
 }
 
 export const useGetExternalServiceCosts = (APIParams = { tag }, useQueryOptions = { stateTime: 200000 }) => {
-    return useQuery(["getExternalServiceCosts", APIParams.tag], () => getExternalServiceCosts_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getExternalServiceCosts", APIParams.tag],
+        queryFn: () => getExternalServiceCosts_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }
 
 /**
@@ -147,7 +184,11 @@ async function getExternalServiceBillingNumber_API({ tag }) {
 }
 
 export const useGetExternalServiceBillingNumber = (APIParams = { tag }, useQueryOptions = { stateTime: 200000 }) => {
-    return useQuery(["getExternalServiceBillingNumber", APIParams.tag], () => getExternalServiceBillingNumber_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getExternalServiceBillingNumber", APIParams.tag],
+        queryFn: () => getExternalServiceBillingNumber_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }
 
 /**
@@ -161,5 +202,9 @@ async function getExternalServiceInternalID_API({ tag }) {
 }
 
 export const useGetExternalServiceInternalID = (APIParams = { tag }, useQueryOptions = { stateTime: 200000 }) => {
-    return useQuery(["getExternalServiceInternalID", APIParams.tag], () => getExternalServiceInternalID_API({ ...APIParams }), useQueryOptions)
+    return useQuery({
+        queryKey: ["getExternalServiceInternalID", APIParams.tag],
+        queryFn: () => getExternalServiceInternalID_API({ ...APIParams }),
+        ...useQueryOptions
+    });
 }
