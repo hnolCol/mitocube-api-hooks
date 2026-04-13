@@ -25,15 +25,19 @@
         "url": "https://github.com/hnolcol/mitocube-api-hooks/issues",
         "email": "h.nolte@age.mpg.de"
     },
+    "peerDependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
     "dependencies": {
         "axios": "^1.13.2",
         "dotenv": "^16.4.7",
         "lodash": "^4.17.21",
-        "react": "^19.0.0",
-        "react-dom": "^19.0.0",
         "react-query": "^3.39.3"
     },
     "devDependencies": {
+        "react": "^18.0.0",
+        "react-dom": "^18.0.0",
         "@babel/core": "^7.26.10",
         "@babel/preset-env": "^7.26.9",
         "babel-jest": "^29.7.0",
