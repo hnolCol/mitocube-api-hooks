@@ -1,6 +1,6 @@
 import { useGetSequenceByFeatureKey } from "./src/hooks/features/sequence"
-import { useGetAttribute, usePostAttribute, usePostAttributeValues, useUpdateAttributeValue } from "./src/hooks/attributes/attributes";
-import { useGetAttributesByQuery } from "./src/hooks/attributes/query_attributes";
+import { createModifyAttributesAPI } from "./src/hooks/attributes/attributes";
+import { createQueryAttributesAPI} from "./src/hooks/attributes/query_attributes";
 import { useDeleteFilter, useGetFilters, usePostFilter } from "./src/hooks/filters/filters";
 import { useGetAnnotationsByTag, useGetAnnotationsBySearchString, useGetAnnotationsByProteinTag, usePostAnnotations, useGetAnnotationGroupByTag, usePostAnnotationGroup, useGetAnnotationGroupByQuery, useGetAnnotationProteinCount, useGetAnnotationsByGroupTag, useGetAnnotationGroupCount, useDeleteAnnotations, useUpdateAnnotations, useUpdateAnnotationGroup, useGetIsProteinInAnnotation } from "./src/hooks/annotations/annotations";
 import { useGetAnnotationPermissions } from "./src/hooks/annotations/permissions";
@@ -12,26 +12,21 @@ import { useGetSubmissionSampleCount, useGetSubmissionSamplesFull, useGetSubmiss
 import { useGetUserRoleByTag, useGetUserRoles } from "./src/hooks/users/roles";
 import { useGetSubmissionComments } from "./src/hooks/submissions/comments";
 import { useGetPublicUserByTag, usePatchUser, usePostUser } from "./src/hooks/users/users";
-import { useGetAttributeChildren } from "./src/hooks/attributes/children";
-import { useDeleteTrait, useGetTraitBySearchString, useGetTraitByTag, useGetTraitCount, useGetTraitDescription, useGetTraitPermissions, useGetTraitPriority, useGetTraitsByAttributeTag, useGetTraitText, usePostTrait, useUpdateTrait } from "./src/hooks/attributes/traits";
+import { createModifyTraitsAPI } from "./src/hooks/attributes/traits";
 import { useGetInstrument, useGetInstrumentsByType, useGetInstrumentState, useGetInstrumentStateByQuery, useGetInstrumentStateDurations, useGetInstrumentTypes, useGetSpecificInstrumentStateDurations, useGetStatesOfAnInstrument, usePostInstrumentState } from "./src/hooks/instruments/instruments";
 import { useGetSymptomByQuery, useGetSymptomByTag, useCheckSymptomExists, useEditSymptom, useGetSymptoms, usePostSymptom, useDeleteSymptom, useGetSymptomDescription,useGetSymptomText, useGetSymptomPriority } from "./src/hooks/maintenance/symptoms";
 import { useGetSymptomsPermissions } from "./src/hooks/maintenance/symptomspermissions";
 import { useGetSubmissionByQuery } from "./src/hooks/submissions/query";
 import {  createSubmissionTitleAPI } from "./src/hooks/submissions/title";
-import { useGetAttributeByGroup, useGetAttributeGroups } from "./src/hooks/attributes/groups";
 import { useGetMaintenanceCosts, useGetQueryMaintenanceEvents, usePostMaintenanceEvent, useGetMaintenanceEventByTag, usePostSymptomToMaintenanceEvent, useDeleteSymptomToMaintenanceEvent, usePostMaintenanceProcedureToMaintenanceEvent, useDeleteMaintenanceProcedureToMaintenanceEvent, useGetMaintenanceEventCount, usePostSparePartToMaintenanceEvent, useDeleteSparePartToMaintenanceEvent, useGetSparePartCountByMaintenanceEvent, useGetMaintenanceEventState, usePostMaintenanceEventState, useGetMaintenanceEventCosts, usePostExternalServiceToMaintenanceEvent, useDeleteExternalServiceFromMaintenanceEvent} from "./src/hooks/maintenance/events";
 import { useGetMaintenanceProcedureByQuery, useGetMaintenanceProcedureByTag, useCheckMaintenanceProcedureExists, useGetMaintenanceProcedures, useGetMaintenanceProcedureText, useGetMaintenanceProcedureDescription, useGetMaintenanceProcedurePriority, usePostMaintenanceProcedure, useEditMaintenanceProcedure, useDeleteMaintenanceProcedure} from "./src/hooks/maintenance/procedures";
 import { useGetSparePartByQuery, useGetSparePartByTag, useGetSparePartText, useGetSparePartDescription, useGetSparePartCompany, useGetSparePartProductID, useGetSparePartPrice, useGetSparePartLink, usePostSparePart, useUpdateSparePart, useDeleteSparePart } from "./src/hooks/maintenance/spareparts";
 import { useGetMaintenanceEventStates } from "./src/hooks/maintenance/states";
 import { useGetExternalServiceByTag, useGetExternalServiceByQuery, usePostExternalService, useUpdateExternalService, useDeleteExternalService, useGetExternalServiceDescription, useGetExternalServiceName, useGetExternalServiceCompany, useGetExternalServiceEmail, useGetExternalServiceCosts, useGetExternalServiceBillingNumber, useGetExternalServiceInternalID  } from "./src/hooks/maintenance/externalservice"; 
 import { useGetFeatureCorrelation } from "./src/hooks/features/correlation";
-
 import { useGetUserByQuery } from "./src/hooks/users/query_users";
 import { useGetUserCount } from "./src/hooks/users/counts";
 import { useGetUserIsActive } from "./src/hooks/users/active";
-import { useGetAttributeCount } from "./src/hooks/attributes/count";
-import { useGetAttributeMinState } from "./src/hooks/attributes/state";
 import { useGetSubmissionConditionApplication, useGetSubmissionConditionApplicationAttributes, useGetSubmissionSampleConditionApplications, useGetSubmissionSampleConditionApplicationAttributes, useGetSubmissionConditionApplicationData, useUpdateSubmissionCA } from "./src/hooks/submissions/ca";
 import { useGetConditionApplication, useGetConditionApplicationByQuery, useGetConditionApplicationText } from "./src/hooks/condition_applications/condition_applications";
 import { useInsertSampleGenotype, useGetSample, useGetSampleConditionApplications, useGetSampleGenotype, useUpdateSample, useAddSampleGenotype } from "./src/hooks/samples/samples";
@@ -52,7 +47,7 @@ import { createSubmissionAnalysisAPI } from "./src/hooks/submissions/analysis";
 import { useGetProteinFeatureByQuery } from "./src/hooks/features/proteins/query";
 import { useGetProteinByTag } from "./src/hooks/features/proteins/get";
 import { useGetSampleCount } from "./src/hooks/samples/count";
-import { useGetRequiredTraits } from "./src/hooks/attributes/requires";
+import { createQueryTraitsAPI } from "./src/hooks/attributes/requires";
 import { usePostGenotype } from "./src/hooks/genotypes/insert";
 import { useGetProteome, useGetProteomeCreatedAt, useGetProteomeIsUpdating, useGetProteomeText } from "./src/hooks/proteomes/get";
 import { useGetProteomeBySearchString } from "./src/hooks/proteomes/find";
@@ -104,21 +99,8 @@ export default {
         createMetatextAPI
     },
     attributes: {
-        useGetAttribute,
-        usePostAttribute,
-        usePostAttributeValues,
-        useUpdateAttributeValue,
-        useGetAttributeChildren,
-        useGetAttributeCount,
-        useGetAttributeMinState,
-        useGetRequiredTraits,
-        groups: {
-            useGetAttributeByGroup,
-            useGetAttributeGroups
-        }
-    },
-    attributes_query: {
-        useGetAttributesByQuery
+        createModifyAttributesAPI,
+        createQueryAttributesAPI
     },
     condition_applications: {
         useGetConditionApplication,
@@ -318,17 +300,8 @@ export default {
         }
     },
     traits: {
-        useGetTraitBySearchString,
-        useGetTraitByTag,
-        useGetTraitCount,
-        useGetTraitsByAttributeTag,
-        usePostTrait,
-        useGetTraitText,
-        useGetTraitDescription,
-        useGetTraitPriority,
-        useUpdateTrait,
-        useDeleteTrait,
-        useGetTraitPermissions
+        createModifyTraitsAPI,
+        createQueryTraitsAPI
     },
     maintenance: {
         usePostMaintenanceEvent,
