@@ -7,11 +7,8 @@ import { useGetAnnotationPermissions } from "./src/hooks/annotations/permissions
 import { useGetBackendVersion } from "./src/hooks/info/version";
 import { useGetTermsOfUse } from "./src/hooks/info/terms";
 import { useGetFeatureInfo } from "./src/hooks/features/info";
-import { useGetStateColor } from "./src/hooks/states/color";
-import { useGetStateName } from "./src/hooks/states/name";
 import { useGetStates, useGetSubmissionState, useGetSubmissionStateCount, usePatchSubmissionState } from "./src/hooks/submissions/state";
 import { useGetSubmissionSampleCount, useGetSubmissionSamplesFull, useGetSubmissionSampleTags } from "./src/hooks/submissions/samples";
-import { useGetMetatexts, useGetSubmissionMetatextByTag, usePostMetatext } from "./src/hooks/submissions/metatext";
 import { useGetUserRoleByTag, useGetUserRoles } from "./src/hooks/users/roles";
 import { useGetSubmissionComments } from "./src/hooks/submissions/comments";
 import { useGetPublicUserByTag, usePatchUser, usePostUser } from "./src/hooks/users/users";
@@ -21,7 +18,7 @@ import { useGetInstrument, useGetInstrumentsByType, useGetInstrumentState, useGe
 import { useGetSymptomByQuery, useGetSymptomByTag, useCheckSymptomExists, useEditSymptom, useGetSymptoms, usePostSymptom, useDeleteSymptom, useGetSymptomDescription,useGetSymptomText, useGetSymptomPriority } from "./src/hooks/maintenance/symptoms";
 import { useGetSymptomsPermissions } from "./src/hooks/maintenance/symptomspermissions";
 import { useGetSubmissionByQuery } from "./src/hooks/submissions/query";
-import { useGetSubmissionTitle, usePatchSubmissionTitle } from "./src/hooks/submissions/title";
+import {  createSubmissionTitleAPI } from "./src/hooks/submissions/title";
 import { useGetAttributeByGroup, useGetAttributeGroups } from "./src/hooks/attributes/groups";
 import { useGetMaintenanceCosts, useGetQueryMaintenanceEvents, usePostMaintenanceEvent, useGetMaintenanceEventByTag, usePostSymptomToMaintenanceEvent, useDeleteSymptomToMaintenanceEvent, usePostMaintenanceProcedureToMaintenanceEvent, useDeleteMaintenanceProcedureToMaintenanceEvent, useGetMaintenanceEventCount, usePostSparePartToMaintenanceEvent, useDeleteSparePartToMaintenanceEvent, useGetSparePartCountByMaintenanceEvent, useGetMaintenanceEventState, usePostMaintenanceEventState, useGetMaintenanceEventCosts, usePostExternalServiceToMaintenanceEvent, useDeleteExternalServiceFromMaintenanceEvent} from "./src/hooks/maintenance/events";
 import { useGetMaintenanceProcedureByQuery, useGetMaintenanceProcedureByTag, useCheckMaintenanceProcedureExists, useGetMaintenanceProcedures, useGetMaintenanceProcedureText, useGetMaintenanceProcedureDescription, useGetMaintenanceProcedurePriority, usePostMaintenanceProcedure, useEditMaintenanceProcedure, useDeleteMaintenanceProcedure} from "./src/hooks/maintenance/procedures";
@@ -29,8 +26,7 @@ import { useGetSparePartByQuery, useGetSparePartByTag, useGetSparePartText, useG
 import { useGetMaintenanceEventStates } from "./src/hooks/maintenance/states";
 import { useGetExternalServiceByTag, useGetExternalServiceByQuery, usePostExternalService, useUpdateExternalService, useDeleteExternalService, useGetExternalServiceDescription, useGetExternalServiceName, useGetExternalServiceCompany, useGetExternalServiceEmail, useGetExternalServiceCosts, useGetExternalServiceBillingNumber, useGetExternalServiceInternalID  } from "./src/hooks/maintenance/externalservice"; 
 import { useGetFeatureCorrelation } from "./src/hooks/features/correlation";
-import { useGetSubmissionCreatedAt } from "./src/hooks/submissions/createdat";
-import { useGetSubmissionExists } from "./src/hooks/submissions/exists";2
+
 import { useGetUserByQuery } from "./src/hooks/users/query_users";
 import { useGetUserCount } from "./src/hooks/users/counts";
 import { useGetUserIsActive } from "./src/hooks/users/active";
@@ -39,20 +35,20 @@ import { useGetAttributeMinState } from "./src/hooks/attributes/state";
 import { useGetSubmissionConditionApplication, useGetSubmissionConditionApplicationAttributes, useGetSubmissionSampleConditionApplications, useGetSubmissionSampleConditionApplicationAttributes, useGetSubmissionConditionApplicationData, useUpdateSubmissionCA } from "./src/hooks/submissions/ca";
 import { useGetConditionApplication, useGetConditionApplicationByQuery, useGetConditionApplicationText } from "./src/hooks/condition_applications/condition_applications";
 import { useInsertSampleGenotype, useGetSample, useGetSampleConditionApplications, useGetSampleGenotype, useUpdateSample, useAddSampleGenotype } from "./src/hooks/samples/samples";
-import { useDeleteMetatext, useGetMetatext, usePatchMetatext } from "./src/hooks/metatext/metatext";
-import { useGetSubmissionPermissions, useGetSubmissionPermissionsByTag } from "./src/hooks/submissions/permissions";
+import { createMetatextAPI } from "./src/hooks/metatext/metatext";
+import { createSubmissionPermissionsAPI } from "./src/hooks/submissions/permissions";
 import { createNewsAPI } from "./src/hooks/news/news";
 import { useGetSubmissionUsers } from "./src/hooks/submissions/users";
 import { useGetSubmissionViews, usePostSubmissionView } from "./src/hooks/submissions/views";
 import { useGetSubmissionDuration } from "./src/hooks/stats/submissions";
 import { useGetSubmissionQuantificationExists, usePostPrecursorQuantification, usePostProteinQuantification } from "./src/hooks/submissions/quantifications";
 import { useGetCypherQuery, useGetPublicationSummaryForProtein } from "./src/hooks/openai/cypher";
-import { useGetResearchAim, usePatchResearchAim } from "./src/hooks/submissions/researchaim";
-import { useGetUserViews } from "./src/hooks/users/views";
+import { createSubmissionMetatextAPI} from "./src/hooks/submissions/metatexts";
+import { createUserViewsAPI } from "./src/hooks/users/views";
 import { useGetSubmissionPeptideCount, useGetSubmissionProteinGroupCount, useGetSubmissionSampleProteinGroupCount } from "./src/hooks/submissions/count";
 import { useGetFeaturesByQuery } from "./src/hooks/features/query";
 import { useGetFeatureDataForSubmission } from "./src/hooks/features/data";
-import { useGetSubmissionAnnotationNetwork, createSubmissionAnalysisAPI } from "./src/hooks/submissions/analysis";
+import { createSubmissionAnalysisAPI } from "./src/hooks/submissions/analysis";
 import { useGetProteinFeatureByQuery } from "./src/hooks/features/proteins/query";
 import { useGetProteinByTag } from "./src/hooks/features/proteins/get";
 import { useGetSampleCount } from "./src/hooks/samples/count";
@@ -90,6 +86,8 @@ import { useGetBackendInfo } from "./src/hooks/info/backend";
 import axios from "axios";
 import { createAuthenticationAPI } from "./src/hooks/authorization/login";
 import { createAuthenticationTokenAPI } from "./src/hooks/authorization/token";
+import { createSubmissionCoreAPI } from "./src/hooks/submissions/core";
+import { createStateAPI } from "./src/hooks/states/core";
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 
@@ -101,6 +99,9 @@ export default {
         login: {
             createAuthenticationAPI
         }
+    },
+    metatexts: {
+        createMetatextAPI
     },
     attributes: {
         useGetAttribute,
@@ -155,11 +156,6 @@ export default {
         useGetTermsOfUse,
         useGetBackendInfo
     },
-    metatexts: {
-        useGetMetatext,
-        usePatchMetatext,
-        useDeleteMetatext
-    },
     news: {
         createNewsAPI
     },
@@ -172,7 +168,7 @@ export default {
         usePostUser,
         usePatchUser,
         views: {
-            useGetUserViews
+            createUserViewsAPI
         }
     },
     users_query: {
@@ -242,14 +238,14 @@ export default {
         useAddSampleGenotype
     },
     submissions: {
-        useGetSubmissionMetatextByTag,
+        
         useGetSubmissionStateCount,
         useGetSubmissionComments,
-        useGetSubmissionCreatedAt,
-        useGetSubmissionExists,
+        core: {
+            createSubmissionCoreAPI
+        },
         title: {
-            useGetSubmissionTitle,
-            usePatchSubmissionTitle
+            createSubmissionTitleAPI
         },
         samples: {
             useGetSubmissionSampleTags,
@@ -274,12 +270,12 @@ export default {
             useUpdateSubmissionCA
         },
         metatexts: {
-            useGetMetatexts,
-            usePostMetatext
+            createSubmissionMetatextAPI
+            // useGetMetatexts,
+            // usePostMetatext
         },
         permissions: {
-            useGetSubmissionPermissions,
-            useGetSubmissionPermissionsByTag
+            createSubmissionPermissionsAPI
         },
         users: {
             useGetSubmissionUsers
@@ -293,10 +289,10 @@ export default {
             usePostPrecursorQuantification,
             useGetSubmissionQuantificationExists,
         },
-        researchaim: {
-            useGetResearchAim,
-            usePatchResearchAim
-        },
+        // researchaim: {
+        //     useGetResearchAim,
+        //     usePatchResearchAim
+        // },
         counts: {
             useGetSubmissionProteinGroupCount,
             useGetSubmissionSampleCount, 
@@ -304,11 +300,7 @@ export default {
             useGetSubmissionSampleProteinGroupCount,
         },
         analysis: {
-            // useGetSubmissionPCA,
             createSubmissionAnalysisAPI,
-            // useGetSubmissionVolcano,
-            useGetSubmissionAnnotationNetwork,
-            // useGetSubmissionHeatmap
         },
         statistics: {
             useUpdateSubmissionStats,
@@ -318,8 +310,7 @@ export default {
         }
     },
     states: {
-        useGetStateColor,
-        useGetStateName
+        createStateAPI
     },
     stats: {
         submissions: {

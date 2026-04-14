@@ -1,7 +1,9 @@
 import { useQuery } from "@tanstack/react-query"
-import axios from "axios"
 
-/**
+
+export function createUserViewsAPI(client) {
+
+  /**
  * @description Retrieves the last views count of a given user (tag). Endpoint: `/api/users/${tag}/views`
  * @param {Object} props 
  * @param {String} props.tag The user tag.
@@ -10,11 +12,11 @@ import axios from "axios"
  * @returns {Number} Tags of the last viewed items 
  */
 async function getUserViews_API({ tag, type, limit }) {
-    const res = await axios.get(`/api/users/views`, { params: { user_tag: tag, type, limit } })
+    const res = await client.get(`/users/views`, { params: { user_tag: tag, type, limit } })
     return res.data
 }
 
-export const useGetUserViews = (APIParams = { tag, type, limit: 20 }, useQueryOptions = {}) => {
+ const useGetUserViews = (APIParams = { tag, type, limit: 20 }, useQueryOptions = {}) => {
     return useQuery({
         queryKey: ["getUserViews", APIParams.tag, APIParams.type, APIParams.limit],
         queryFn: () => getUserViews_API({ ...APIParams }),
@@ -22,5 +24,7 @@ export const useGetUserViews = (APIParams = { tag, type, limit: 20 }, useQueryOp
     })
 }
 
-
-
+  return {
+    useGetUserViews
+  };
+}
