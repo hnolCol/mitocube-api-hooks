@@ -4,7 +4,6 @@ import { useGetAttributesByQuery } from "./src/hooks/attributes/query_attributes
 import { useDeleteFilter, useGetFilters, usePostFilter } from "./src/hooks/filters/filters";
 import { useGetAnnotationsByTag, useGetAnnotationsBySearchString, useGetAnnotationsByProteinTag, usePostAnnotations, useGetAnnotationGroupByTag, usePostAnnotationGroup, useGetAnnotationGroupByQuery, useGetAnnotationProteinCount, useGetAnnotationsByGroupTag, useGetAnnotationGroupCount, useDeleteAnnotations, useUpdateAnnotations, useUpdateAnnotationGroup, useGetIsProteinInAnnotation } from "./src/hooks/annotations/annotations";
 import { useGetAnnotationPermissions } from "./src/hooks/annotations/permissions";
-import { useGetBackendVersion } from "./src/hooks/info/version";
 import { useGetTermsOfUse } from "./src/hooks/info/terms";
 import { useGetFeatureInfo } from "./src/hooks/features/info";
 import { useGetStates, useGetSubmissionState, useGetSubmissionStateCount, usePatchSubmissionState } from "./src/hooks/submissions/state";
@@ -33,7 +32,7 @@ import { useGetUserIsActive } from "./src/hooks/users/active";
 import { useGetAttributeCount } from "./src/hooks/attributes/count";
 import { useGetAttributeMinState } from "./src/hooks/attributes/state";
 import { useGetSubmissionConditionApplication, useGetSubmissionConditionApplicationAttributes, useGetSubmissionSampleConditionApplications, useGetSubmissionSampleConditionApplicationAttributes, useGetSubmissionConditionApplicationData, useUpdateSubmissionCA } from "./src/hooks/submissions/ca";
-import { useGetConditionApplication, useGetConditionApplicationByQuery, useGetConditionApplicationText } from "./src/hooks/condition_applications/condition_applications";
+import { createConditionApplicationAPI } from "./src/hooks/condition_applications/condition_applications";
 import { useInsertSampleGenotype, useGetSample, useGetSampleConditionApplications, useGetSampleGenotype, useUpdateSample, useAddSampleGenotype } from "./src/hooks/samples/samples";
 import { createMetatextAPI } from "./src/hooks/metatext/metatext";
 import { createSubmissionPermissionsAPI } from "./src/hooks/submissions/permissions";
@@ -82,7 +81,7 @@ import { useGetProteinGroupSubmissionStats } from "./src/hooks/features/ranking"
 import { useGetSubmissionExclusivelyQuantifiedProteinGroups, useGetSubmissionRanking, useUpdateSubmissionStats } from "./src/hooks/submissions/ranking";
 import { useGetGenotypeExists } from "./src/hooks/genotypes/exists";
 import { useGetStatisticInfo } from "./src/hooks/info/statistics";
-import { useGetBackendInfo } from "./src/hooks/info/backend";
+import { createBackendInfoAPI} from "./src/hooks/info/backend";
 import axios from "axios";
 import { createAuthenticationAPI } from "./src/hooks/authorization/login";
 import { createAuthenticationTokenAPI } from "./src/hooks/authorization/token";
@@ -121,9 +120,7 @@ export default {
         useGetAttributesByQuery
     },
     condition_applications: {
-        useGetConditionApplication,
-        useGetConditionApplicationText,
-        useGetConditionApplicationByQuery
+        createConditionApplicationAPI
     },
     filters: {
         useGetFilters,
@@ -152,9 +149,7 @@ export default {
         useGetAnnotationPermissions
     },
     info: {
-        useGetBackendVersion,
         useGetTermsOfUse,
-        useGetBackendInfo
     },
     news: {
         createNewsAPI
@@ -446,7 +441,7 @@ export default {
         
     },
     info: {
+        createBackendInfoAPI,
         useGetStatisticInfo,
-        useGetBackendInfo
-    } 
+    }
 }
