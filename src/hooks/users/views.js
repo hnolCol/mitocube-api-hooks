@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query"
-import axios from "../axios-setup"
+import axios from "axios"
 
 /**
  * @description Retrieves the last views count of a given user (tag). Endpoint: `/api/users/${tag}/views`

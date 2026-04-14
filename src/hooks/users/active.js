@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query"
-import axios from "../axios-setup"
+import axios from "axios"
 
 /**
  * @description Retrieves whether the user is active. Endpoint: `/api/users/{tag}/is_active`

@@ -1,5 +1,5 @@
 
-import axios from "../axios-setup"
+import axios from "axios"
 import { useQuery } from "@tanstack/react-query"
 
 

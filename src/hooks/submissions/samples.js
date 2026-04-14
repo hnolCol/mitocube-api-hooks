@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query"
-import axios from "../axios-setup"
+import axios from "axios"
 import config from "../../../config"
 /**
  * @description Returns the sample names of a submission including the replicate, the index, and the name. It

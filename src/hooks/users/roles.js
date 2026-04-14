@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query"
-import axios from "../axios-setup"
+import axios from "axios"
 
 /**
  * @description Retrieves the available user roles. Endpoint: '/api/users/roles'

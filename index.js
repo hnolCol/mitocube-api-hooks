@@ -41,8 +41,7 @@ import { useGetConditionApplication, useGetConditionApplicationByQuery, useGetCo
 import { useInsertSampleGenotype, useGetSample, useGetSampleConditionApplications, useGetSampleGenotype, useUpdateSample, useAddSampleGenotype } from "./src/hooks/samples/samples";
 import { useDeleteMetatext, useGetMetatext, usePatchMetatext } from "./src/hooks/metatext/metatext";
 import { useGetSubmissionPermissions, useGetSubmissionPermissionsByTag } from "./src/hooks/submissions/permissions";
-import { useDeleteNews, useFindNews, useGetNewsByTag, usePostNews } from "./src/hooks/news/news";
-import { useGetNewsPermissions } from "./src/hooks/news/permissions";
+import { createNewsAPI } from "./src/hooks/news/news";
 import { useGetSubmissionUsers } from "./src/hooks/submissions/users";
 import { useGetSubmissionViews, usePostSubmissionView } from "./src/hooks/submissions/views";
 import { useGetSubmissionDuration } from "./src/hooks/stats/submissions";
@@ -53,7 +52,7 @@ import { useGetUserViews } from "./src/hooks/users/views";
 import { useGetSubmissionPeptideCount, useGetSubmissionProteinGroupCount, useGetSubmissionSampleProteinGroupCount } from "./src/hooks/submissions/count";
 import { useGetFeaturesByQuery } from "./src/hooks/features/query";
 import { useGetFeatureDataForSubmission } from "./src/hooks/features/data";
-import { useGetSubmissionAnnotationNetwork, useGetSubmissionHeatmap, useGetSubmissionPCA, useGetSubmissionVolcano } from "./src/hooks/submissions/analysis";
+import { useGetSubmissionAnnotationNetwork, createSubmissionAnalysisAPI } from "./src/hooks/submissions/analysis";
 import { useGetProteinFeatureByQuery } from "./src/hooks/features/proteins/query";
 import { useGetProteinByTag } from "./src/hooks/features/proteins/get";
 import { useGetSampleCount } from "./src/hooks/samples/count";
@@ -83,20 +82,24 @@ import { useGetFeatureByTag } from "./src/hooks/features/features";
 import { useGetPairwiseFeatureQuant } from "./src/hooks/features/pairwise_quant";
 import { useGetSampleAbundance, useGetSampleFeatureAbundanceDistribution } from "./src/hooks/features/quantifications";
 import { useGetProteinGroupSubmissionStats } from "./src/hooks/features/ranking";
-import { useVerifyToken } from "./src/hooks/authorization/token/verify";
-import { useGetTokenValid } from "./src/hooks/authorization/token/check";
+
 import { useGetSubmissionExclusivelyQuantifiedProteinGroups, useGetSubmissionRanking, useUpdateSubmissionStats } from "./src/hooks/submissions/ranking";
 import { useGetGenotypeExists } from "./src/hooks/genotypes/exists";
 import { useGetStatisticInfo } from "./src/hooks/info/statistics";
 import { useGetBackendInfo } from "./src/hooks/info/backend";
-// axios.defaults.headers.common['Content-Type'] = 'application/json';
+import axios from "axios";
+import { createAuthenticationAPI } from "./src/hooks/authorization/login";
+import { createAuthenticationTokenAPI } from "./src/hooks/authorization/token";
+axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 
 export default {
     authorization: {
         token: {
-            useVerifyToken,
-            useGetTokenValid
+            createAuthenticationTokenAPI
+        },
+        login: {
+            createAuthenticationAPI
         }
     },
     attributes: {
@@ -158,13 +161,7 @@ export default {
         useDeleteMetatext
     },
     news: {
-        useFindNews,
-        useGetNewsByTag,
-        usePostNews,
-        useDeleteNews,
-        permissions: {
-            useGetNewsPermissions
-        },
+        createNewsAPI
     },
     users: {
         useGetUserRoles,
@@ -307,10 +304,11 @@ export default {
             useGetSubmissionSampleProteinGroupCount,
         },
         analysis: {
-            useGetSubmissionPCA,
-            useGetSubmissionVolcano,
+            // useGetSubmissionPCA,
+            createSubmissionAnalysisAPI,
+            // useGetSubmissionVolcano,
             useGetSubmissionAnnotationNetwork,
-            useGetSubmissionHeatmap
+            // useGetSubmissionHeatmap
         },
         statistics: {
             useUpdateSubmissionStats,
@@ -459,9 +457,5 @@ export default {
     info: {
         useGetStatisticInfo,
         useGetBackendInfo
-    }
-    
-
-    
-    
+    } 
 }

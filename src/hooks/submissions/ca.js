@@ -1,7 +1,7 @@
 // States and states changes of a submission 
 import { useQuery, useMutation } from "@tanstack/react-query"
 import config from "../../../config"
-import axios from "../axios-setup"
+import axios from "axios"
 
 /**
  * @description Returns the condition applications defined for the submission

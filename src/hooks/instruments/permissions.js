@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import axios from "../axios-setup";
+import axios from "axios";
 import config from "../../../config";
 /**
  * Fetch submission permissions from the API. For example, if user can create or download a submission or comment on submissions. 
