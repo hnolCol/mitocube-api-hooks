@@ -6,7 +6,7 @@ import { useGetAnnotationsByTag, useGetAnnotationsBySearchString, useGetAnnotati
 import { useGetAnnotationPermissions } from "./src/hooks/annotations/permissions";
 import { useGetTermsOfUse } from "./src/hooks/info/terms";
 import { useGetFeatureInfo } from "./src/hooks/features/info";
-import { useGetStates, useGetSubmissionState, useGetSubmissionStateCount, usePatchSubmissionState } from "./src/hooks/submissions/state";
+import { createSubmissionStateAPI } from "./src/hooks/submissions/state";
 import { useGetSubmissionSampleCount, useGetSubmissionSamplesFull, useGetSubmissionSampleTags } from "./src/hooks/submissions/samples";
 import { useGetUserRoleByTag, useGetUserRoles } from "./src/hooks/users/roles";
 import { useGetSubmissionComments } from "./src/hooks/submissions/comments";
@@ -28,7 +28,7 @@ import { useGetUserCount } from "./src/hooks/users/counts";
 import { useGetUserIsActive } from "./src/hooks/users/active";
 import { useGetSubmissionConditionApplication, useGetSubmissionConditionApplicationAttributes, useGetSubmissionSampleConditionApplications, useGetSubmissionSampleConditionApplicationAttributes, useGetSubmissionConditionApplicationData, useUpdateSubmissionCA } from "./src/hooks/submissions/ca";
 import { createConditionApplicationAPI } from "./src/hooks/condition_applications/condition_applications";
-import { useInsertSampleGenotype, useGetSample, useGetSampleConditionApplications, useGetSampleGenotype, useUpdateSample, useAddSampleGenotype } from "./src/hooks/samples/samples";
+import { createSampleCoreAPI } from "./src/hooks/samples/samples";
 import { createMetatextAPI } from "./src/hooks/metatext/metatext";
 import { createSubmissionPermissionsAPI } from "./src/hooks/submissions/permissions";
 import { createNewsAPI } from "./src/hooks/news/news";
@@ -45,7 +45,7 @@ import { useGetFeatureDataForSubmission } from "./src/hooks/features/data";
 import { createSubmissionAnalysisAPI } from "./src/hooks/submissions/analysis";
 import { useGetProteinFeatureByQuery } from "./src/hooks/features/proteins/query";
 import { useGetProteinByTag } from "./src/hooks/features/proteins/get";
-import { useGetSampleCount } from "./src/hooks/samples/count";
+import { createSampleCountAPI } from "./src/hooks/samples/count";
 import { createQueryTraitsAPI } from "./src/hooks/attributes/requires";
 import { createModifyGenotypesAPI } from "./src/hooks/genotypes/insert";
 import { useGetProteome, useGetProteomeCreatedAt, useGetProteomeIsUpdating, useGetProteomeText } from "./src/hooks/proteomes/get";
@@ -73,7 +73,6 @@ import { createAuthenticationAPI } from "./src/hooks/authorization/login";
 import { createAuthenticationTokenAPI } from "./src/hooks/authorization/token";
 import { createSubmissionCoreAPI } from "./src/hooks/submissions/core";
 import { createStateAPI } from "./src/hooks/states/core";
-import { create } from "lodash";
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 
@@ -187,17 +186,17 @@ export default {
         useGetProteomeCreatedAt
     },
     samples: {
-        useGetSample,  
-        useGetSampleConditionApplications,
-        useGetSampleCount, 
-        useGetSampleGenotype,
-        useInsertSampleGenotype,
-        useUpdateSample,
-        useAddSampleGenotype
+        createSampleCountAPI,
+        createSampleCoreAPI
+        // useGetSample,  
+        // useGetSampleConditionApplications,
+        // useGetSampleGenotype,
+        // useInsertSampleGenotype,
+        // useUpdateSample,
+        // useAddSampleGenotype
     },
     submissions: {
         
-        useGetSubmissionStateCount,
         useGetSubmissionComments,
         core: {
             createSubmissionCoreAPI
@@ -211,9 +210,8 @@ export default {
             useGetSubmissionSamplesFull
         },
         states: {
-            usePatchSubmissionState,
-            useGetSubmissionState,
-            useGetStates
+
+            createSubmissionStateAPI
         },
         query: {
             useGetSubmissionByQuery
