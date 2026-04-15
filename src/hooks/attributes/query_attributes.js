@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, useQueries } from "@tanstack/react-query"
 
 export function createQueryAttributesAPI(client) {
 
@@ -17,7 +17,7 @@ export function createQueryAttributesAPI(client) {
         return useQuery({
             queryKey: ["getAttribute", APIParams.tag],
             queryFn: () => getAttributeByTag_API({ ...APIParams }),
-            staleTime: 30000,
+            staleTime: Infinity,
             ...useQueryOptions
         })
     }
@@ -139,8 +139,6 @@ export function createQueryAttributesAPI(client) {
             queryFn: () => getAttributesAndValuesByQuery_API({ ...APIParams }),
             ...useQueryOptions
         });
-
-
     }
 
     /**
@@ -162,8 +160,20 @@ export function createQueryAttributesAPI(client) {
         });
     }
 
+    const useGetAttributes = (APIParams = {tags : []}, useQueryOptions = {}) => {
+        return useQueries(
+            {queries: APIParams.tags.map((tag) => ({
+                queryKey: ["getAttribute", tag],
+                queryFn: () => getAttributeByTag_API({ tag }),
+                staleTime: 300000,
+                ...useQueryOptions
+            }))}
+        )
+    }
+
 return {
     useGetAttribute,
+    useGetAttributes,
     useGetAttributeCount,
     useGetAttributeChildren,
     useGetAttributeByGroup,

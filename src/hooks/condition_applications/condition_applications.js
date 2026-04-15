@@ -2,7 +2,7 @@
 
 
 
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, useQueries } from "@tanstack/react-query"
 
 export function createConditionApplicationAPI(client) {
 
@@ -93,11 +93,26 @@ export function createConditionApplicationAPI(client) {
     });
     };
 
+
+
+
+    const useGetConditionApplicationTexts = (APIParams = {tags : []}, useQueryOptions = {}) => {
+        return useQueries(
+            {queries: APIParams.tags.map((tag) => ({
+                queryKey: ["getConditionApplicationText", tag],
+                queryFn: () => getConditionApplicationTextByTag_API({ tag }),
+                staleTime: 300000,
+                ...useQueryOptions
+            }))}
+        )
+    }
+
     return {
         useGetConditionApplication,
         useGetConditionApplicationText,
         useGetConditionApplicationByQuery,
         useGetCATreeForUI,
+        useGetConditionApplicationTexts,
         getConditionApplicationTextByTag_API
     }
 }
