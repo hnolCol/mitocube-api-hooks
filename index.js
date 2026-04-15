@@ -48,22 +48,14 @@ import { useGetProteinFeatureByQuery } from "./src/hooks/features/proteins/query
 import { useGetProteinByTag } from "./src/hooks/features/proteins/get";
 import { useGetSampleCount } from "./src/hooks/samples/count";
 import { createQueryTraitsAPI } from "./src/hooks/attributes/requires";
-import { usePostGenotype } from "./src/hooks/genotypes/insert";
+import { createModifyGenotypesAPI } from "./src/hooks/genotypes/insert";
 import { useGetProteome, useGetProteomeCreatedAt, useGetProteomeIsUpdating, useGetProteomeText } from "./src/hooks/proteomes/get";
 import { useGetProteomeBySearchString } from "./src/hooks/proteomes/find";
 import { useGetProteomeCount, useGetProteomeProteinCount } from "./src/hooks/proteomes/count";
 import { usePostProteome } from "./src/hooks/proteomes/insert";
 import { useGetProteomePermissions } from "./src/hooks/proteomes/permissions";
-import { useGetGenotypesBySearchString } from "./src/hooks/genotypes/query";
-import { useGetGenotypeText } from "./src/hooks/genotypes/text";
-import { useGetGenotypeDescription } from "./src/hooks/genotypes/description";
-import { useGetGenotypeItem } from "./src/hooks/genotypes/item";
-import { useGetGenotypeProteins, useGetGenotypeProteome } from "./src/hooks/genotypes/proteins";
-import { useGetGenotypeSampleCount } from "./src/hooks/genotypes/countsamples";
-import { useDeleteGenotype } from "./src/hooks/genotypes/delete";
-import { useGetGenotypePermissions } from "./src/hooks/genotypes/permission";
-import { useEditGenotype } from "./src/hooks/genotypes/edit";
-import { useGetGenotypeConditionApplications, useGetGenotypeConditionApplicationsData } from "./src/hooks/genotypes/condition_applications";
+import { createQueryGenotypesAPI } from "./src/hooks/genotypes/query";
+import { createQueryGenotypeConditionApplicationsAPI } from "./src/hooks/genotypes/condition_applications";
 import { useGetSparepartPermissions } from "./src/hooks/maintenance/sparepartpermissions";
 import { useGetProcedurePermissions } from "./src/hooks/maintenance/procedurespermissions";
 import { useGetExternalServicePermissions } from "./src/hooks/maintenance/externalservicepermissions";
@@ -75,7 +67,6 @@ import { useGetSampleAbundance, useGetSampleFeatureAbundanceDistribution } from 
 import { useGetProteinGroupSubmissionStats } from "./src/hooks/features/ranking";
 
 import { useGetSubmissionExclusivelyQuantifiedProteinGroups, useGetSubmissionRanking, useUpdateSubmissionStats } from "./src/hooks/submissions/ranking";
-import { useGetGenotypeExists } from "./src/hooks/genotypes/exists";
 import { useGetStatisticInfo } from "./src/hooks/info/statistics";
 import { useGetBackendInfo } from "./src/hooks/info/backend";
 import axios from "axios";
@@ -83,6 +74,7 @@ import { createAuthenticationAPI } from "./src/hooks/authorization/login";
 import { createAuthenticationTokenAPI } from "./src/hooks/authorization/token";
 import { createSubmissionCoreAPI } from "./src/hooks/submissions/core";
 import { createStateAPI } from "./src/hooks/states/core";
+import { create } from "lodash";
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 
@@ -157,21 +149,10 @@ export default {
         useGetUserByQuery
     },
     genotypes: {
-        usePostGenotype,
-        useGetGenotypeExists,
-        useGetGenotypesBySearchString,
-        useGetGenotypeText,
-        useGetGenotypeDescription,
-        useGetGenotypeItem,
-        useGetGenotypeProteins,
-        useGetGenotypeSampleCount,
-        useDeleteGenotype,
-        useGetGenotypePermissions, 
-        useEditGenotype,
-        useGetGenotypeProteome,
+        createModifyGenotypesAPI,
+        createQueryGenotypesAPI,
         condition_applications : {
-            useGetGenotypeConditionApplications,
-            useGetGenotypeConditionApplicationsData
+            createQueryGenotypeConditionApplicationsAPI
         }
     },
     features: {
