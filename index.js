@@ -73,6 +73,7 @@ import { createAuthenticationAPI } from "./src/hooks/authorization/login";
 import { createAuthenticationTokenAPI } from "./src/hooks/authorization/token";
 import { createSubmissionCoreAPI } from "./src/hooks/submissions/core";
 import { createStateAPI } from "./src/hooks/states/core";
+import { createResearchGroupsAPI } from "./src/hooks/researchgroups/researchgroups";
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 
@@ -327,6 +328,7 @@ export default {
         }
         
     },
+    researchgroups : createResearchGroupsAPI,
     info: {
         createBackendInfoAPI,
         useGetStatisticInfo,
