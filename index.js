@@ -2,8 +2,9 @@ import { useGetSequenceByFeatureKey } from "./src/hooks/features/sequence"
 import { createModifyAttributesAPI } from "./src/hooks/attributes/attributes";
 import { createQueryAttributesAPI} from "./src/hooks/attributes/query_attributes";
 import { useDeleteFilter, useGetFilters, usePostFilter } from "./src/hooks/filters/filters";
-import { useGetAnnotationsByTag, useGetAnnotationsBySearchString, useGetAnnotationsByProteinTag, usePostAnnotations, useGetAnnotationGroupByTag, usePostAnnotationGroup, useGetAnnotationGroupByQuery, useGetAnnotationProteinCount, useGetAnnotationsByGroupTag, useGetAnnotationGroupCount, useDeleteAnnotations, useUpdateAnnotations, useUpdateAnnotationGroup, useGetIsProteinInAnnotation } from "./src/hooks/annotations/annotations";
-import { useGetAnnotationPermissions } from "./src/hooks/annotations/permissions";
+import { useGetBackendVersion } from "./src/hooks/info/version";
+import { createModifyAnnotationsAPI } from "./src/hooks/annotations/annotations";
+import { createQueryAnnotationsAPI } from "./src/hooks/annotations/annotations_query";
 import { useGetTermsOfUse } from "./src/hooks/info/terms";
 import { useGetFeatureInfo } from "./src/hooks/features/info";
 import { createSubmissionStateAPI } from "./src/hooks/submissions/state";
@@ -13,15 +14,17 @@ import { useGetSubmissionComments } from "./src/hooks/submissions/comments";
 import { useGetPublicUserByTag, usePatchUser, usePostUser } from "./src/hooks/users/users";
 import { createModifyTraitsAPI } from "./src/hooks/attributes/traits";
 import { useGetInstrument, useGetInstrumentsByType, useGetInstrumentState, useGetInstrumentStateByQuery, useGetInstrumentStateDurations, useGetInstrumentTypes, useGetSpecificInstrumentStateDurations, useGetStatesOfAnInstrument, usePostInstrumentState } from "./src/hooks/instruments/instruments";
-import { useGetSymptomByQuery, useGetSymptomByTag, useCheckSymptomExists, useEditSymptom, useGetSymptoms, usePostSymptom, useDeleteSymptom, useGetSymptomDescription,useGetSymptomText, useGetSymptomPriority } from "./src/hooks/maintenance/symptoms";
-import { useGetSymptomsPermissions } from "./src/hooks/maintenance/symptomspermissions";
+import { createModifySymptomsAPI } from "./src/hooks/maintenance/symptoms";
+import { createQuerySymptomsAPI } from "./src/hooks/maintenance/symptoms_query";
 import { useGetSubmissionByQuery } from "./src/hooks/submissions/query";
 import {  createSubmissionTitleAPI } from "./src/hooks/submissions/title";
 import { useGetMaintenanceCosts, useGetQueryMaintenanceEvents, usePostMaintenanceEvent, useGetMaintenanceEventByTag, usePostSymptomToMaintenanceEvent, useDeleteSymptomToMaintenanceEvent, usePostMaintenanceProcedureToMaintenanceEvent, useDeleteMaintenanceProcedureToMaintenanceEvent, useGetMaintenanceEventCount, usePostSparePartToMaintenanceEvent, useDeleteSparePartToMaintenanceEvent, useGetSparePartCountByMaintenanceEvent, useGetMaintenanceEventState, usePostMaintenanceEventState, useGetMaintenanceEventCosts, usePostExternalServiceToMaintenanceEvent, useDeleteExternalServiceFromMaintenanceEvent} from "./src/hooks/maintenance/events";
-import { useGetMaintenanceProcedureByQuery, useGetMaintenanceProcedureByTag, useCheckMaintenanceProcedureExists, useGetMaintenanceProcedures, useGetMaintenanceProcedureText, useGetMaintenanceProcedureDescription, useGetMaintenanceProcedurePriority, usePostMaintenanceProcedure, useEditMaintenanceProcedure, useDeleteMaintenanceProcedure} from "./src/hooks/maintenance/procedures";
-import { useGetSparePartByQuery, useGetSparePartByTag, useGetSparePartText, useGetSparePartDescription, useGetSparePartCompany, useGetSparePartProductID, useGetSparePartPrice, useGetSparePartLink, usePostSparePart, useUpdateSparePart, useDeleteSparePart } from "./src/hooks/maintenance/spareparts";
+import { createModifyMaintenanceProceduresAPI } from "./src/hooks/maintenance/procedures";
+import { createQueryMaintenanceProceduresAPI} from "./src/hooks/maintenance/procedures_query";
+import { createModifySparePartsAPI } from "./src/hooks/maintenance/spareparts";
 import { useGetMaintenanceEventStates } from "./src/hooks/maintenance/states";
-import { useGetExternalServiceByTag, useGetExternalServiceByQuery, usePostExternalService, useUpdateExternalService, useDeleteExternalService, useGetExternalServiceDescription, useGetExternalServiceName, useGetExternalServiceCompany, useGetExternalServiceEmail, useGetExternalServiceCosts, useGetExternalServiceBillingNumber, useGetExternalServiceInternalID  } from "./src/hooks/maintenance/externalservice"; 
+import { createModifyExternalServiceAPI  } from "./src/hooks/maintenance/externalservice"; 
+import { createQueryExternalServiceAPI } from "./src/hooks/maintenance/externalservice_query";
 import { useGetFeatureCorrelation } from "./src/hooks/features/correlation";
 import { useGetUserByQuery } from "./src/hooks/users/query_users";
 import { useGetUserCount } from "./src/hooks/users/counts";
@@ -55,9 +58,7 @@ import { usePostProteome } from "./src/hooks/proteomes/insert";
 import { useGetProteomePermissions } from "./src/hooks/proteomes/permissions";
 import { createQueryGenotypesAPI } from "./src/hooks/genotypes/query";
 import { createQueryGenotypeConditionApplicationsAPI } from "./src/hooks/genotypes/condition_applications";
-import { useGetSparepartPermissions } from "./src/hooks/maintenance/sparepartpermissions";
-import { useGetProcedurePermissions } from "./src/hooks/maintenance/procedurespermissions";
-import { useGetExternalServicePermissions } from "./src/hooks/maintenance/externalservicepermissions";
+import { createQuerySparePartsAPI } from "./src/hooks/maintenance/sparepart_query";
 import { useGetInstrumentPermissions } from "./src/hooks/instruments/permissions";
 import { useGetInstrumentSamplesCount } from "./src/hooks/instruments/samples";
 import { useGetFeatureByTag } from "./src/hooks/features/features";
@@ -101,25 +102,8 @@ export default {
         usePostFilter
     },
     annotations: {
-        useGetAnnotationsByTag,
-        useGetAnnotationsBySearchString,
-        useGetAnnotationsByProteinTag,
-        usePostAnnotations,
-        useGetAnnotationGroupByTag,
-        usePostAnnotationGroup,
-        useGetAnnotationGroupByQuery,
-        useGetAnnotationGroupCount,
-        useGetAnnotationProteinCount,
-        useGetAnnotationsByGroupTag,
-        useDeleteAnnotations,
-        useUpdateAnnotations,
-        useUpdateAnnotationGroup,
-        proteins: {
-            useGetIsProteinInAnnotation
-        }
-    },
-    annotationspermissions: {
-        useGetAnnotationPermissions
+        createModifyAnnotationsAPI,
+        createQueryAnnotationsAPI
     },
     info: {
         useGetTermsOfUse,
@@ -295,51 +279,17 @@ export default {
         usePostExternalServiceToMaintenanceEvent,
         useDeleteExternalServiceFromMaintenanceEvent,
         procedures: {
-            useGetMaintenanceProcedureByQuery,
-            useGetMaintenanceProcedureByTag,
-            useCheckMaintenanceProcedureExists, 
-            useGetMaintenanceProcedures, 
-            useGetMaintenanceProcedureText, 
-            useGetMaintenanceProcedureDescription, 
-            useGetMaintenanceProcedurePriority, 
-            usePostMaintenanceProcedure, 
-            useEditMaintenanceProcedure, 
-            useDeleteMaintenanceProcedure 
-        },
-        procedurespermissions: {
-            useGetProcedurePermissions
+            createModifyMaintenanceProceduresAPI,
+            createQueryMaintenanceProceduresAPI
         },
         spareparts: {
-            useGetSparePartByQuery,
-            useGetSparePartByTag,
-            useGetSparePartText, 
-            useGetSparePartDescription, 
-            useGetSparePartCompany, 
-            useGetSparePartProductID, 
-            useGetSparePartPrice, 
-            useGetSparePartLink, 
-            usePostSparePart, 
-            useUpdateSparePart, 
-            useDeleteSparePart 
-        },
-        sparepartpermissions: {
-            useGetSparepartPermissions
+            createModifySparePartsAPI,
+            createQuerySparePartsAPI
+
         },
         symptoms: {
-            useGetSymptomByQuery,
-            useGetSymptomByTag,
-            useCheckSymptomExists,
-            useGetSymptomDescription,
-            useGetSymptomText,
-            useGetSymptomPriority,
-            useEditSymptom,
-            useGetSymptoms,
-            usePostSymptom,
-            useDeleteSymptom
-        },
-
-        symptomspermissions: {
-            useGetSymptomsPermissions
+            createModifySymptomsAPI,
+            createQuerySymptomsAPI,
         },
         
         costs: {
@@ -350,22 +300,8 @@ export default {
         },
 
         externalservice: {
-            useGetExternalServiceByTag, 
-            useGetExternalServiceByQuery,
-            usePostExternalService, 
-            useUpdateExternalService, 
-            useDeleteExternalService, 
-            useGetExternalServiceDescription, 
-            useGetExternalServiceName, 
-            useGetExternalServiceCompany, 
-            useGetExternalServiceEmail, 
-            useGetExternalServiceCosts, 
-            useGetExternalServiceBillingNumber, 
-            useGetExternalServiceInternalID
-        },
-
-        externalservicepermissions: {
-            useGetExternalServicePermissions
+            createModifyExternalServiceAPI,
+            createQueryExternalServiceAPI,
         },
     },
     openai: {
