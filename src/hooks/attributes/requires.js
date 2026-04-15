@@ -59,7 +59,7 @@ export function createQueryTraitsAPI(client) {
      * @returns {String[]} The tags for the traits matching the attribute
      */ 
     async function getTraitsByAttributeTag_API({ tag }) {
-        const res = await client.get(`/api/attributes/${tag}/traits`,{params : {tag}})
+        const res = await client.get(`/attributes/${tag}/traits`,{params : {tag}})
         return res.data 
     }
 
@@ -78,7 +78,7 @@ export function createQueryTraitsAPI(client) {
      * @returns {Number} The number of traits matching the attribute
      */
     async function getTraitCountByAttributeTag_API({ tag }) {
-        const res = await client.get(`/api/attributes/${tag}/traits/count`)
+        const res = await client.get(`/attributes/${tag}/traits/count`)
         return res.data
     }
 
@@ -98,7 +98,7 @@ export function createQueryTraitsAPI(client) {
      * @returns {String} The trait text
      */
     async function getTraitText_API({ tag }) {
-        const res = await client.get(`/api/attributes/traits/${tag}/text`)
+        const res = await client.get(`/attributes/traits/${tag}/text`)
         return res.data
     }
 
@@ -118,7 +118,7 @@ export function createQueryTraitsAPI(client) {
      */
 
     async function getTraitDescription_API({ tag }) {
-        const res = await client.get(`/api/attributes/traits/${tag}/description`)
+        const res = await client.get(`/attributes/traits/${tag}/description`)
         return res.data
     }
 
@@ -139,7 +139,7 @@ export function createQueryTraitsAPI(client) {
      */
 
     async function getTraitPriority_API({ tag }) {
-        const res = await client.get(`/api/attributes/traits/${tag}/priority`)
+        const res = await client.get(`/attributes/traits/${tag}/priority`)
         return res.data
     }
 

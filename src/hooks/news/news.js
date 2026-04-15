@@ -106,8 +106,6 @@ export function createNewsAPI(client) {
         })
     }
 
-
-
   return {
       useFindNews, 
       useGetNewsByTag,
