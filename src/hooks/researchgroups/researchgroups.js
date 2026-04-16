@@ -36,12 +36,28 @@ export function createResearchGroupsAPI(client) {
     return useQuery({queryKey: ["getResearchGroupsUsers", APIParams.tag], queryFn: () => getResearchGroupUsers_API({...APIParams}), ...useQueryOptions})
     }
 
+    /**
+     * @description The list of users tags in the research group. 
+     * @param {Object} props 
+     * @param {String} props.tag Research group tag 
+     * @returns {Number} Returns the list of users in the group. 
+     */
+    async function getResearchGroupUsersCount_API({ tag }) {
+    const res = await client.get(`/researchgroups/${tag}/users/count`, {})
+    return res.data
+    }
+
+    const useGetResearchGroupUsersCount = (APIParams = {tag}, useQueryOptions = {}) => {
+    return useQuery({queryKey: ["getResearchGroupsUsersCount", APIParams.tag], queryFn: () => getResearchGroupUsersCount_API({...APIParams}), ...useQueryOptions})
+    }
+
+
 
     /**
      * @description Returns the research group item
      * @param {Object} props
      * @param {String} props.tag The research group tag to return 
-     * @returns {import("../../types/researchgroup").ResearchGroup} The research group item.
+     * @returns {import("./types").ResearchGroup} The research group item.
      */
     async function getResearchGroupsByTag_API({ tag }) {
     const res = await client.get(`/researchgroups/${tag}`, {})
@@ -134,6 +150,7 @@ export function createResearchGroupsAPI(client) {
     usePostResearchGroup,
     usePatchResearchGroup,
     useDeleteResearchGroupUsers,
-    usePostResearchGroupUsers
+    usePostResearchGroupUsers,
+    useGetResearchGroupUsersCount
   };
 }
