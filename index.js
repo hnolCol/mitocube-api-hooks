@@ -8,9 +8,9 @@ import { useGetTermsOfUse } from "./src/hooks/info/terms";
 import { useGetFeatureInfo } from "./src/hooks/features/info";
 import { createSubmissionStateAPI } from "./src/hooks/submissions/state";
 import { useGetSubmissionSampleCount, useGetSubmissionSamplesFull, useGetSubmissionSampleTags } from "./src/hooks/submissions/samples";
-import { useGetUserRoleByTag, useGetUserRoles } from "./src/hooks/users/roles";
+import { createQueryUserRolesAPI } from "./src/hooks/users/roles";
 import { useGetSubmissionComments } from "./src/hooks/submissions/comments";
-import { useGetPublicUserByTag, usePatchUser, usePostUser } from "./src/hooks/users/users";
+import { createModifyUsersAPI } from "./src/hooks/users/users";
 import { createModifyTraitsAPI } from "./src/hooks/attributes/traits";
 import { useGetInstrument, useGetInstrumentsByType, useGetInstrumentState, useGetInstrumentStateByQuery, useGetInstrumentStateDurations, useGetInstrumentTypes, useGetSpecificInstrumentStateDurations, useGetStatesOfAnInstrument, usePostInstrumentState } from "./src/hooks/instruments/instruments";
 import { createModifySymptomsAPI } from "./src/hooks/maintenance/symptoms";
@@ -25,9 +25,9 @@ import { useGetMaintenanceEventStates } from "./src/hooks/maintenance/states";
 import { createModifyExternalServiceAPI  } from "./src/hooks/maintenance/externalservice"; 
 import { createQueryExternalServiceAPI } from "./src/hooks/maintenance/externalservice_query";
 import { useGetFeatureCorrelation } from "./src/hooks/features/correlation";
-import { useGetUserByQuery } from "./src/hooks/users/query_users";
-import { useGetUserCount } from "./src/hooks/users/counts";
-import { useGetUserIsActive } from "./src/hooks/users/active";
+import { createQueryUsersByQueryAPI } from "./src/hooks/users/query_users";
+import { createQueryUserCountAPI } from "./src/hooks/users/counts";
+import { createQueryUserActiveAPI } from "./src/hooks/users/active";
 import { useGetSubmissionConditionApplication, useGetSubmissionConditionApplicationAttributes, useGetSubmissionSampleConditionApplications, useGetSubmissionSampleConditionApplicationAttributes, useGetSubmissionConditionApplicationData, useUpdateSubmissionCA } from "./src/hooks/submissions/ca";
 import { createConditionApplicationAPI } from "./src/hooks/condition_applications/condition_applications";
 import { createSampleCoreAPI } from "./src/hooks/samples/samples";
@@ -112,19 +112,16 @@ export default {
         createNewsAPI
     },
     users: {
-        useGetUserRoles,
-        useGetUserRoleByTag,
-        useGetPublicUserByTag,
-        useGetUserCount,
-        useGetUserIsActive,
-        usePostUser,
-        usePatchUser,
+        createModifyUsersAPI,
+        createQueryUserRolesAPI,
+        createQueryUserCountAPI,
+        createQueryUserActiveAPI,
         views: {
             createUserViewsAPI
         }
     },
     users_query: {
-        useGetUserByQuery
+        createQueryUsersByQueryAPI
     },
     genotypes: {
         createModifyGenotypesAPI,
