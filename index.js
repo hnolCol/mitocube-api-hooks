@@ -11,24 +11,25 @@ import { createSubmissionStateAPI } from "./src/hooks/submissions/state";
 import { useGetSubmissionSampleCount, useGetSubmissionSamplesFull, useGetSubmissionSampleTags } from "./src/hooks/submissions/samples";
 import { createQueryUserRolesAPI } from "./src/hooks/users/roles";
 import { useGetSubmissionComments } from "./src/hooks/submissions/comments";
-import { createModifyUsersAPI } from "./src/hooks/users/users";
+import { createCoreUsersAPI } from "./src/hooks/users/users";
 import { createModifyTraitsAPI } from "./src/hooks/attributes/traits";
 import { useGetInstrument, useGetInstrumentsByType, useGetInstrumentState, useGetInstrumentStateByQuery, useGetInstrumentStateDurations, useGetInstrumentTypes, useGetSpecificInstrumentStateDurations, useGetStatesOfAnInstrument, usePostInstrumentState } from "./src/hooks/instruments/instruments";
 import { createModifySymptomsAPI } from "./src/hooks/maintenance/symptoms";
 import { createQuerySymptomsAPI } from "./src/hooks/maintenance/symptoms_query";
 import { useGetSubmissionByQuery } from "./src/hooks/submissions/query";
 import {  createSubmissionTitleAPI } from "./src/hooks/submissions/title";
-import { useGetMaintenanceCosts, useGetQueryMaintenanceEvents, usePostMaintenanceEvent, useGetMaintenanceEventByTag, usePostSymptomToMaintenanceEvent, useDeleteSymptomToMaintenanceEvent, usePostMaintenanceProcedureToMaintenanceEvent, useDeleteMaintenanceProcedureToMaintenanceEvent, useGetMaintenanceEventCount, usePostSparePartToMaintenanceEvent, useDeleteSparePartToMaintenanceEvent, useGetSparePartCountByMaintenanceEvent, useGetMaintenanceEventState, usePostMaintenanceEventState, useGetMaintenanceEventCosts, usePostExternalServiceToMaintenanceEvent, useDeleteExternalServiceFromMaintenanceEvent} from "./src/hooks/maintenance/events";
+import { createCoreMaintenanceEventsAPI } from "./src/hooks/maintenance/events";
 import { createModifyMaintenanceProceduresAPI } from "./src/hooks/maintenance/procedures";
 import { createQueryMaintenanceProceduresAPI} from "./src/hooks/maintenance/procedures_query";
 import { createModifySparePartsAPI } from "./src/hooks/maintenance/spareparts";
-import { useGetMaintenanceEventStates } from "./src/hooks/maintenance/states";
+import { createGetMaintenanceEventStatesAPI } from "./src/hooks/maintenance/states";
 import { createModifyExternalServiceAPI  } from "./src/hooks/maintenance/externalservice"; 
 import { createQueryExternalServiceAPI } from "./src/hooks/maintenance/externalservice_query";
 import { useGetFeatureCorrelation } from "./src/hooks/features/correlation";
 import { createQueryUsersByQueryAPI } from "./src/hooks/users/query_users";
 import { createQueryUserCountAPI } from "./src/hooks/users/counts";
 import { createQueryUserActiveAPI } from "./src/hooks/users/active";
+import { createEditUserAPI } from "./src/hooks/users/edit";
 import { useGetSubmissionConditionApplication, useGetSubmissionConditionApplicationAttributes, useGetSubmissionSampleConditionApplications, useGetSubmissionSampleConditionApplicationAttributes, useGetSubmissionConditionApplicationData, useUpdateSubmissionCA } from "./src/hooks/submissions/ca";
 import { createConditionApplicationAPI } from "./src/hooks/condition_applications/condition_applications";
 import { createSampleCoreAPI } from "./src/hooks/samples/samples";
@@ -51,11 +52,9 @@ import { useGetProteinByTag } from "./src/hooks/features/proteins/get";
 import { createSampleCountAPI } from "./src/hooks/samples/count";
 import { createQueryTraitsAPI } from "./src/hooks/attributes/requires";
 import { createModifyGenotypesAPI } from "./src/hooks/genotypes/insert";
-import { useGetProteome, useGetProteomeCreatedAt, useGetProteomeIsUpdating, useGetProteomeText } from "./src/hooks/proteomes/get";
-import { useGetProteomeBySearchString } from "./src/hooks/proteomes/find";
-import { useGetProteomeCount, useGetProteomeProteinCount } from "./src/hooks/proteomes/count";
-import { usePostProteome } from "./src/hooks/proteomes/insert";
-import { useGetProteomePermissions } from "./src/hooks/proteomes/permissions";
+import { createQueryProteomeAPI } from "./src/hooks/proteomes/find";
+import { createQueryProteomeCountsAPI } from "./src/hooks/proteomes/count";
+import { createPostProteomeAPI } from "./src/hooks/proteomes/insert";
 import { createQueryGenotypesAPI } from "./src/hooks/genotypes/query";
 import { createQueryGenotypeConditionApplicationsAPI } from "./src/hooks/genotypes/condition_applications";
 import { createQuerySparePartsAPI } from "./src/hooks/maintenance/sparepart_query";
@@ -74,7 +73,9 @@ import { createAuthenticationAPI } from "./src/hooks/authorization/login";
 import { createAuthenticationTokenAPI } from "./src/hooks/authorization/token";
 import { createSubmissionCoreAPI } from "./src/hooks/submissions/core";
 import { createStateAPI } from "./src/hooks/states/core";
+import { createResearchGroupsAPI } from "./src/hooks/researchgroups/researchgroups";
 import { create } from "lodash";
+
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 
@@ -113,10 +114,11 @@ export default {
         createNewsAPI
     },
     users: {
-        createModifyUsersAPI,
+        createCoreUsersAPI,
         createQueryUserRolesAPI,
         createQueryUserCountAPI,
         createQueryUserActiveAPI,
+        createEditUserAPI,
         views: {
             createUserViewsAPI
         }
@@ -157,15 +159,9 @@ export default {
         }
     },
     proteomes: {
-        useGetProteome,
-        useGetProteomeText,
-        useGetProteomeBySearchString,
-        useGetProteomeCount,
-        useGetProteomeProteinCount,
-        usePostProteome,
-        useGetProteomeIsUpdating,
-        useGetProteomePermissions,
-        useGetProteomeCreatedAt
+        createQueryProteomeAPI,
+        createQueryProteomeCountsAPI,
+        createPostProteomeAPI
     },
     samples: {
         createSampleCountAPI,
@@ -260,22 +256,7 @@ export default {
         createQueryTraitsAPI
     },
     maintenance: {
-        usePostMaintenanceEvent,
-        useGetQueryMaintenanceEvents,
-        useGetMaintenanceEventCount,
-        useGetMaintenanceEventByTag,
-        usePostSymptomToMaintenanceEvent,
-        useDeleteSymptomToMaintenanceEvent,
-        usePostMaintenanceProcedureToMaintenanceEvent,
-        useDeleteMaintenanceProcedureToMaintenanceEvent,
-        usePostSparePartToMaintenanceEvent,
-        useDeleteSparePartToMaintenanceEvent,
-        useGetSparePartCountByMaintenanceEvent,
-        useGetMaintenanceEventState,
-        usePostMaintenanceEventState,
-        useGetMaintenanceEventCosts,
-        usePostExternalServiceToMaintenanceEvent,
-        useDeleteExternalServiceFromMaintenanceEvent,
+        createCoreMaintenanceEventsAPI,
         procedures: {
             createModifyMaintenanceProceduresAPI,
             createQueryMaintenanceProceduresAPI
@@ -289,12 +270,8 @@ export default {
             createModifySymptomsAPI,
             createQuerySymptomsAPI,
         },
-        
-        costs: {
-            useGetMaintenanceCosts
-        },
         states: {
-            useGetMaintenanceEventStates
+            createGetMaintenanceEventStatesAPI
         },
 
         externalservice: {

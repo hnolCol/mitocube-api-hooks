@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query"
 
-export function createModifyUsersAPI(client) {
+export function createCoreUsersAPI(client) {
 
     /**
      * @description Endpoint: POST '/api/users'
@@ -8,7 +8,7 @@ export function createModifyUsersAPI(client) {
      * @param {} props.userProps
      */
     async function postUser_API({ firstname, lastname, email, role, research_group, institute }) {
-        const res = await client.post('/api/users',
+        const res = await client.post('/users',
         { firstname, lastname, email, role, research_group, institute }
         )
         return res.data 
@@ -29,7 +29,7 @@ export function createModifyUsersAPI(client) {
      * @param {} props.userProps
      */
     async function patchUser_API({ firstname, lastname, email, role, research_group, institute }) {
-        const res = await client.patch('/api/users',
+        const res = await client.patch('/users',
             {}, { params: { firstname, lastname, email, role, research_group, institute } }
         )
         return res.data 
