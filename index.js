@@ -2,7 +2,6 @@ import { useGetSequenceByFeatureKey } from "./src/hooks/features/sequence"
 import { createModifyAttributesAPI } from "./src/hooks/attributes/attributes";
 import { createQueryAttributesAPI} from "./src/hooks/attributes/query_attributes";
 import { useDeleteFilter, useGetFilters, usePostFilter } from "./src/hooks/filters/filters";
-import { useGetBackendVersion } from "./src/hooks/info/version";
 import { createModifyAnnotationsAPI } from "./src/hooks/annotations/annotations";
 import { createQueryAnnotationsAPI } from "./src/hooks/annotations/annotations_query";
 import { useGetTermsOfUse } from "./src/hooks/info/terms";
@@ -74,7 +73,7 @@ import { createAuthenticationAPI } from "./src/hooks/authorization/login";
 import { createAuthenticationTokenAPI } from "./src/hooks/authorization/token";
 import { createSubmissionCoreAPI } from "./src/hooks/submissions/core";
 import { createStateAPI } from "./src/hooks/states/core";
-import { create } from "lodash";
+import { createResearchGroupsAPI } from "./src/hooks/researchgroups/researchgroups";
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 
@@ -326,6 +325,7 @@ export default {
         }
         
     },
+    researchgroups : createResearchGroupsAPI,
     info: {
         createBackendInfoAPI,
         useGetStatisticInfo,
