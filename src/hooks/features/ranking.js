@@ -37,7 +37,7 @@ export function createFeaturesProteinsRankingAPI(client) {
  * @returns {ProteinGroupSubmissionRanking[]} The ranked submission tags for the given protein group tag
  */
 async function getProteinGroupSubmissionStats_API({ tag, limit }) {
-    const res = await client.get(`}/features/protein_groups/${tag}/stats`, {
+    const res = await client.get(`/features/protein_groups/${tag}/stats`, {
         params: { limit }
     });
     return res.data;

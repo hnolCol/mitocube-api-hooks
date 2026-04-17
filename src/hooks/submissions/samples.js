@@ -31,7 +31,7 @@ export function createSubmissionSamplesAPI(client) {
      * @returns 
      */
     async function deleteSubmissionSample_API({ tag, sample_index }) {
-        const res = await client.delete(`/api/submissions/${tag}/samples/${sample_index}`)
+        const res = await client.delete(`/submissions/${tag}/samples/${sample_index}`)
         return res.data 
     }
     const useDeleteSample = (APIParams = {}, useMutationOptions = {}) => {
