@@ -8,7 +8,7 @@ export function createQueryUserRolesAPI(client) {
      * @returns 
      */
     async function getUserRoles_API({ }) {
-        const res = await client.get('/api/users/roles')
+        const res = await client.get('/users/roles')
         return res.data
     }
 
@@ -27,7 +27,7 @@ export function createQueryUserRolesAPI(client) {
      * @returns {Number} The role of the user.
      */
     async function getUserRoleByTag_API({ tag }) {
-        const res = await client.get(`/api/users/roles/${tag}`)
+        const res = await client.get(`/users/roles/${tag}`)
         return res.data
     }
 
