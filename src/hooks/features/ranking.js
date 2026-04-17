@@ -6,8 +6,6 @@
 
 import { useQuery } from "@tanstack/react-query"
 
-import axios from "axios"
-import config from "../../../config"
 
 /**
  * @typedef ProteinGroupSubmissionRanking
@@ -30,6 +28,7 @@ import config from "../../../config"
  */
 
 
+export function createFeaturesProteinsRankingAPI(client) {
 
 /**
  * 
@@ -37,14 +36,14 @@ import config from "../../../config"
  * @param {String} props.tag - The protein group tag 
  * @returns {ProteinGroupSubmissionRanking[]} The ranked submission tags for the given protein group tag
  */
-export async function getProteinGroupSubmissionStats_API({ tag, limit }) {
-    const res = await axios.get(`${config.baseURL}/features/protein_groups/${tag}/stats`, {
+async function getProteinGroupSubmissionStats_API({ tag, limit }) {
+    const res = await client.get(`}/features/protein_groups/${tag}/stats`, {
         params: { limit }
     });
     return res.data;
 }
 
-export function useGetProteinGroupSubmissionStats(APIParams = {tag, limit}, useQueryOptions = { staleTime: Infinity}) {
+function useGetProteinGroupSubmissionStats(APIParams = {tag, limit}, useQueryOptions = { staleTime: Infinity}) {
     return useQuery({
         queryKey: ["getProteinGroupSubmissionStats", APIParams.tag, APIParams.limit],
         queryFn: () => getProteinGroupSubmissionStats_API({ ...APIParams }),
@@ -53,3 +52,8 @@ export function useGetProteinGroupSubmissionStats(APIParams = {tag, limit}, useQ
 }
 
 
+return { 
+    useGetProteinGroupSubmissionStats
+};
+
+}   

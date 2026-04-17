@@ -1,22 +1,22 @@
-import { useGetSequenceByFeatureKey } from "./src/hooks/features/sequence"
+import { createFeatureSequenceAPI } from "./src/hooks/features/sequence"
 import { createModifyAttributesAPI } from "./src/hooks/attributes/attributes";
 import { createQueryAttributesAPI} from "./src/hooks/attributes/query_attributes";
 import { useDeleteFilter, useGetFilters, usePostFilter } from "./src/hooks/filters/filters";
 import { createModifyAnnotationsAPI } from "./src/hooks/annotations/annotations";
 import { createQueryAnnotationsAPI } from "./src/hooks/annotations/annotations_query";
-import { useGetTermsOfUse } from "./src/hooks/info/terms";
-import { useGetFeatureInfo } from "./src/hooks/features/info";
+import { createTermsOfUseAPI } from "./src/hooks/info/terms";
+import { createFeatureInfoAPI } from "./src/hooks/features/info";
 import { createSubmissionStateAPI } from "./src/hooks/submissions/state";
-import { useGetSubmissionSampleCount, useGetSubmissionSamplesFull, useGetSubmissionSampleTags } from "./src/hooks/submissions/samples";
+import { createSubmissionSamplesAPI } from "./src/hooks/submissions/samples";
 import { createQueryUserRolesAPI } from "./src/hooks/users/roles";
-import { useGetSubmissionComments } from "./src/hooks/submissions/comments";
+import { createSubmissionCommentsAPI } from "./src/hooks/submissions/comments";
 import { createCoreUsersAPI } from "./src/hooks/users/users";
 import { createModifyTraitsAPI } from "./src/hooks/attributes/traits";
 import { createCoreInstrumentsAPI } from "./src/hooks/instruments/instruments";
 import { createModifySymptomsAPI } from "./src/hooks/maintenance/symptoms";
 import { createQuerySymptomsAPI } from "./src/hooks/maintenance/symptoms_query";
-import { useGetSubmissionByQuery } from "./src/hooks/submissions/query";
-import {  createSubmissionTitleAPI } from "./src/hooks/submissions/title";
+import { createSubmissionQueryAPI } from "./src/hooks/submissions/query";
+import { createSubmissionTitleAPI } from "./src/hooks/submissions/title";
 import { createCoreMaintenanceEventsAPI } from "./src/hooks/maintenance/events";
 import { createModifyMaintenanceProceduresAPI } from "./src/hooks/maintenance/procedures";
 import { createQueryMaintenanceProceduresAPI} from "./src/hooks/maintenance/procedures_query";
@@ -24,30 +24,28 @@ import { createModifySparePartsAPI } from "./src/hooks/maintenance/spareparts";
 import { createGetMaintenanceEventStatesAPI } from "./src/hooks/maintenance/states";
 import { createModifyExternalServiceAPI  } from "./src/hooks/maintenance/externalservice"; 
 import { createQueryExternalServiceAPI } from "./src/hooks/maintenance/externalservice_query";
-import { useGetFeatureCorrelation } from "./src/hooks/features/correlation";
+import { createFeatureCorrelationAPI } from "./src/hooks/features/correlation";
 import { createQueryUsersByQueryAPI } from "./src/hooks/users/query_users";
 import { createQueryUserCountAPI } from "./src/hooks/users/counts";
 import { createQueryUserActiveAPI } from "./src/hooks/users/active";
 import { createEditUserAPI } from "./src/hooks/users/edit";
-import { useGetSubmissionConditionApplication, useGetSubmissionConditionApplicationAttributes, useGetSubmissionSampleConditionApplications, useGetSubmissionSampleConditionApplicationAttributes, useGetSubmissionConditionApplicationData, useUpdateSubmissionCA } from "./src/hooks/submissions/ca";
+import { createSubmissionCAAPI } from "./src/hooks/submissions/ca";
 import { createConditionApplicationAPI } from "./src/hooks/condition_applications/condition_applications";
 import { createSampleCoreAPI } from "./src/hooks/samples/samples";
 import { createMetatextAPI } from "./src/hooks/metatext/metatext";
 import { createSubmissionPermissionsAPI } from "./src/hooks/submissions/permissions";
 import { createNewsAPI } from "./src/hooks/news/news";
-import { useGetSubmissionUsers } from "./src/hooks/submissions/users";
-import { useGetSubmissionViews, usePostSubmissionView } from "./src/hooks/submissions/views";
-import { useGetSubmissionDuration } from "./src/hooks/stats/submissions";
-import { useGetSubmissionQuantificationExists, usePostPrecursorQuantification, usePostProteinQuantification } from "./src/hooks/submissions/quantifications";
-import { useGetCypherQuery, useGetPublicationSummaryForProtein } from "./src/hooks/openai/cypher";
+import { createSubmissionUsersAPI } from "./src/hooks/submissions/users";
+import { createSubmissionViewsAPI } from "./src/hooks/submissions/views";
+import { createSubmissionDurationsAPI } from "./src/hooks/stats/submissions";
+import { createSubmissionQuantificationAPI } from "./src/hooks/submissions/quantifications";
+import { createOpenAIAPI } from "./src/hooks/openai/cypher";
 import { createSubmissionMetatextAPI} from "./src/hooks/submissions/metatexts";
 import { createUserViewsAPI } from "./src/hooks/users/views";
-import { useGetSubmissionPeptideCount, useGetSubmissionProteinGroupCount, useGetSubmissionSampleProteinGroupCount } from "./src/hooks/submissions/count";
-import { useGetFeaturesByQuery } from "./src/hooks/features/query";
-import { useGetFeatureDataForSubmission } from "./src/hooks/features/data";
+import { createSubmissionCountAPI } from "./src/hooks/submissions/count";
+import { createFeatureDataAPI } from "./src/hooks/features/data";
 import { createSubmissionAnalysisAPI } from "./src/hooks/submissions/analysis";
-import { useGetProteinFeatureByQuery } from "./src/hooks/features/proteins/query";
-import { useGetProteinByTag } from "./src/hooks/features/proteins/get";
+import { createProteinFeatureQueryAPI } from "./src/hooks/features/proteins/query";
 import { createSampleCountAPI } from "./src/hooks/samples/count";
 import { createQueryTraitsAPI } from "./src/hooks/attributes/requires";
 import { createModifyGenotypesAPI } from "./src/hooks/genotypes/insert";
@@ -59,13 +57,13 @@ import { createQueryGenotypeConditionApplicationsAPI } from "./src/hooks/genotyp
 import { createQuerySparePartsAPI } from "./src/hooks/maintenance/sparepart_query";
 import { createGetInstrumentPermissionsAPI } from "./src/hooks/instruments/permissions";
 import { createGetInstrumentSamplesCountAPI } from "./src/hooks/instruments/samples";
-import { useGetFeatureByTag } from "./src/hooks/features/features";
-import { useGetPairwiseFeatureQuant } from "./src/hooks/features/pairwise_quant";
-import { useGetSampleAbundance, useGetSampleFeatureAbundanceDistribution } from "./src/hooks/features/quantifications";
-import { useGetProteinGroupSubmissionStats } from "./src/hooks/features/ranking";
+import { createFeatureAPI } from "./src/hooks/features/features";
+import { createFeaturePairwiseQuantAPI } from "./src/hooks/features/pairwise_quant";
+import { createFeatureQuantificationAPI } from "./src/hooks/features/quantifications";
+import { createFeaturesProteinsRankingAPI } from "./src/hooks/features/ranking";
 
-import { useGetSubmissionExclusivelyQuantifiedProteinGroups, useGetSubmissionRanking, useUpdateSubmissionStats } from "./src/hooks/submissions/ranking";
-import { useGetStatisticInfo } from "./src/hooks/info/statistics";
+import { createSubmissionRankingAPI } from "./src/hooks/submissions/ranking";
+import { createStatisticInfoAPI } from "./src/hooks/info/statistics";
 import { createBackendInfoAPI} from "./src/hooks/info/backend";
 import axios from "axios";
 import { createAuthenticationAPI } from "./src/hooks/authorization/login";
@@ -105,9 +103,9 @@ export default {
         createModifyAnnotationsAPI,
         createQueryAnnotationsAPI
     },
-    info: {
-        useGetTermsOfUse,
-    },
+    // info: {
+    //     createTermsOfUseAPI,
+    // },
     news: {
         createNewsAPI
     },
@@ -132,28 +130,25 @@ export default {
         }
     },
     features: {
-        useGetFeaturesByQuery,
-        useGetSequenceByFeatureKey,
-        useGetFeatureInfo,
-        useGetFeatureByTag,
+        createFeatureSequenceAPI,
+        createFeatureInfoAPI,
+        createFeatureAPI,
         correlations: {
-            useGetFeatureCorrelation
+            createFeatureCorrelationAPI
         },
         data: {
-            useGetFeatureDataForSubmission,
-            useGetPairwiseFeatureQuant
+            createFeaturePairwiseQuantAPI,
+            createFeatureDataAPI
         },
         proteins: {
-            useGetProteinFeatureByQuery,
-            useGetProteinByTag
+            createProteinFeatureQueryAPI
         },
         protein_groups : {
-            useGetProteinGroupSubmissionStats
+            createFeaturesProteinsRankingAPI
             
         },
         quantification: {
-            useGetSampleAbundance,
-            useGetSampleFeatureAbundanceDistribution
+            createFeatureQuantificationAPI
         }
     },
     proteomes: {
@@ -173,7 +168,7 @@ export default {
     },
     submissions: {
         
-        useGetSubmissionComments,
+        createSubmissionCommentsAPI,
         core: {
             createSubmissionCoreAPI
         },
@@ -181,25 +176,17 @@ export default {
             createSubmissionTitleAPI
         },
         samples: {
-            useGetSubmissionSampleTags,
-            useGetSubmissionSampleCount,
-            useGetSubmissionSamplesFull
+            createSubmissionSamplesAPI
         },
         states: {
 
             createSubmissionStateAPI
         },
         query: {
-            useGetSubmissionByQuery
+            createSubmissionQueryAPI
         },
         condition_applications: {
-
-            useGetSubmissionConditionApplication,
-            useGetSubmissionSampleConditionApplicationAttributes,
-            useGetSubmissionConditionApplicationAttributes,
-            useGetSubmissionSampleConditionApplications,
-            useGetSubmissionConditionApplicationData,
-            useUpdateSubmissionCA
+            createSubmissionCAAPI
         },
         metatexts: {
             createSubmissionMetatextAPI
@@ -210,34 +197,26 @@ export default {
             createSubmissionPermissionsAPI
         },
         users: {
-            useGetSubmissionUsers
+            createSubmissionUsersAPI
         },
         views: {
-            useGetSubmissionViews,
-            usePostSubmissionView
+            createSubmissionViewsAPI
         },
         quantifications: {
-            usePostProteinQuantification,
-            usePostPrecursorQuantification,
-            useGetSubmissionQuantificationExists,
+            createSubmissionQuantificationAPI
         },
         // researchaim: {
         //     useGetResearchAim,
         //     usePatchResearchAim
         // },
         counts: {
-            useGetSubmissionProteinGroupCount,
-            useGetSubmissionSampleCount, 
-            useGetSubmissionPeptideCount,
-            useGetSubmissionSampleProteinGroupCount,
+            createSubmissionCountAPI
         },
         analysis: {
             createSubmissionAnalysisAPI,
         },
         statistics: {
-            useUpdateSubmissionStats,
-            useGetSubmissionRanking,
-            useGetSubmissionExclusivelyQuantifiedProteinGroups
+            createSubmissionRankingAPI
 
         }
     },
@@ -246,7 +225,7 @@ export default {
     },
     stats: {
         submissions: {
-            useGetSubmissionDuration
+            createSubmissionDurationsAPI
         }
     },
     traits: {
@@ -278,8 +257,7 @@ export default {
         },
     },
     openai: {
-        useGetCypherQuery,
-        useGetPublicationSummaryForProtein
+        createOpenAIAPI
     },
     instruments: {
         createCoreInstrumentsAPI,
@@ -293,7 +271,8 @@ export default {
     },
     researchgroups : createResearchGroupsAPI,
     info: {
+        createTermsOfUseAPI,
         createBackendInfoAPI,
-        useGetStatisticInfo,
+        createStatisticInfoAPI,
     }
 }
