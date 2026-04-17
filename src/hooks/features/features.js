@@ -1,23 +1,29 @@
 
-import axios from "axios"
 import { useQuery } from "@tanstack/react-query"
 
+export function createFeatureAPI(client) {
 
-/**
- * @description Get the information about a feature including gene name, etc. Endpoint: /api/features/${tag}/i
- * @param {Object} props
- * @param {String} props.tag - The feature tag (e.g. Uniprot ID)
- * @returns {import("./types").Feature} The feature information. 
- */
-async function getFeatureByTag_API({ tag }) {
-    const res = await axios.get(`/api/features/${tag}`, { })
-    return res.data
-}
+    /**
+     * @description Get the information about a feature including gene name, etc. Endpoint: /api/features/${tag}/i
+     * @param {Object} props
+     * @param {String} props.tag - The feature tag (e.g. Uniprot ID)
+     * @returns {import("./types").Feature} The feature information. 
+     */
+    async function getFeatureByTag_API({ tag }) {
+        const res = await client.get(`/features/${tag}`, { })
+        return res.data
+    }
 
-export function useGetFeatureByTag(APIParams = {tag}, useQueryOptions = { }) {
-    return useQuery({
-        queryKey: ["infoFeature", APIParams.tag],
-        queryFn: () => getFeatureByTag_API({ ...APIParams }),
-        ...useQueryOptions
-    });
-}
+    function useGetFeatureByTag(APIParams = {tag}, useQueryOptions = { }) {
+        return useQuery({
+            queryKey: ["infoFeature", APIParams.tag],
+            queryFn: () => getFeatureByTag_API({ ...APIParams }),
+            ...useQueryOptions
+        });
+    }
+
+    return {
+        useGetFeatureByTag
+    };
+
+}   
