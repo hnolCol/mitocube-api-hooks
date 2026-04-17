@@ -12,7 +12,7 @@ import { createQueryUserRolesAPI } from "./src/hooks/users/roles";
 import { useGetSubmissionComments } from "./src/hooks/submissions/comments";
 import { createCoreUsersAPI } from "./src/hooks/users/users";
 import { createModifyTraitsAPI } from "./src/hooks/attributes/traits";
-import { useGetInstrument, useGetInstrumentsByType, useGetInstrumentState, useGetInstrumentStateByQuery, useGetInstrumentStateDurations, useGetInstrumentTypes, useGetSpecificInstrumentStateDurations, useGetStatesOfAnInstrument, usePostInstrumentState } from "./src/hooks/instruments/instruments";
+import { createCoreInstrumentsAPI } from "./src/hooks/instruments/instruments";
 import { createModifySymptomsAPI } from "./src/hooks/maintenance/symptoms";
 import { createQuerySymptomsAPI } from "./src/hooks/maintenance/symptoms_query";
 import { useGetSubmissionByQuery } from "./src/hooks/submissions/query";
@@ -57,8 +57,8 @@ import { createPostProteomeAPI } from "./src/hooks/proteomes/insert";
 import { createQueryGenotypesAPI } from "./src/hooks/genotypes/query";
 import { createQueryGenotypeConditionApplicationsAPI } from "./src/hooks/genotypes/condition_applications";
 import { createQuerySparePartsAPI } from "./src/hooks/maintenance/sparepart_query";
-import { useGetInstrumentPermissions } from "./src/hooks/instruments/permissions";
-import { useGetInstrumentSamplesCount } from "./src/hooks/instruments/samples";
+import { createGetInstrumentPermissionsAPI } from "./src/hooks/instruments/permissions";
+import { createGetInstrumentSamplesCountAPI } from "./src/hooks/instruments/samples";
 import { useGetFeatureByTag } from "./src/hooks/features/features";
 import { useGetPairwiseFeatureQuant } from "./src/hooks/features/pairwise_quant";
 import { useGetSampleAbundance, useGetSampleFeatureAbundanceDistribution } from "./src/hooks/features/quantifications";
@@ -73,6 +73,7 @@ import { createAuthenticationTokenAPI } from "./src/hooks/authorization/token";
 import { createSubmissionCoreAPI } from "./src/hooks/submissions/core";
 import { createStateAPI } from "./src/hooks/states/core";
 import { createResearchGroupsAPI } from "./src/hooks/researchgroups/researchgroups";
+import { create } from "lodash";
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 
@@ -281,22 +282,12 @@ export default {
         useGetPublicationSummaryForProtein
     },
     instruments: {
-        useGetInstrument,
-        useGetInstrumentsByType,
-        useGetInstrumentTypes,
-        useGetStatesOfAnInstrument,
-        states: {
-            useGetInstrumentStateDurations,
-            useGetSpecificInstrumentStateDurations,
-            useGetInstrumentState,
-            useGetInstrumentStateByQuery,
-            usePostInstrumentState
-        },
+        createCoreInstrumentsAPI,
         permissions: {
-            useGetInstrumentPermissions
+            createGetInstrumentPermissionsAPI
         },
         samples: {
-            useGetInstrumentSamplesCount
+            createGetInstrumentSamplesCountAPI
         }
         
     },
