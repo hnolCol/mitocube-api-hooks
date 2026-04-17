@@ -71,6 +71,22 @@ export function createResearchGroupsAPI(client) {
 
 
     /**
+     * @description Returns the research group item
+     * @param {Object} props
+     * @param {String} props.tag The research group tag to return 
+     * @returns {import("./types").ResearchGroup} The research group item.
+     */
+    async function getResearchGroupSubmissionCount_API({ tag }) {
+    const res = await client.get(`/researchgroups/${tag}/submissions/count`, {})
+    return res.data
+    }
+
+    const useGetResearchGroupSubmissionCount = (APIParams = {tag }, useQueryOptions = {}) => {
+    return useQuery({queryKey: ["getResearchGroupSubmissionCount", APIParams.tag], queryFn: () => getResearchGroupSubmissionCount_API({...APIParams}), ...useQueryOptions})
+    }
+
+
+    /**
      * @description Adds a research group to the database 
      * @param {Object} props 
      * @param {import("../../types/researchgroup").ResearchGroupPost} props.researchGroup
@@ -143,10 +159,13 @@ export function createResearchGroupsAPI(client) {
 
 
 
+
+
   return {
     useGetResearchGroups,
     useGetResearchGroupUsers,
-    useGetResearchGroupByTag,
+      useGetResearchGroupByTag,
+    useGetResearchGroupSubmissionCount,
     usePostResearchGroup,
     usePatchResearchGroup,
     useDeleteResearchGroupUsers,
