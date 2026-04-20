@@ -158,6 +158,22 @@ export function createResearchGroupsAPI(client) {
     }
 
 
+    /**
+     * @description Returns the details of all research groups. Endpoint: '/api/researchgroups/details'
+     * @returns 
+     */
+    async function getResearchGroupsDetails_API() {
+      const res = await client.get('/researchgroups/details')
+      return res.data
+    }
+    
+    const useGetResearchGroupsDetails = (useQueryOptions = {}) => {
+        return useQuery({
+            queryKey: ["getResearchGroupsDetails"],
+            queryFn: () => getResearchGroupsDetails_API(),
+            ...useQueryOptions
+        })
+    }
 
 
 
@@ -170,6 +186,7 @@ export function createResearchGroupsAPI(client) {
     usePatchResearchGroup,
     useDeleteResearchGroupUsers,
     usePostResearchGroupUsers,
-    useGetResearchGroupUsersCount
+    useGetResearchGroupUsersCount,
+    useGetResearchGroupsDetails
   };
 }
