@@ -9,16 +9,36 @@ export function createResearchGroupsAPI(client) {
      * @param {Object} props 
      * @returns {String[]} Returns the list of research group tags. 
      */
-    async function getResearchGroups_API({limit}) {
-    const res = await client.get('/researchgroups', {params : {limit}})
+    async function getResearchGroups_API({limit, search_string}) {
+    const res = await client.get('/researchgroups/q', {params : {limit, search_string}})
     return res.data
     }
 
     const useGetResearchGroups = (APIParams = {}, useQueryOptions = {}) => {
-    return useQuery({queryKey: ["getResearchGroups"], queryFn: () => getResearchGroups_API({...APIParams}), ...useQueryOptions})
+    return useQuery({queryKey: ["getResearchGroups", APIParams.limit, APIParams.search_string], queryFn: () => getResearchGroups_API({...APIParams}), ...useQueryOptions})
     }
 
 
+    /**
+     * @description Find research groups by search string, user tags, or submission tags.
+     * @return {String[]} - The research group tags matching the search criteria.
+     */
+    async function getResearchGroupsByQuery_API({ search_string, user_tags, submission_tags, limit }) {
+      const res = await client.get('/researchgroups/q', { params: { search_string, user_tags, submission_tags, limit } })
+      return res.data
+    }
+
+    const useGetResearchGroupsByQuery = (APIParams = { search_string, user_tags, submission_tags, limit: 40 }, useQueryOptions = {}) => {
+      return useQuery({
+          queryKey: ["getResearchGroupsByQuery",
+              APIParams.search_string,
+              APIParams.user_tags,
+              APIParams.submission_tags,
+              APIParams.limit],
+          queryFn: () => getResearchGroupsByQuery_API({ ...APIParams }),
+          ...useQueryOptions
+      })
+    }
 
 
     /**
@@ -159,8 +179,6 @@ export function createResearchGroupsAPI(client) {
 
 
 
-
-
   return {
     useGetResearchGroups,
     useGetResearchGroupUsers,
@@ -170,6 +188,7 @@ export function createResearchGroupsAPI(client) {
     usePatchResearchGroup,
     useDeleteResearchGroupUsers,
     usePostResearchGroupUsers,
-    useGetResearchGroupUsersCount
+    useGetResearchGroupUsersCount,
+    useGetResearchGroupsByQuery
   };
 }

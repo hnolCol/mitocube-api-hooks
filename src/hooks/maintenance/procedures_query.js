@@ -35,7 +35,7 @@ export function createQueryMaintenanceProceduresAPI(client) {
 
   const useGetMaintenanceProcedureByQuery = (APIParams = {search_string : "", limit : 10}, useQueryOptions = {stateTime : 200000, placeholderData: (prev) => prev}) => {
     return useQuery({
-        queryKey: ["getProcedureBySearchString", APIParams.search_string],
+        queryKey: ["getProcedureBySearchString", APIParams.search_string, APIParams.limit],
         queryFn: () => getMaintenanceProcedureByQuery_API({...APIParams}),
         ...useQueryOptions
     });
