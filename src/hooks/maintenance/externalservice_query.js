@@ -33,7 +33,7 @@ export function createQueryExternalServiceAPI(client) {
 
   const useGetExternalServiceByQuery = (APIParams = {search_string : "", limit : 10}, useQueryOptions = {stateTime : 200000, placeholderData: (prev) => prev}) => {
     return useQuery({
-        queryKey: ["getExternalServiceBySearchString", APIParams.search_string],
+        queryKey: ["getExternalServiceBySearchString", APIParams.search_string, APIParams.limit],
         queryFn: () => getExternalServiceByQuery_API({...APIParams}),
         ...useQueryOptions
     });
