@@ -9,13 +9,13 @@ export function createResearchGroupsAPI(client) {
      * @param {Object} props 
      * @returns {String[]} Returns the list of research group tags. 
      */
-    async function getResearchGroups_API({limit}) {
-    const res = await client.get('/researchgroups', {params : {limit}})
+    async function getResearchGroups_API({limit, search_string}) {
+    const res = await client.get('/researchgroups/q', {params : {limit, search_string}})
     return res.data
     }
 
     const useGetResearchGroups = (APIParams = {}, useQueryOptions = {}) => {
-    return useQuery({queryKey: ["getResearchGroups"], queryFn: () => getResearchGroups_API({...APIParams}), ...useQueryOptions})
+    return useQuery({queryKey: ["getResearchGroups", APIParams.limit, APIParams.search_string], queryFn: () => getResearchGroups_API({...APIParams}), ...useQueryOptions})
     }
 
 
