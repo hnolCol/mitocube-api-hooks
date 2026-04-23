@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, useQueries } from "@tanstack/react-query"
 
 export function createProteinFeatureQueryAPI(client) {
 
@@ -35,15 +35,28 @@ export function createProteinFeatureQueryAPI(client) {
 
     function useGetProteinByTag(APIParams = {tag}, useQueryOptions = { }) {
         return useQuery({
-            queryKey: ["protein", APIParams.tag],
+            queryKey: ["getProtein", APIParams.tag],
             queryFn: () => getProteinByTag_API({ ...APIParams }),
             ...useQueryOptions
         });
     }
 
+
+    const useGetProteins = (APIParams = {tags : []}, useQueryOptions = {}) => {
+        return useQueries(
+            {queries: APIParams.tags.map((tag) => ({
+                queryKey: ["getProtein", tag],
+                queryFn: () => getProteinByTag_API({ tag }),
+                staleTime: Infinity,
+                ...useQueryOptions
+            }))}
+        )
+    }
+
 return {
     useGetProteinFeatureByQuery,
-    useGetProteinByTag
+    useGetProteinByTag,
+    useGetProteins
 };
 
 }
