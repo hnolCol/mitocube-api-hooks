@@ -15,7 +15,7 @@ export function createSubmissionCommentsAPI(client) {
 
     const useGetSubmissionComments = (APIParams = {tag}, useQueryOptions = {}) => {
         return useQuery({
-            queryKey: ["submission_samples", APIParams.tag],
+            queryKey: ["submission_comments", APIParams.tag],
             queryFn: () => getSubmissionComments_API({ ...APIParams }),
             ...useQueryOptions
         })
@@ -29,16 +29,14 @@ export function createSubmissionCommentsAPI(client) {
      * @param {String} props.tag  Submission tag 
      * @param {String[]} - Tags associated with the given comment. For example trouble shoot, maintenance, performance 
      */
-    async function postComment_API({ tag, content, tags }) {
-        const res = await client.post(`/submissions/${tag}/comments`,
-            {
-                content,
-                tags
-        }
-        )
-        return res.data 
+    async function postComment_API({ tag, content, tags = [], response_to = null }) {
+        const res = await client.post(`/submissions/${tag}/comments`, {
+            content,
+            tags,
+            response_to
+        })
+        return res.data
     }
-
     const usePostComment = (useMutationOptions = {}) => {
         return useMutation({mutationFn: (APIParams) => postComment_API({...APIParams}), ...useMutationOptions})
     }
