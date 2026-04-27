@@ -62,6 +62,7 @@ import { createFeaturePairwiseQuantAPI } from "./src/hooks/features/pairwise_qua
 import { createFeatureQuantificationAPI } from "./src/hooks/features/quantifications";
 import { createFeaturesProteinsRankingAPI } from "./src/hooks/features/ranking";
 
+import { createSubmissionRunlistAPI } from "./src/hooks/submissions/runlist";
 import { createSubmissionRankingAPI } from "./src/hooks/submissions/ranking";
 import { createStatisticInfoAPI } from "./src/hooks/info/statistics";
 import { createBackendInfoAPI} from "./src/hooks/info/backend";
@@ -217,7 +218,9 @@ export default {
         },
         statistics: {
             createSubmissionRankingAPI
-
+        },
+        runlist: {
+            createSubmissionRunlistAPI
         }
     },
     states: {
