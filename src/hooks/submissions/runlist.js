@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, useMutation } from "@tanstack/react-query"
 
 export function createSubmissionRunlistAPI(client) {
 
@@ -20,8 +20,26 @@ export function createSubmissionRunlistAPI(client) {
         })
     }
 
+    /**
+     * @description Create or update a runlist for a given submission. If a runlist already exists for the submission, it will be updated. Otherwise, a new runlist will be created.
+     * @param {Object} props 
+     * @param {String} props.tag - The submission tag
+     */
+    async function postRunlist_API({tag, runlist_props}) { 
+        const res = await client.post(`/submissions/${tag}/runlist`, runlist_props)
+        return res.data
+    }
+    
+    const usePostRunlist = (useMutationOptions = {}) => {
+        return useMutation({
+            mutationFn: (APIParams) => postRunlist_API({...APIParams}), 
+            ...useMutationOptions
+        })
+    }
+
     return {        
-        useGetRunlist
+        useGetRunlist,
+        usePostRunlist
     };
 
 }
