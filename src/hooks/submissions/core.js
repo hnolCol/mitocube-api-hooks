@@ -46,10 +46,23 @@ export function createSubmissionCoreAPI(client) {
         });
     }
 
+    async function checkSubmission_API({ tag }) {
+        const res = await client.get(`/submissions/${tag}/check`)
+        return res.data
+    }
+    
+    const useCheckSubmission = (APIParams = {}, useQueryOptions = { staleTime: 30000 }) => {
+        return useQuery({
+            queryKey: ["submissionCheck", APIParams.tag],
+            queryFn: () => checkSubmission_API({ ...APIParams }),
+            ...useQueryOptions
+        })
+    }
 
     return {
         useGetSubmissionExists,
-        useGetSubmissionCreatedAt
+        useGetSubmissionCreatedAt,
+        useCheckSubmission
   };
 }
 
