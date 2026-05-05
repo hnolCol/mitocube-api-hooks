@@ -37,9 +37,29 @@ export function createSubmissionRunlistAPI(client) {
         })
     }
 
+    /**
+     * @description Deletes the runlist for a given submission if it exists.
+     * @param {Object} props 
+     * @param {String} props.tag - The submission tag
+     * @returns 
+     */
+
+    async function deleteRunlist_API({tag}) {
+        const res = await client.delete(`/submissions/${tag}/runlist`)
+        return res.data
+    }
+
+    const useDeleteRunlist = (useMutationOptions = {}) => {
+        return useMutation({
+            mutationFn: (APIParams) => deleteRunlist_API({...APIParams}), 
+            ...useMutationOptions
+        })
+    }   
+
     return {        
         useGetRunlist,
-        usePostRunlist
+        usePostRunlist,
+        useDeleteRunlist
     };
 
 }
