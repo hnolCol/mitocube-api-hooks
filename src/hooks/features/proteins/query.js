@@ -42,7 +42,7 @@ export function createProteinFeatureQueryAPI(client) {
     }
 
 
-    const useGetProteins = (APIParams = {tags : []}, useQueryOptions = {}) => {
+    const useGetProteins = (APIParams = { tags: [] }, useQueryOptions = {}) => {
         return useQueries(
             {queries: APIParams.tags.map((tag) => ({
                 queryKey: ["getProtein", tag],
