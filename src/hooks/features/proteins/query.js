@@ -1,4 +1,5 @@
 import { useQuery, useQueries } from "@tanstack/react-query"
+import _ from "lodash" 
 
 export function createProteinFeatureQueryAPI(client) {
 
@@ -9,15 +10,17 @@ export function createProteinFeatureQueryAPI(client) {
      * @param {Number} props.limit - The maximum number of results to return.
      * @returns {String[]} The protein tags.
      */
-    async function getProteinFeatureByQuery_API({ search_string, limit }) {
-        const res = await client.get(`/features/proteins/q`, { params: { search_string, limit } })
+    async function getProteinFeatureByQuery_API({ search_string, limit, proteome_tags }) {
+        const res = await client.get(`/features/proteins/q`, { params: { search_string, limit, proteome_tags } })
         return res.data
     }
 
-    function useGetProteinFeatureByQuery(APIParams = {search_string, limit}, useQueryOptions = { }) {
+    function useGetProteinFeatureByQuery(APIParams = { search_string, limit, proteome_tags }, useQueryOptions = {}) {
+        const proteome_tags = _.isArray(APIParams.proteome_tags) ? APIParams.proteome_tags.join(";") : undefined
+        APIParams = { ...APIParams, proteome_tags }
         return useQuery({
-            queryKey: ["proteinFeatures_query", APIParams.search_string, APIParams.limit],
-            queryFn: () => getProteinFeatureByQuery_API({ ...APIParams }),
+            queryKey: ["proteinFeatures_query", APIParams.search_string, APIParams.limit, proteome_tags],
+            queryFn: () => getProteinFeatureByQuery_API({ ...APIParams}),
             ...useQueryOptions
         });
     }

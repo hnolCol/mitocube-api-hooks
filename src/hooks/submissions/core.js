@@ -59,10 +59,26 @@ export function createSubmissionCoreAPI(client) {
         })
     }
 
+    async function getSubmissionHasGenotype_API({ tag }) {
+        const res = await client.get(`/submissions/${tag}/genotypes/exists`)
+        return res.data
+    }
+    
+    const useGetSubmissionHasGenotype = (APIParams = {tag}, useQueryOptions = { staleTime: Infinity }) => {
+        return useQuery({
+            queryKey: ["submissionHasGenotype", APIParams.tag],
+            queryFn: () => getSubmissionHasGenotype_API({ ...APIParams }),
+            ...useQueryOptions
+        })
+    }
+
+
+
     return {
         useGetSubmissionExists,
         useGetSubmissionCreatedAt,
-        useCheckSubmission
+        useCheckSubmission,
+        useGetSubmissionHasGenotype
   };
 }
 
