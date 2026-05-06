@@ -1,4 +1,5 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
+import { use } from "react";
 
 export function createCoreInstrumentsAPI(client) {
 
@@ -39,6 +40,8 @@ const useGetInstrumentsByType = (APIParams = {tag}, useQueryOptions = {stateTime
     });
 }
 
+
+
 /**
  * @description Returns the states of an instrument. Order by most recent.
  * @returns {Object[]} - The state responses of the instrument. 
@@ -52,6 +55,32 @@ const useGetStatesOfAnInstrument = (APIParams = {tag, limit}, useQueryOptions = 
     return useQuery({
         queryKey: ["getStatesOfAnInstrument", APIParams.tag, APIParams.limit],
         queryFn: () => getStatesOfAnInstrument_API({...APIParams}),
+        ...useQueryOptions
+    });
+}
+
+async function getInstrumentTypesText_API({}) {
+    const res = await client.get(`/instruments/types/text`)
+    return res.data 
+}
+
+const useGetInstrumentTypesText = (APIParams = {}, useQueryOptions = {staleTime: Infinity}) => {
+    return useQuery({
+        queryKey: ["getInstrumentTypesText"],
+        queryFn: () => getInstrumentTypesText_API({...APIParams}),
+        ...useQueryOptions
+    });
+}
+
+async function getInstrumentsByTypeText_API({tag}) {
+    const res = await client.get(`/instruments/text`, {params: {type: tag}})
+    return res.data 
+}
+
+const useGetInstrumentsByTypeText = (APIParams = {tag}, useQueryOptions = {staleTime: Infinity}) => {
+    return useQuery({
+        queryKey: ["getInstrumentByTypeText", APIParams.tag],
+        queryFn: () => getInstrumentsByTypeText_API({...APIParams}),
         ...useQueryOptions
     });
 }
@@ -180,6 +209,8 @@ const usePostInstrumentState = (useMutationOptions = {}) => {
 return {
     useGetInstrumentTypes,
     useGetInstrumentsByType,
+    useGetInstrumentTypesText,
+    useGetInstrumentsByTypeText,
     useGetStatesOfAnInstrument,
     useGetInstrument,
     useGetInstrumentState,
