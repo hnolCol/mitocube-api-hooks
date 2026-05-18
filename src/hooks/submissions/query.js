@@ -11,14 +11,14 @@ export function createSubmissionQueryAPI(client) {
      * @param {Boolean} props.ordered - If true, the results are ordered by the submission date.
      * @returns 
      */
-    async function getSubmissionBySearchString_API({search_string, state, limit, ordered, group_by_state, genotype_tag, user_tag, attribute_tag, trait_tag, include_sample_ca}) {
-        const res = await client.get(`/submissions/q`, {params : {search_string, state, limit, ordered, group_by_state, genotype_tag, user_tag, attribute_tag, trait_tag, include_sample_ca}})
+    async function getSubmissionBySearchString_API({search_string, state, limit, ordered, group_by_state, genotype_tag, user_tag, attribute_tag, trait_tag, include_sample_ca, group_by_user}) {
+        const res = await client.get(`/submissions/q`, {params : {search_string, state, limit, ordered, group_by_state, genotype_tag, user_tag, attribute_tag, trait_tag, include_sample_ca, group_by_user}})
         return res.data 
     }
     
     const useGetSubmissionByQuery = (APIParams = {search_string, state, limit, ordered, group_by_state, genotype_tag, user_tag, attribute_tag, trait_tag}, useQueryOptions = {staleTime : 300000, placeholderData: (prev) => prev}) => {
         return useQuery({
-            queryKey: ["submission_query", APIParams.search_string, APIParams.state, APIParams.limit, APIParams.ordered, APIParams.group_by_state, APIParams.genotype_tag, APIParams.user_tag, APIParams.attribute_tag, APIParams.trait_tag, APIParams.include_sample_ca],
+            queryKey: ["submission_query", APIParams.search_string, APIParams.state, APIParams.limit, APIParams.ordered, APIParams.group_by_state, APIParams.genotype_tag, APIParams.user_tag, APIParams.attribute_tag, APIParams.trait_tag, APIParams.include_sample_ca, APIParams.group_by_user],
             queryFn: () => getSubmissionBySearchString_API({ ...APIParams }),
             ...useQueryOptions
         })
