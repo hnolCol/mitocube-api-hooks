@@ -72,13 +72,28 @@ export function createSubmissionCoreAPI(client) {
         })
     }
 
+    async function getSubmissionProteomes_API({ tag }) {
+        const res = await client.get(`/submissions/${tag}/proteomes`)
+        return res.data
+    }
+    
+    const useGetSubmissionProteomes = (APIParams = {tag}, useQueryOptions = { staleTime: Infinity }) => {
+        return useQuery({
+            queryKey: ["submissionProteomes", APIParams.tag],
+            queryFn: () => getSubmissionProteomes_API({ ...APIParams }),
+            ...useQueryOptions
+        })
+    }
+
+    
 
 
     return {
         useGetSubmissionExists,
         useGetSubmissionCreatedAt,
         useCheckSubmission,
-        useGetSubmissionHasGenotype
+        useGetSubmissionHasGenotype,
+        useGetSubmissionProteomes
   };
 }
 
