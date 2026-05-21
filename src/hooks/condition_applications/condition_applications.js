@@ -26,6 +26,26 @@ export function createConditionApplicationAPI(client) {
     })
     }
 
+        /**
+     * @description Return the condition application for the given tag. If it does not exist, an error is thrown.
+     * @param {Object} props
+     * @param {String} props.tag The condition application tag to be returned.
+     * @returns {Object} - The condition application
+     */
+        async function getConditionApplicationValueExists_API({ tag }) {
+            const res = await client.get(`/condition_applications/${tag}/value_exists`)
+            return res.data
+            }
+        
+        const useGetConditionApplicationValueExists = (APIParams = { tag }, useQueryOptions = {}) => {
+            return useQuery({
+                queryKey: ["getConditionApplicationValueExists", APIParams.tag],
+                queryFn: () => getConditionApplicationValueExists_API({ ...APIParams }),
+                staleTime: 300000,
+                ...useQueryOptions
+            })
+            }
+
 
     /**
      * @description Return the condition application text
@@ -57,7 +77,7 @@ export function createConditionApplicationAPI(client) {
      * @param {String} props.trait_tag - If provided, only condition applications that are linked to the given trait are returned. This link may occur in any level of the condition application hierarchy.
      *  * @returns {String[]} - The condition application tags that match the query
      */
-    async function getConditionApplicationByQuery_API({ search_string, samples_only, submission_tag, attribute_tag, trait_tag, sort_by_frequency, limit }) {
+    async function getConditionApplicationByQuery_API({ search_string, samples_only, submission_tag, attribute_tag, trait_tag, sort_by_frequency, limit}) {
     const res = await client.get(`/condition_applications/q`, {
         params: {
             search_string,
@@ -93,9 +113,6 @@ export function createConditionApplicationAPI(client) {
     });
     };
 
-
-
-
     const useGetConditionApplicationTexts = (APIParams = {tags : []}, useQueryOptions = {}) => {
         return useQueries(
             {queries: APIParams.tags.map((tag) => ({
@@ -107,12 +124,40 @@ export function createConditionApplicationAPI(client) {
         )
     }
 
+    /**
+     * @description Return the condition application text
+     * @param {Object} props
+     * @param {String} props.tag The condition application tag to be returned.You may add multiple tags, separated by semicolons. 
+     * @returns {Object} - The condition application text
+     */
+    async function getConditionApplicationHearachyByQyery_API({ search_string, limit }) {
+        const res = await client.get(`/condition_applications/q/hierarchy`, {
+            params: {
+                search_string,
+                limit
+            }
+        })
+        return res.data
+        }
+    
+        const useGetConditionApplicationHierarchyByQuery = (APIParams = { search_string, limit }, useQueryOptions = {}) => {
+        return useQuery({
+            queryKey: ["getConditionApplicationHierarchy", APIParams.search_string, APIParams.limit],
+            queryFn: () => getConditionApplicationHearachyByQyery_API({ ...APIParams }),
+            staleTime: 300000,
+            ...useQueryOptions
+        })
+        }
+    
+
     return {
         useGetConditionApplication,
         useGetConditionApplicationText,
         useGetConditionApplicationByQuery,
         useGetCATreeForUI,
         useGetConditionApplicationTexts,
-        getConditionApplicationTextByTag_API
+        getConditionApplicationTextByTag_API,
+        useGetConditionApplicationHierarchyByQuery,
+        useGetConditionApplicationValueExists 
     }
 }
