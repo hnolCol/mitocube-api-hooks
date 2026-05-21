@@ -29,33 +29,6 @@ export function createProteinFeatureQueryAPI(client) {
     }
 
 
-
-    /**
- * @description Get the information about a feature including gene name, etc. Endpoint: /api/features/${tag}/i
- * @param {Object} props
- * @param {String} props.submission_tags - The submission tags (e.g. Uniprot ID)
- * @param {String} props.proteome_tags - The proteome tags
- * @param {String} props.annotation_tags - The annotation tags
- * @returns {import("./types").Feature} The feature information. 
- */
-    async function getProteinFavorites_API({ submission_tags, proteome_tags, annotation_tags, limit }) {
-        const res = await client.get(`/features/proteins/favorites`, { params: { submission_tags, proteome_tags, annotation_tags, limit }})
-        return res.data
-    }
-
-    function useGetFavoriteProteins(APIParams = { submission_tags, proteome_tags, annotation_tags, limit }, useQueryOptions = {}) {
-        //take care of lists
-        const proteome_tags = _.isArray(APIParams.proteome_tags) ? APIParams.proteome_tags.join(";") : undefined
-        const submission_tags = _.isArray(APIParams.submission_tags) ? APIParams.submission_tags.join(";") : undefined
-        const annotation_tags = _.isArray(APIParams.annotation_tags) ? APIParams.annotation_tags.join(";") : undefined
-        APIParams = { ...APIParams, proteome_tags, submission_tags, annotation_tags }
-        return useQuery({
-            queryKey: ["getProteinFavorites", APIParams.submission_tags, APIParams.proteome_tags, APIParams.annotation_tags, APIParams.limit],
-            queryFn: () => getProteinFavorites_API({ ...APIParams }),
-            ...useQueryOptions
-        });
-    }
-
     /**
      * @description Get the information about a feature including gene name, etc. Endpoint: /api/features/${tag}/i
      * @param {Object} props
@@ -90,8 +63,6 @@ export function createProteinFeatureQueryAPI(client) {
 return {
     useGetProteinFeatureByQuery,
     useGetProteinByTag,
-    useGetProteins,
-    useGetFavoriteProteins
+    useGetProteins
 };
-
 }

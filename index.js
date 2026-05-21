@@ -61,7 +61,7 @@ import { createFeatureAPI } from "./src/hooks/features/features";
 import { createFeaturePairwiseQuantAPI } from "./src/hooks/features/pairwise_quant";
 import { createFeatureQuantificationAPI } from "./src/hooks/features/quantifications";
 import { createFeaturesProteinsRankingAPI } from "./src/hooks/features/ranking";
-
+import { createProteinFavoriteAPI } from "./src/hooks/features/proteins/favorite";
 import { createSubmissionRunlistAPI } from "./src/hooks/submissions/runlist";
 import { createSubmissionRankingAPI } from "./src/hooks/submissions/ranking";
 import { createStatisticInfoAPI } from "./src/hooks/info/statistics";
@@ -142,7 +142,8 @@ export default {
             createFeatureDataAPI
         },
         proteins: {
-            createProteinFeatureQueryAPI
+            createProteinFeatureQueryAPI,
+            createProteinFavoriteAPI
         },
         protein_groups : {
             createFeaturesProteinsRankingAPI
