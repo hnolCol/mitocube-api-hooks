@@ -158,7 +158,7 @@ export function createQueryGenotypesAPI(client) {
 
 
     async function getGenotypeSampleCount_API({ genotype_tag }) {
-        const res = await client.get(`/genotypes/${genotype_tag}/relationships/count`);
+        const res = await client.get(`/genotypes/${genotype_tag}/samples/count`);
         return res.data
     }
     

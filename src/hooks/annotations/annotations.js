@@ -74,7 +74,7 @@ export function createModifyAnnotationsAPI(client) {
 
 
     /**
-     * @description Update annotation group.
+     * @description Update annotation group from url 
      * @returns 
      */
 
@@ -90,11 +90,28 @@ export function createModifyAnnotationsAPI(client) {
         });
     }
 
+    /** 
+     * @description Edit an annotation group.
+     * @returns 
+     */
+    async function editAnnotationGroup_API({ tag, text, description, source, url }) {
+        const res = await client.put(`/annotations/groups/${tag}`, { tag, text, description, source, url })
+        return res.data
+    }
+
+    const useEditAnnotationGroup = (useMutationOptions = {}) => {
+        return useMutation({
+            mutationFn: (APIParams) => editAnnotationGroup_API ({ ...APIParams}),
+            ...useMutationOptions
+        });
+    }
+
     return {
         usePostAnnotations,
         useUpdateAnnotations,
         useDeleteAnnotations,
         usePostAnnotationGroup,
-        useUpdateAnnotationGroup
+        useUpdateAnnotationGroup,
+        useEditAnnotationGroup
     };
 }

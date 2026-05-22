@@ -25,6 +25,24 @@ export function createSubmissionStateAPI(client) {
     }
 
 
+    /**
+     * @description Returns the complete state change history for a submission.
+     * @param {Object} props 
+     * @param {String} props.tag The submission tag.
+     * @returns {Array} Array of state changes with state_tag, state_name, created_at, user_tag
+     */
+    async function getSubmissionStateHistory_API({ tag }) {
+        const res = await client.get(`/submissions/${tag}/state/history`)
+        return res.data
+    }
+
+    const useGetStateHistory = (APIParams = {tag}, useQueryOptions = { staleTime: 500}) => {
+        return useQuery({
+            queryKey: ["getSubmissionStateHistory", APIParams.tag],
+            queryFn: () => getSubmissionStateHistory_API({ ...APIParams }),
+            ...useQueryOptions
+        })
+    }
 
     /**
      * @description Updates the state of the submission. A state can go in both directions. 
@@ -82,6 +100,7 @@ export function createSubmissionStateAPI(client) {
 
     return {
         useGetSubmissionState,
+        useGetStateHistory,
         usePatchSubmissionState,
         useGetSubmissionStateCount,
         useGetStates
