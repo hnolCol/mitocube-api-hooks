@@ -71,6 +71,33 @@ export function createNewsAPI(client) {
     }
 
     /**
+     * @description Endpoint: PUT '/api/news/{tag}'
+     * @param {Object} props 
+     * @param {String} props.tag - The news tag to update
+     * @param {String} props.title - The updated news title
+     * @param {String} props.content - The updated news content
+     * @param {String[]} props.submission_tags - Updated submission tags
+     * @returns {import("../../types/news").News} The updated news item
+     */
+    async function updateNews_API({ tag, title, content, submission_tags, user_tag }) {
+        const res = await client.put(`/news/${tag}`, {
+            tag,
+            title,
+            content,
+            submission_tags,
+            user_tag
+        })
+        return res.data
+    }
+
+    const useUpdateNews = (useMutationOptions = {}) => {
+        return useMutation({
+            mutationFn: (APIParams) => updateNews_API({...APIParams}),
+            ...useMutationOptions
+        })
+    }
+
+    /**
      * @description Endpoint: DELETE '/api/news'
      * @param {Object} props 
      * @param {String} props.tag - The news tag to delete
@@ -94,7 +121,7 @@ export function createNewsAPI(client) {
      * @returns {import("../permissions/types").PermissionResponse} - The permissions for news.
      */
     async function getNewsPermission_API({}) {
-        const res = await axios.get(`/news/permissions`)
+        const res = await client.get(`/news/permissions`)
         return res.data
     }
 
@@ -110,6 +137,7 @@ export function createNewsAPI(client) {
       useFindNews, 
       useGetNewsByTag,
       usePostNews,
+      useUpdateNews,
       useDeleteNews,
       useGetNewsPermissions
 
