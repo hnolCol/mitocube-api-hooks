@@ -130,19 +130,20 @@ export function createConditionApplicationAPI(client) {
      * @param {String} props.tag The condition application tag to be returned.You may add multiple tags, separated by semicolons. 
      * @returns {Object} - The condition application text
      */
-    async function getConditionApplicationHearachyByQyery_API({ search_string, limit }) {
+    async function getConditionApplicationHearachyByQyery_API({ search_string, limit,  exclude_attribute_group }) {
         const res = await client.get(`/condition_applications/q/hierarchy`, {
             params: {
                 search_string,
-                limit
+                limit,
+                exclude_attribute_group
             }
         })
         return res.data
         }
     
-        const useGetConditionApplicationHierarchyByQuery = (APIParams = { search_string, limit }, useQueryOptions = {}) => {
+        const useGetConditionApplicationHierarchyByQuery = (APIParams = { search_string, limit,  exclude_attribute_group }, useQueryOptions = {}) => {
         return useQuery({
-            queryKey: ["getConditionApplicationHierarchy", APIParams.search_string, APIParams.limit],
+            queryKey: ["getConditionApplicationHierarchy", APIParams.search_string, APIParams.limit, APIParams.exclude_attribute_group],
             queryFn: () => getConditionApplicationHearachyByQyery_API({ ...APIParams }),
             staleTime: 300000,
             ...useQueryOptions

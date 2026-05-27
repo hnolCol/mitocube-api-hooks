@@ -176,7 +176,25 @@ export function createQueryAnnotationsAPI(client) {
     });
   }   
 
+  /**
+   * @description Get proteins for annotation tag
+   * @returns {Array} - Array of protein tags
+   */
+  async function getProteinsByAnnotation_API({ tag, submission_tag }) {
+    const params = {};
+    if (submission_tag) params.submission_tag = submission_tag;
+    
+    const res = await client.get(`/annotations/${tag}/proteins`, { params })
+    return res.data
+  }
 
+  const useGetProteinsByAnnotation = (APIParams = { tag: "", submission_tag: "" }, useQueryOptions = { staleTime: 6000 }) => {
+    return useQuery({
+        queryKey: ["getProteinsByAnnotation", APIParams.tag, APIParams.submission_tag],
+        queryFn: () => getProteinsByAnnotation_API({ ...APIParams }),
+        ...useQueryOptions
+    });
+  }
 
 
   /**
@@ -208,6 +226,7 @@ export function createQueryAnnotationsAPI(client) {
         useGetAnnotationGroupByQuery,
         useGetAnnotationGroupCount,
         useGetIsProteinInAnnotation,
+        useGetProteinsByAnnotation,
         useGetAnnotationPermissions
    };
 }
