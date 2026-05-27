@@ -7,8 +7,8 @@ export function createModifyAnnotationsAPI(client) {
      * @return {Boolean}
      */
 
-    async function postAnnotations_API({ text, description, publication, pubmed_id, source, protein_tags, group_tag}) {
-        const res = await client.post(`/annotations/`, { text, description, publication, pubmed_id, source, protein_tags, group_tag})
+    async function postAnnotations_API({ text, description, publication, pubmed_id, source, protein_tags, group_tag, submission_tags}) {
+        const res = await client.post(`/annotations/`, { text, description, publication, pubmed_id, source, protein_tags, group_tag, submission_tags})
         return res.data
     }
 
@@ -24,8 +24,8 @@ export function createModifyAnnotationsAPI(client) {
      * @return {Boolean}
      */
 
-    async function updateAnnotations_API({ tag, text, description, publication, pubmed_id, source, protein_tags, group_tag}) {
-        const res = await client.put(`/annotations/${tag}`, { tag, text, description, publication, pubmed_id, source, protein_tags, group_tag})
+    async function updateAnnotations_API({ tag, text, description, publication, pubmed_id, source, protein_tags, group_tag, submission_tags}) {
+        const res = await client.put(`/annotations/${tag}`, { tag, text, description, publication, pubmed_id, source, protein_tags, group_tag, submission_tags})
         return res.data
     }
 
