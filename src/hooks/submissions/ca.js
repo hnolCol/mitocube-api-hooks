@@ -9,18 +9,19 @@ export function createSubmissionCAAPI(client) {
      * @param {String} props.tag The submission tag.
      * @param {String} props.attribute_tags - The attribute tags to filter the condition applications. Multiple can be provided, separated by semicolons.
      * @param {Boolean} props.group_by_attribute - If true, the results are grouped by attribute.
+     * @param {Boolean} props.group_by_min_state - If true, the results are grouped by the minimum state.
      * @returns {Object} The condition applications for the submission
      */
-    async function getSubmissionCA_API({ tag, attribute_tags, group_by_attribute = false }) {
+    async function getSubmissionCA_API({ tag, attribute_tags, group_by_attribute = false, group_by_min_state = false }) {
         const res = await client.get(`/submissions/${tag}/ca`, {
-            params: { attribute_tags, group_by_attribute }
+            params: { attribute_tags, group_by_attribute, group_by_min_state }
         })
         return res.data
     }
 
-    const useGetSubmissionConditionApplication = (APIParams = {tag, attribute_tags, group_by_attribute}, useQueryOptions = { staleTime: 500}) => {
+    const useGetSubmissionConditionApplication = (APIParams = {tag, attribute_tags, group_by_attribute, group_by_min_state}, useQueryOptions = { staleTime: 500}) => {
         return useQuery({
-            queryKey: ["getSubmissionConditionApplication", APIParams.tag, APIParams.attribute_tags, APIParams.group_by_attribute],
+            queryKey: ["getSubmissionConditionApplication", APIParams.tag, APIParams.attribute_tags, APIParams.group_by_attribute, APIParams.group_by_min_state],
             queryFn: () => getSubmissionCA_API({ ...APIParams }),
             ...useQueryOptions
         })

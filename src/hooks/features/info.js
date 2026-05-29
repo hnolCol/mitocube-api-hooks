@@ -31,14 +31,14 @@ export function createFeatureInfoAPI(client) {
      * @param {Number} props.limit - The maximum number of results to return
      * @returns {} The feature search results.  
      */
-    async function featureInfoByTag_API({ search_string, submission_tag, include_types, exclude_types, limit }) {
-        const res = await client.get(`/features/q`, { params: { search_string, submission_tag, include_types, exclude_types, limit } })
+    async function featureInfoByTag_API({ search_string, submission_tag, include_types, exclude_types, limit, sort_by_stat, annotation_tags}) {
+        const res = await client.get(`/features/q`, { params: { search_string, submission_tag, include_types, exclude_types, limit, sort_by_stat, annotation_tags } })
         return res.data
     }
 
-    function useGetFeaturesByQuery(APIParams = {search_string, submission_tag, include_types, exclude_types, limit}, useQueryOptions = { }) {
+    function useGetFeaturesByQuery(APIParams = {search_string, submission_tag, include_types, exclude_types, limit, sort_by_stat, annotation_tags}, useQueryOptions = { }) {
         return useQuery({
-            queryKey: ["infoFeature", APIParams.search_string, APIParams.submission_tag, APIParams.include_types, APIParams.exclude_types, APIParams.limit],
+            queryKey: ["infoFeature", APIParams.search_string, APIParams.submission_tag, APIParams.include_types, APIParams.exclude_types, APIParams.limit, APIParams.sort_by_stat, APIParams.annotation_tags],
             queryFn: () => featureInfoByTag_API({ ...APIParams }),
             ...useQueryOptions
         }); 

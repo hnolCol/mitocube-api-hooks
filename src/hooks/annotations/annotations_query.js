@@ -27,18 +27,20 @@ export function createQueryAnnotationsAPI(client) {
   * @return {Object} - The annotation matching thhe search string. 
   */
 
-  async function getAnnotationsBySearchString_API({ search_string, group_tags, protein_tags,limit, group_by_group }) {
-    const res = await client.get(`/annotations/q`, { params: { search_string, group_tags, protein_tags, limit, group_by_group}})
+  async function getAnnotationsBySearchString_API({ search_string, group_tags, protein_tags, limit, group_by_group, submission_tags }) {
+    const res = await client.get(`/annotations/q`, { params: { search_string, group_tags, protein_tags, limit, group_by_group, submission_tags }})
     return res.data
   }
 
-  const useGetAnnotationsBySearchString = (APIParams = { search_string, limit: 10, group_by_group, group_tags, protein_tags}, useQueryOptions = {stateTime: 200000}) => {
+  const useGetAnnotationsBySearchString = (APIParams = { search_string, limit: 10, group_by_group, group_tags, protein_tags, submission_tags}, useQueryOptions = {stateTime: 200000}) => {
     return useQuery({
         queryKey: ["getAnnotationsBySearchString",
             APIParams.search_string,
             APIParams.group_by_group,
             APIParams.limit,
-            APIParams.protein_tags],
+            APIParams.group_tags,
+            APIParams.protein_tags,
+            APIParams.submission_tags],
         queryFn: () => getAnnotationsBySearchString_API({ ...APIParams }),
         ...useQueryOptions
     });
