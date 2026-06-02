@@ -46,6 +46,23 @@ export function createQueryGenotypesAPI(client) {
         });
     }
 
+    /**
+     * Query genotype creator by its tag 
+     * @param {Object} props 
+     * @param {String} props.tag - The unique genotype tag.
+     * @returns {Object} - The genotyple creator matching the tag. 
+     */
+    async function getGenotypeCreator_API({ tag }) {
+        const res = await client.get(`/genotypes/${tag}/creator`)
+        return res.data
+    }
+    const useGetGenotypeCreator = (tag, useQueryOptions = {}) => useQuery({
+        queryKey: ["genotype-creator", tag],
+        queryFn: () => getGenotypeCreator_API({ tag }),
+        enabled: !!tag,
+        ...useQueryOptions
+    })
+  
 
     /**
      * Query genotype text by its tag 
@@ -196,6 +213,7 @@ export function createQueryGenotypesAPI(client) {
     return {
         useGetGenotypeExists,
         useGetGenotypesBySearchString,
+        useGetGenotypeCreator,
         useGetGenotypeText,
         useGetGenotypeProteins,
         useGetGenotypeProteome,
