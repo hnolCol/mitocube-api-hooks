@@ -32,16 +32,16 @@ function useGetSubmissionPCA(APIParams, useQueryOptions = {}) {
  * @param {Boolean} props.impute - Whether to impute missing values.
  * @returns {Object} The PCA data for the submission
  */
-async function getSubmissionVolcano_API({ tag, ca_tag_left, ca_tag_right, annotation_tag,  impute, equal_variance }) {
+async function getSubmissionVolcano_API({ tag, ca_tag_left, ca_tag_right, annotation_tag,  impute, equal_variance, within_attribute_tags, within_ca_tags }) {
     const res = await client.get(`/submissions/analysis/${tag}/volcano`, {
-        params: { ca_tag_left, ca_tag_right, annotation_tag, impute, equal_variance}
+        params: { ca_tag_left, ca_tag_right, annotation_tag, impute, equal_variance, within_attribute_tags, within_ca_tags}
     })
     return res.data
 }
 
-const useGetSubmissionVolcano = (APIParams = {tag, ca_tag_left, ca_tag_right, annotation_tag, impute : false, equal_variance : false}, useQueryOptions = { staleTime: 500}) => {
+const useGetSubmissionVolcano = (APIParams = {tag, ca_tag_left, ca_tag_right, annotation_tag, impute : false, equal_variance : false, within_attribute_tags, within_ca_tags}, useQueryOptions = { staleTime: 500}) => {
     return useQuery({
-        queryKey: ["getSubmissionVolcano", APIParams.tag, APIParams.ca_tag_left, APIParams.ca_tag_right, APIParams.annotation_tag, APIParams.impute, APIParams.equal_variance],
+        queryKey: ["getSubmissionVolcano", APIParams.tag, APIParams.ca_tag_left, APIParams.ca_tag_right, APIParams.annotation_tag, APIParams.impute, APIParams.equal_variance, APIParams.within_attribute_tags, APIParams.within_ca_tags],
         queryFn: () => getSubmissionVolcano_API({ ...APIParams }),
         ...useQueryOptions
     })
