@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, useQueries } from "@tanstack/react-query"
 
 export function createSubmissionAnalysisAPI(client) {
   
@@ -47,6 +47,21 @@ const useGetSubmissionVolcano = (APIParams = {tag, ca_tag_left, ca_tag_right, an
     })
 }
     
+    const useGetSubmissionVolcanos = (APIParams = {testParams : []}, useQueryOptions = {}) => {
+        return useQueries(
+            {queries: APIParams.testParams.map((testParam) => ({
+                queryKey: ["getVolcanoData", testParam.tag,
+                    testParam.ca_tag_left,
+                    testParam.ca_tag_right,
+                    testParam.annotation_tag, testParam.impute, testParam.equal_variance, testParam.within_attribute_tags, testParam.within_ca_tags],
+                queryFn: () => getSubmissionVolcano_API({ ...testParam }),
+                staleTime: Infinity,
+                ...useQueryOptions
+            }))}
+        )
+    }
+
+    
     
 /**
  * @description Returns the heatmap data for the submission
@@ -93,6 +108,7 @@ const useGetSubmissionHeatmap = (APIParams = {tag, annotation_tag}, useQueryOpti
   return {
     useGetSubmissionPCA,
     useGetSubmissionVolcano,
+    useGetSubmissionVolcanos,
     useGetSubmissionHeatmap,
     useGetSubmissionAnnotationNetwork
   };
