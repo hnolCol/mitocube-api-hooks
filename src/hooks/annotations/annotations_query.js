@@ -32,7 +32,7 @@ export function createQueryAnnotationsAPI(client) {
     return res.data
   }
 
-  const useGetAnnotationsBySearchString = (APIParams = { search_string, limit: 10, group_by_group, group_tags, protein_tags, submission_tags}, useQueryOptions = {stateTime: 200000}) => {
+  const useGetAnnotationsBySearchString = (APIParams = { search_string, limit: 10, group_by_group, group_tags, protein_tags, submission_tags }, useQueryOptions = {stateTime: 200000}) => {
     return useQuery({
         queryKey: ["getAnnotationsBySearchString",
             APIParams.search_string,
@@ -40,7 +40,8 @@ export function createQueryAnnotationsAPI(client) {
             APIParams.limit,
             APIParams.group_tags,
             APIParams.protein_tags,
-            APIParams.submission_tags],
+            APIParams.submission_tags,
+            ],
         queryFn: () => getAnnotationsBySearchString_API({ ...APIParams }),
         ...useQueryOptions
     });

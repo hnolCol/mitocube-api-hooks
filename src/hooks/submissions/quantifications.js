@@ -1,5 +1,6 @@
 // States and states changes of a submission 
-import { useQuery, useMutation } from "@tanstack/react-query"
+import { useQuery, useMutation, useQueries } from "@tanstack/react-query"
+import { use } from "react"
 
 export function createSubmissionQuantificationAPI(client) {
 
@@ -37,9 +38,6 @@ export function createSubmissionQuantificationAPI(client) {
     }
 
 
-
-
-
     /**
      * @description Retruns if there are already quantification data for a given submission and quantification type.
      * @param {Object} props 
@@ -62,10 +60,101 @@ export function createSubmissionQuantificationAPI(client) {
         })
     }
 
+
+    /**
+     * @description Retruns the distribution of quantification values for a given submission and quantification type. This can be used to determine if the quantification data is suitable for downstream analysis.
+     * @param {Object} props 
+     * @param {String} props.tag The submission tag.
+     * @param {String} props.quantification_type The type of quantification to check. E.g., "proteins" or "precursors" or "protein_groups", or any.
+     * @param {String} props.annotation_tag The annotation tag to filter the distribution.
+     * @returns {Object} The distribution of quantification values
+     */
+    async function getSubmissionQuantificationDist_API({ tag, quantification_type, annotation_tag}) {
+        const res = await client.get(`/submissions/${tag}/quantifications/distribution`, {
+            params: { quantification_type, annotation_tag }
+        })
+        return res.data
+    }
+
+    const useGetSubmissionQuantificationDistribution = (APIParams = {tag, quantification_type, annotation_tag}, useQueryOptions = { staleTime: Infinity}) => {
+        return useQuery({
+            queryKey: ["getSubmissionQuantificationDistribution", APIParams.tag, APIParams.quantification_type, APIParams.annotation_tag],
+            queryFn: () => getSubmissionQuantificationDist_API({ ...APIParams }),
+            ...useQueryOptions
+        })
+    }
+
+
+        /**
+     * @description Endpoint: POST '/api/submissions/:tag/quantifications/test/distribution' Uses post to submit the test params in the body as a list of objects
+     * @param {Object} props
+     * @param {String} props.tag The submission tag.
+     * @param {String} props.quantification_type The type of quantification to check. E.g., "proteins" or "precursors" or "protein_groups", or any.
+     * @param {String} props.annotation_tag The annotation tag to filter the distribution.
+     * @param {Object} props.testParams The parameters for the test.
+     * @returns {Boolean} If insertion of view was successful
+     */
+    async function postTestQuantificationDistribution_API({ tag, quantification_type, annotation_tag, testParams }) {
+        const res = await client.post(`/submissions/${tag}/quantifications/test/distribution`,  testParams, { params : { quantification_type, annotation_tag } })
+        return res.data
+    }
+
+    const usePostTestQuantificationDistribution = (useMutationOptions = {}) => {
+        return useMutation({mutationFn: (APIParams) => postTestQuantificationDistribution_API({...APIParams}), ...useMutationOptions})
+    }
+
+    /**
+ * @description Endpoint:
+ * POST '/api/submissions/:tag/quantifications/test/distribution'
+ *
+ * Although this uses POST because the payload is complex,
+ * React Query will cache the result using the queryKey.
+ */
+async function getTestQuantificationDistribution_API({
+    tag,
+    quantification_type,
+    annotation_tag,
+    testParam,
+}) {
+    const res = await client.post(
+        `/submissions/${tag}/quantifications/test/distribution`,
+        testParam,
+        {
+            params: {
+                quantification_type,
+                annotation_tag,
+            },
+        }
+    );
+
+    return res.data;
+}
+
+    
+    const useGetTestQuantificationDistributions = (APIParams = { tag, quantification_type, annotation_tag, testParams: [] }, useQueryOptions = {}) => {
+        return useQueries(
+            {queries: APIParams.testParams.map((testParam) => ({
+                queryKey: ["getConditionApplicationText", JSON.stringify(testParam), APIParams.tag, APIParams.quantification_type, APIParams.annotation_tag],
+                queryFn: () => getTestQuantificationDistribution_API({
+                    tag: APIParams.tag,
+                    quantification_type: APIParams.quantification_type,
+                    annotation_tag: APIParams.annotation_tag,
+                    testParam
+                }),
+                staleTime: 300000,
+                ...useQueryOptions
+            }))}
+        )
+    }
+
     return {
         usePostProteinQuantification,
         usePostPrecursorQuantification,
-        useGetSubmissionQuantificationExists
+        useGetSubmissionQuantificationExists,
+        useGetSubmissionQuantificationDistribution,
+        useGetTestQuantificationDistributions
+        // useGetTestQuantificationDistribution,
+        // usePostTestQuantificationDistribution
     }
 
 }

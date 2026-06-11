@@ -18,9 +18,10 @@ export function createProteinFeatureQueryAPI(client) {
     }
 
     function useGetProteinFeatureByQuery(APIParams = { search_string, limit, proteome_tags, submission_tags }, useQueryOptions = {}) {
-        const proteome_tags = _.isArray(APIParams.proteome_tags) ? APIParams.proteome_tags.join(";") : undefined
+        const proteome_tags = _.isString(APIParams.proteome_tags) ? APIParams.proteome_tags : (_.isArray(APIParams.proteome_tags) ? APIParams.proteome_tags.join(";") : undefined)
         const submission_tags = _.isArray(APIParams.submission_tags) ? APIParams.submission_tags.join(";") : undefined
         APIParams = { ...APIParams, proteome_tags, submission_tags }
+        console.log(APIParams.proteome_tags)
         return useQuery({
             queryKey: ["proteinFeatures_query", APIParams.search_string, APIParams.limit, APIParams.proteome_tags, APIParams.submission_tags],
             queryFn: () => getProteinFeatureByQuery_API({ ...APIParams}),

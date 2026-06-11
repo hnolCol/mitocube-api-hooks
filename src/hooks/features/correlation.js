@@ -12,13 +12,13 @@ export function createFeatureCorrelationAPI(client) {
      * @param {Number} props.limit  The maximum number of results to return.
      * @returns  
      */
-    async function getFeatureCorrelation_API({tag, annotation_tags, limit, min_data_points, direction, fdr}) {
-        const res = await client.get(`/features/${tag}/correlations`, {params : {limit, annotation_tags, min_data_points, direction, fdr}})
+    async function getFeatureCorrelation_API({tag, annotation_tags, limit, min_data_points, direction, fdr, metrics, ca_tags}) {
+        const res = await client.get(`/features/${tag}/correlations`, {params : {limit, annotation_tags, min_data_points, direction, fdr, metrics, ca_tags}})
         return res.data
     }
 
 
-    const useGetFeatureCorrelation = (APIParams = { tag, min_data_points, annotation_tags, limit, direction, fdr }, queryOptions = {placeHolderData: (prev) => prev, staleTime: 30000}) => {
+    const useGetFeatureCorrelation = (APIParams = { tag, min_data_points, annotation_tags, limit, direction, fdr, metrics, ca_tags}, queryOptions = {placeHolderData: (prev) => prev, staleTime: 30000}) => {
 
         return useQuery({
             queryKey: ["feature_spec_corr",
@@ -27,7 +27,9 @@ export function createFeatureCorrelationAPI(client) {
                 APIParams.min_data_points,
                 APIParams.limit,
                 APIParams.direction,
-            APIParams.fdr], queryFn: () => getFeatureCorrelation_API({ ...APIParams }), ...queryOptions
+                APIParams.metrics,
+                APIParams.fdr,
+            APIParams.ca_tags], queryFn: () => getFeatureCorrelation_API({ ...APIParams }), ...queryOptions
         });
     }
 
