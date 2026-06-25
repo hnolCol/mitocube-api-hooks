@@ -59,13 +59,13 @@ export function createQueryTraitsAPI(client) {
      * @returns {String[]} The tags for the traits matching the attribute
      */ 
     async function getTraitsByAttributeTag_API({ tag }) {
-        const res = await client.get(`/attributes/${tag}/traits`,{params : {tag}})
+        const res = await client.get(`/attributes/${tag}/traits`,{params : {tag, limit}})
         return res.data 
     }
 
-    const useGetTraitsByAttributeTag = (APIParams = {tag }, useQueryOptions) => {
+    const useGetTraitsByAttributeTag = (APIParams = {tag, limit}, useQueryOptions) => {
         return useQuery({
-            queryKey: ["traitsByTag", APIParams.tag],
+            queryKey: ["traitsByTag", APIParams.tag, APIParams.limit],
             queryFn: () => getTraitsByAttributeTag_API({...APIParams}),
             ...useQueryOptions
         })

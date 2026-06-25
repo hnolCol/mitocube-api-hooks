@@ -10,7 +10,7 @@ export function createSubmissionAnalysisAPI(client) {
       
   }
 
-function useGetSubmissionPCA(APIParams, useQueryOptions = {}) {
+function useGetSubmissionPCA(APIParams = {tag, annotation_tag}, useQueryOptions = {}) {
 
   return useQuery({
     queryKey: ["getSubmissionPCA", APIParams?.tag, APIParams?.annotation_tag],
