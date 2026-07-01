@@ -9,9 +9,9 @@ export function createModifyGenotypesAPI(client) {
      * @param {Object[]} props.genetic_components The genetic components that make up the genotype.
      * @returns {Boolean} If insertion was successful
      */
-    async function postGenotype_API({ text, description, publication, components }) {
+    async function postGenotype_API({ text, description, publication, components, is_external }) {
         const res = await client.post(`/genotypes`,
-            { text, description, publication, components }
+            { text, description, publication, components, is_external }
         )
         return res.data 
     }

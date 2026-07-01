@@ -51,9 +51,22 @@ function useGetProteinGroupSubmissionStats(APIParams = {tag, limit}, useQueryOpt
     });
 }
 
+async function getProteinGroupsByProteinTag_API({ protein_tag }) {
+    const res = await client.get(`/features/protein_groups/protein/${protein_tag}`);
+    return res.data;
+}
+
+const useGetProteinGroupsByProteinTag = (APIParams = { protein_tag: "" }, useQueryOptions = { staleTime: Infinity }) => {
+    return useQuery({
+        queryKey: ["getProteinGroupsByProteinTag", APIParams.protein_tag],
+        queryFn: () => getProteinGroupsByProteinTag_API({ ...APIParams }),
+        ...useQueryOptions
+    });
+}
 
 return { 
-    useGetProteinGroupSubmissionStats
+    useGetProteinGroupSubmissionStats,
+    useGetProteinGroupsByProteinTag
 };
 
 }   

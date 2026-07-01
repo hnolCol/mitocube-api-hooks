@@ -60,9 +60,41 @@ export function createProteinFeatureQueryAPI(client) {
         )
     }
 
+    async function getProteinInterproFeatures_API({ tag }) {
+        const res = await client.get(`/features/proteins/${tag}/interpro`)
+        return res.data
+    }
+    
+    const useGetProteinInterproFeatures = (
+        APIParams = { tag: "" },
+        useQueryOptions = { staleTime: Infinity }
+    ) => {
+        return useQuery({
+            queryKey: ["getProteinInterproFeatures", APIParams.tag],
+            queryFn: () => getProteinInterproFeatures_API({ ...APIParams }),
+            enabled: Boolean(APIParams.tag),
+            ...useQueryOptions,
+        })
+    }
+
+    const useGetProteinsInterproFeatures = (APIParams = { tags: [] }, useQueryOptions = { staleTime: Infinity }) => {
+        return useQueries({
+            queries: APIParams.tags.map((tag) => ({
+                queryKey: ["getProteinInterproFeatures", tag],
+                queryFn: () => getProteinInterproFeatures_API({ tag }),
+                enabled: Boolean(tag),
+                staleTime: Infinity,
+                ...useQueryOptions,
+            }))
+        })
+    }
+
+
 return {
     useGetProteinFeatureByQuery,
     useGetProteinByTag,
-    useGetProteins
+    useGetProteins,
+    useGetProteinInterproFeatures,
+    useGetProteinsInterproFeatures
 };
 }

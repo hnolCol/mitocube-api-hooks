@@ -72,6 +72,13 @@ import { createAuthenticationTokenAPI } from "./src/hooks/authorization/token";
 import { createSubmissionCoreAPI } from "./src/hooks/submissions/core";
 import { createStateAPI } from "./src/hooks/states/core";
 import { createResearchGroupsAPI } from "./src/hooks/researchgroups/researchgroups";
+import { createDiseasesAPI } from "./src/hooks/diseases/diseases";
+import { createVariantsAPI } from "./src/hooks/variants/variants";
+import { createPhenotypesAPI } from "./src/hooks/phenotype/phenotype";
+import { createPhenotypeAssociationsAPI } from "./src/hooks/phenotype/phenotype_association";
+import { createClinVarAPI } from "./src/hooks/diseases/ClinVar";
+import { createQueryCrosslinksAPI } from "./src/hooks/crosslink/crosslink";
+import { createQueryExternalResourcesAPI } from "./src/hooks/crosslink/external_resource";
 import { create } from "lodash";
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
@@ -278,5 +285,22 @@ export default {
         createTermsOfUseAPI,
         createBackendInfoAPI,
         createStatisticInfoAPI,
-    }
+    },
+    diseases: {
+        createDiseasesAPI,
+        createClinVarAPI
+    },
+    variants: {
+        createVariantsAPI
+    },
+    phenotype: {
+        createPhenotypesAPI,
+        associations: {
+            createPhenotypeAssociationsAPI
+        }
+    },
+    crosslink: {
+        createQueryCrosslinksAPI,
+        createQueryExternalResourcesAPI
+    }      
 }
