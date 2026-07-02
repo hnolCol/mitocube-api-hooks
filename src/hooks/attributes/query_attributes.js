@@ -40,6 +40,25 @@ export function createQueryAttributesAPI(client) {
     }
 
     /**
+     * @description Returns the attribute abbreviation.
+     * @returns {String} The attribute abbreviation.
+     */
+    async function getAttributeAbbreviation_API({tag}) {
+        const res = await client.get(`/attributes/${tag}/abbr`)
+        return res.data 
+    }
+
+    const useGetAttributeAbbreviation = (APIParams = { tag }, useQueryOptions = { staleTime:Infinity }) => {
+        return useQuery({
+            queryKey: ["getAttributeAbbreviation", APIParams.tag],
+            queryFn: () => getAttributeAbbreviation_API({ ...APIParams }),
+            ...useQueryOptions
+        })
+    }
+
+
+
+    /**
      * @description Returns the attribute's children. The default stale time is 300000 ms.
      * @param {Object} props
      * @param {String} props.tag The attribute tag to be returned.  
@@ -181,5 +200,6 @@ return {
     useGetAttributeGroups,
     useGetAttributesByQuery,
     useGetAttributeMinState,
+    useGetAttributeAbbreviation
   };
 }

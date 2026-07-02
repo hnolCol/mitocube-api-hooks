@@ -24,8 +24,6 @@ export function createSubmissionPermissionsAPI(client) {
     }
 
 
-
-
     /**
      * Fetch submission permissions from the API. For example, if user can create or download a submission or comment on submissions. 
      * @param {Object} props - The parameters for the API request.

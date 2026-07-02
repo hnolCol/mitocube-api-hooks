@@ -58,7 +58,7 @@ export function createQueryTraitsAPI(client) {
      * @param {String} props.tag  The attribute tag
      * @returns {String[]} The tags for the traits matching the attribute
      */ 
-    async function getTraitsByAttributeTag_API({ tag }) {
+    async function getTraitsByAttributeTag_API({ tag, limit }) {
         const res = await client.get(`/attributes/${tag}/traits`,{params : {tag, limit}})
         return res.data 
     }
