@@ -1,5 +1,6 @@
 // States and states changes of a submission 
-import { useQuery, useMutation } from "@tanstack/react-query"
+import { useQuery, useMutation, useQueries } from "@tanstack/react-query"
+import { use } from "react"
 
 export function createSubmissionQuantificationAPI(client) {
 
@@ -35,9 +36,6 @@ export function createSubmissionQuantificationAPI(client) {
     const usePostPrecursorQuantification = (useMutationOptions = {}) => {
         return useMutation({mutationFn: (APIParams) => postPrecursorQuantification_API({...APIParams}), ...useMutationOptions})
     }
-
-
-
 
 
     /**

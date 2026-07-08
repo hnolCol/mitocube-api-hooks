@@ -14,18 +14,20 @@ export function createFeatureDataAPI(client) {
      * @param {string} props.submission_tag - The submission tag to limit the data to.
      * @returns 
      */
-    async function getFeatureDataForSubmission_API({tag, submission_tag}) {
-        const res = await client.get(`/features/${tag}/d`, {params : {submission_tag}})
+    async function getFeatureDataForSubmission_API({tag, submission_tag, metrics}) {
+        const res = await client.get(`/features/${tag}/d`, {params : {submission_tag, metrics}})
         return res.data
     }
 
 
-    const useGetFeatureDataForSubmission = (APIParams = { tag, submission_tag }, queryOptions = {placeHolderData: (prev) => prev, staleTime: 30000}) => {
+    const useGetFeatureDataForSubmission = (APIParams = { tag, submission_tag, metrics : "raw" }, queryOptions = {placeHolderData: (prev) => prev, staleTime: 30000}) => {
 
         return useQuery({
             queryKey: ["feature_data",
                 APIParams.tag,
-                APIParams.submission_tag],
+                APIParams.submission_tag,
+                APIParams.metrics
+            ],
             queryFn: () => getFeatureDataForSubmission_API({ ...APIParams }),
             ...queryOptions
         });
