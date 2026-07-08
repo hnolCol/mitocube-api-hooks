@@ -123,6 +123,25 @@ export function createSampleCoreAPI(client) {
         })
         }   
 
+        /**
+         * @description Sets whether a sample is excluded from quantification/statistical analysis.
+         * @param {Object} props
+         * @param {String} props.tag The tag of the sample
+         * @param {Boolean} props.excluded Whether the sample should be excluded
+         * @returns {Boolean} True if the update succeeded.
+         */
+        async function setSampleExcluded_API({ tag, excluded }) {
+            const res = await client.patch(`/samples/${tag}/exclude`, null, { params: { excluded } })
+            return res.data
+        }
+
+        const useSetSampleExcluded = (useMutationOptions = {}) => {
+            return useMutation({
+                mutationFn: (APIParams) => setSampleExcluded_API({ ...APIParams }),
+                ...useMutationOptions
+            })
+        }
+
 
     return {
         useGetSample,
@@ -130,7 +149,8 @@ export function createSampleCoreAPI(client) {
         useGetSampleGenotype,
         useInsertSampleGenotype,
         useUpdateSample,
-        useAddSampleGenotype
+        useAddSampleGenotype,
+        useSetSampleExcluded
     };
 }
   

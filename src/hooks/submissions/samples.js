@@ -82,11 +82,30 @@ export function createSubmissionSamplesAPI(client) {
         })
     }
 
+
+    /**
+     * @description Returns the number of outdated samples in a submission.
+     * @param {*} param0 
+     * @returns 
+     */
+    async function getStatsOutdated_API({ tag }) {
+        const res = await client.get(`/submissions/${tag}/stats/outdated`)
+        return res.data
+    }
+    const useGetStatsOutdated = (APIParams = { tag }, useQueryOptions = { staleTime: 0 }) => {
+        return useQuery({
+            queryKey: ["getStatsOutdated", APIParams.tag],
+            queryFn: () => getStatsOutdated_API({ ...APIParams }),
+            ...useQueryOptions
+        })
+    }
+
     return {
         useGetSubmissionSampleTags,
         useGetSubmissionSampleCount,
         useGetSubmissionSamplesFull,
-        useDeleteSample
+        useDeleteSample,
+        useGetStatsOutdated
     };
 
 }

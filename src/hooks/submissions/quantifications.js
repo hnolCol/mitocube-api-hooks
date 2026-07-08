@@ -147,12 +147,50 @@ async function getTestQuantificationDistribution_API({
         )
     }
 
+    /**
+     * @description Endpoint: PATCH '/api/submissions/:tag/protein_groups/statistics'. Requires curator rights.
+     * Recalculates the multiple-comparison statistics, z-scores, and log2FC for a submission — e.g. after changing sample exclusions.
+     * @param {Object} props
+     * @param {String} props.tag The submission tag.
+     * @returns {Boolean} True if recalculation succeeded.
+     */
+    async function recalculateStatistics_API({ tag }) {
+        const res = await client.patch(`/submissions/${tag}/protein_groups/statistics`)
+        return res.data
+    }
+
+    const useRecalculateStatistics = (useMutationOptions = {}) => {
+        return useMutation({ mutationFn: (APIParams) => recalculateStatistics_API({ ...APIParams }), ...useMutationOptions })
+    }
+
+    /**
+     * @description Endpoint: GET '/api/submissions/:tag/stats/outdated'
+     * Checks if the cached statistics for this submission are outdated (e.g. after excluding/including samples).
+     * @param {Object} props
+     * @param {String} props.tag The submission tag.
+     * @returns {Boolean} True if statistics need to be recalculated.
+     */
+    async function getStatsOutdated_API({ tag }) {
+        const res = await client.get(`/submissions/${tag}/stats/outdated`)
+        return res.data
+    }
+
+    const useGetStatsOutdated = (APIParams = { tag }, useQueryOptions = { staleTime: 0 }) => {
+        return useQuery({
+            queryKey: ["getStatsOutdated", APIParams.tag],
+            queryFn: () => getStatsOutdated_API({ ...APIParams }),
+            ...useQueryOptions
+        })
+    }
+
     return {
         usePostProteinQuantification,
         usePostPrecursorQuantification,
         useGetSubmissionQuantificationExists,
         useGetSubmissionQuantificationDistribution,
-        useGetTestQuantificationDistributions
+        useGetTestQuantificationDistributions,
+        useRecalculateStatistics,
+        useGetStatsOutdated
         // useGetTestQuantificationDistribution,
         // usePostTestQuantificationDistribution
     }
