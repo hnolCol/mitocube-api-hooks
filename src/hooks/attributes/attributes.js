@@ -3,8 +3,19 @@ import _ from "lodash"
 
 export function createModifyAttributesAPI(client) {
 
-    async function postAttribute_API({}){
-        const res = await client.post(`/attributes`,{})
+    async function postAttribute_API({text, abbreviation, priority, allow_input, children, required_trait_tags, group_tags, min_state, traits, parents}){
+        const res = await client.post(`/attributes`,{
+            text,
+            abbreviation,
+            priority,
+            min_state,
+            allow_input,
+            children,
+            group_tags,
+            required_trait_tags,
+            traits,
+            parents
+        })
         return res.data
     }
 
