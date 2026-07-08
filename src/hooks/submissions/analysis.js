@@ -55,17 +55,17 @@ const useGetSubmissionVolcano = (APIParams = {tag, ca_tag_left, ca_tag_right, an
  * @param {String} props.annotation_tag - The annotation tag to use to filter features. Only features associated with this annotation tag will be included in the heatmap.
  * @returns {Object} The heatmap data for the submission
  */
-async function getSubmissionHeatmap_API({ tag, annotation_tag }) {
+async function getSubmissionHeatmap_API({ tag, annotation_tag, n_clusters }) {
     const res = await client.get(`/submissions/analysis/${tag}/heatmap`, {
-        params: { annotation_tag }
+        params: { annotation_tag, n_clusters }
     })
     return res.data
 }
 
 
-const useGetSubmissionHeatmap = (APIParams = {tag, annotation_tag}, useQueryOptions = { staleTime: 50000}) => {
+const useGetSubmissionHeatmap = (APIParams = {tag, annotation_tag, n_clusters}, useQueryOptions = { staleTime: 50000}) => {
     return useQuery({
-        queryKey: ["getSubmissionHeatmap", APIParams.tag, APIParams.annotation_tag],
+        queryKey: ["getSubmissionHeatmap", APIParams.tag, APIParams.annotation_tag, APIParams.n_clusters],
         queryFn: () => getSubmissionHeatmap_API({ ...APIParams }),
         ...useQueryOptions
     })

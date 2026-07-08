@@ -32,15 +32,15 @@ export function createQueryGenotypesAPI(client) {
      * @param {String} props.proteome_tags - The tags of the proteome to consider. Joined by ';'
      * @returns {String[]} - The genotype tags matching the search string.
      */
-    async function getGenotypesBySearchString_API({search_string, limit, proteome_tags}) {
-        const res = await client.get(`/genotypes/q`, {params: {search_string, limit, proteome_tags}})
+    async function getGenotypesBySearchString_API({search_string, limit, proteome_tags, used_in_submission}) {
+        const res = await client.get(`/genotypes/q`, {params: {search_string, limit, proteome_tags, used_in_submission}})
         return res.data
     }
 
-    const useGetGenotypesBySearchString = (APIParams = { search_string, limit, proteome_tags }, useQueryOptions = {}) => {
+    const useGetGenotypesBySearchString = (APIParams = { search_string, limit, proteome_tags, used_in_submission }, useQueryOptions = {}) => {
         const proteome_tag_string = _.isArray(APIParams.proteome_tags) ? _.join(APIParams.proteome_tags, ";") : APIParams.proteome_tags
         return useQuery({
-            queryKey: ["getGenotypesBySearchString", APIParams.search_string, APIParams.limit, proteome_tag_string],
+            queryKey: ["getGenotypesBySearchString", APIParams.search_string, APIParams.limit, proteome_tag_string, APIParams.used_in_submission],
             queryFn: () => getGenotypesBySearchString_API({...APIParams}),
             ...useQueryOptions
         });
