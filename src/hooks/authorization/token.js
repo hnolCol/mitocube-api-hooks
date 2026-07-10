@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, useMutation } from "@tanstack/react-query"
 
 
 
@@ -20,10 +20,9 @@ async function verifyToken({tokenString, verificationCode}) {
   return res.data
 }
 
-const useVerifyToken = (APIParams = {}, queryOptions = {}) => {
-  return useQuery({
-    queryKey: ["verifyToken", APIParams.tokenString, APIParams.verificationCode],
-    queryFn: () => verifyToken({...APIParams}),
+const useVerifyToken = (queryOptions = {}) => {
+  return useMutation({
+    mutationFn: verifyToken,
     ...queryOptions
   })
 }

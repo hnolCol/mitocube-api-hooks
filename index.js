@@ -80,6 +80,7 @@ import { createClinVarAPI } from "./src/hooks/diseases/ClinVar";
 import { createQueryCrosslinksAPI } from "./src/hooks/crosslink/crosslink";
 import { createQueryExternalResourcesAPI } from "./src/hooks/crosslink/external_resource";
 import { create } from "lodash";
+import { createAuthenticationMFAAPI } from "./src/hooks/authorization/mfa";
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 
@@ -90,6 +91,9 @@ export default {
         },
         login: {
             createAuthenticationAPI
+        },
+        mfa: {
+            createAuthenticationMFAAPI
         }
     },
     metatexts: {
