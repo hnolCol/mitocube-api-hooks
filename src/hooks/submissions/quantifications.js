@@ -183,6 +183,28 @@ async function getTestQuantificationDistribution_API({
         })
     }
 
+
+    /**
+     * @description Endpoint: GET '/api/submissions/:tag/samples/quantifications/distribution'
+     * Retrieves the sample quantification distribution for this submission.
+     * @param {Object} props
+     * @param {String} props.tag The submission tag.
+     * @returns {[[string,Object]]} The sample quantification distribution.
+     */
+    async function getSubmissionSampleQuantification_API({ tag }) {
+        const res = await client.get(`/submissions/${tag}/samples/quantifications/distribution`)
+        return res.data
+    }
+
+    const useGetSubmissionSampleQuantification = (APIParams = { tag }, useQueryOptions = { staleTime: 0 }) => {
+        return useQuery({
+            queryKey: ["getSubmissionSampleQuantification", APIParams.tag],
+            queryFn: () => getSubmissionSampleQuantification_API({ ...APIParams }),
+            ...useQueryOptions
+        })
+    }
+
+
     return {
         usePostProteinQuantification,
         usePostPrecursorQuantification,
@@ -190,7 +212,8 @@ async function getTestQuantificationDistribution_API({
         useGetSubmissionQuantificationDistribution,
         useGetTestQuantificationDistributions,
         useRecalculateStatistics,
-        useGetStatsOutdated
+        useGetStatsOutdated,
+        useGetSubmissionSampleQuantification
         // useGetTestQuantificationDistribution,
         // usePostTestQuantificationDistribution
     }
