@@ -80,6 +80,50 @@ export function createQueryAttributesAPI(client) {
 
 
     /**
+     * @description Returns the attribute's parents. The default stale time is 300000 ms.
+     * @param {Object} props
+     * @param {String} props.tag The attribute tag to be returned.  
+     * @returns {String[]} - The attribute tags of the attribute's parents
+     */
+    async function getAttributeParentsByTag_API({ tag }) {
+        const res = await client.get(`/attributes/${tag}/parents`)
+        return res.data 
+    }
+
+    const useGetAttributeParents = (APIParams = { tag }, useQueryOptions = {}) => {
+        return useQuery({
+            queryKey: ["getAttributeParents", APIParams.tag],
+            queryFn: () => getAttributeParentsByTag_API({ ...APIParams }),
+            staleTime: 300000,
+            ...useQueryOptions
+        })
+    }
+
+
+
+    /**
+     * @description Returns the attribute's groups. The default stale time is 300000 ms.
+     * @param {Object} props
+     * @param {String} props.tag The attribute tag to be returned.  
+     * @returns {String[]} - The attribute tags of the attribute's groups
+     */
+    async function getAttributeGroupsByTag_API({ tag }) {
+        const res = await client.get(`/attributes/${tag}/groups`)
+        return res.data 
+    }
+
+    const useGetAttributeGroupsByAttribute = (APIParams = { tag }, useQueryOptions = {}) => {
+        return useQuery({
+            queryKey: ["getAttributeGroupsByAttribute", APIParams.tag],
+            queryFn: () => getAttributeGroupsByTag_API({ ...APIParams }),
+            staleTime: 300000,
+            ...useQueryOptions
+        })
+    }
+
+
+
+    /**
      * @description Returns the attribute by group. The are attribute groups for example: mandatory, sample, qc, dataset etc.
      * @param {Object} props
      * @param {String} props.tag The attribute group.  
@@ -198,10 +242,12 @@ return {
     useGetAttributes,
     useGetAttributeCount,
     useGetAttributeChildren,
+    useGetAttributeParents,
     useGetAttributeByGroup,
     useGetAttributeGroups,
     useGetAttributesByQuery,
     useGetAttributeMinState,
-    useGetAttributeAbbreviation
+    useGetAttributeAbbreviation,
+    useGetAttributeGroupsByAttribute
   };
 }

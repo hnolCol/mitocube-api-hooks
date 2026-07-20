@@ -26,6 +26,30 @@ export function createModifyAttributesAPI(client) {
         })
     }
 
+    async function postAttribute_API({tag, text, abbreviation, priority, allow_input, children, required_trait_tags, group_tags, min_state, parents}){
+        const res = await client.patch(`/attributes/${tag}`,{
+            text,
+            abbreviation,
+            priority,
+            min_state,
+            allow_input,
+            children,
+            group_tags,
+            required_trait_tags,
+            parents
+        })
+        return res.data
+    }
+
+    const useUpdateAttribute = (useMutationOptions = {}) => {
+        return useMutation({
+            mutationFn: (APIParams) => postAttribute_API({...APIParams}),
+            ...useMutationOptions
+        })
+    }
+
+
+
     async function postAttributeValues_API({attribute_tag}){
         const res = await client.post(`/attributes/${attribute_tag}/values`)
         return res.data
@@ -65,6 +89,7 @@ export function createModifyAttributesAPI(client) {
     }
 
     return {
+        useUpdateAttribute,
         usePostAttribute,
         usePostAttributeValues,
         useDeleteAttributeValue,

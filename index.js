@@ -1,5 +1,5 @@
 import { createFeatureSequenceAPI } from "./src/hooks/features/sequence"
-import { createModifyAttributesAPI } from "./src/hooks/attributes/attributes";
+import { createModifyAttributesAPI } from "./src/hooks/attributes/modify";
 import { createQueryAttributesAPI} from "./src/hooks/attributes/query_attributes";
 import { useDeleteFilter, useGetFilters, usePostFilter } from "./src/hooks/filters/filters";
 import { createModifyAnnotationsAPI } from "./src/hooks/annotations/annotations";
