@@ -81,6 +81,10 @@ import { createQueryCrosslinksAPI } from "./src/hooks/crosslink/crosslink";
 import { createQueryExternalResourcesAPI } from "./src/hooks/crosslink/external_resource";
 import { create } from "lodash";
 import { createAuthenticationMFAAPI } from "./src/hooks/authorization/mfa";
+import { createQueryProtocolsAPI } from "./src/hooks/protocols/find";
+import { createModifyProtocolAPI } from "./src/hooks/protocols/modify";
+import { createSubmissionProtocolsAPI } from "./src/hooks/submissions/protocols";
+
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 
@@ -231,6 +235,9 @@ export default {
         statistics: {
             createSubmissionRankingAPI
         },
+        protocols: {
+            createSubmissionProtocolsAPI
+        },
         runlist: {
             createSubmissionRunlistAPI
         }
@@ -302,6 +309,10 @@ export default {
         associations: {
             createPhenotypeAssociationsAPI
         }
+    },
+    protocols: {
+        createQueryProtocolsAPI,
+        createModifyProtocolAPI
     },
     crosslink: {
         createQueryCrosslinksAPI,
