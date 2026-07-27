@@ -29,13 +29,13 @@ export function createSubmissionRankingAPI(client) {
      * @param {Number} props.limit - The maximum number of results to return.
      * @returns {import("./types").ExclusivelyQuantifiedProteinGroup[]} Exclusively quantified protein groups for the submission, filtered by the provided attribute tags if given.
      */
-    async function getSubmissionExclusivelyQuantifiedProteinGroups_API({tag, attribute_tags, limit}) {
-        const res = await client.get(`/submissions/${tag}/ranking/exclusively_quantified`, {params: { attribute_tags, limit }})
+    async function getSubmissionExclusivelyQuantifiedProteinGroups_API({tag, attribute_tags, annotation_tags, limit}) {
+        const res = await client.get(`/submissions/${tag}/ranking/exclusively_quantified`, {params: { attribute_tags, annotation_tags, limit }})
         return res.data 
     }
-    const useGetSubmissionExclusivelyQuantifiedProteinGroups = (APIParams = {tag, attribute_tags, limit}, useQueryOptions = {staleTime : 300000, placeholderData: (prev) => prev}) => {
+    const useGetSubmissionExclusivelyQuantifiedProteinGroups = (APIParams = {tag, attribute_tags, annotation_tags, limit}, useQueryOptions = {staleTime : 300000, placeholderData: (prev) => prev}) => {
         return useQuery({
-            queryKey: ["submission_exclusively_quantified_protein_groups", APIParams.tag, APIParams.attribute_tags, APIParams.limit],
+            queryKey: ["submission_exclusively_quantified_protein_groups", APIParams.tag, APIParams.attribute_tags, APIParams.limit, APIParams.annotation_tags],
             queryFn: () => getSubmissionExclusivelyQuantifiedProteinGroups_API({ ...APIParams }),
             ...useQueryOptions
         })
