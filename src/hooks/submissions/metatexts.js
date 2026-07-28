@@ -107,6 +107,20 @@ export function createSubmissionMetatextAPI(client) {
         return useMutation({mutationFn: (APIParams) => postMetatext_API({...APIParams}), ...useMutationOptions})
     }
     
+        // submission metatexts
+    async function getSubmissionMetatexts_API({}) {
+        const res = await client.get(`/submissions/metatext`)
+        return res.data 
+    }
+
+    const useGetSubmissionMetatext = (APIParams = {}, useQueryOptions = {staleTime: Infinity}) => {
+        return useQuery({
+            queryKey: ["metatext_for_submission"],
+            queryFn: () => getSubmissionMetatexts_API({...APIParams}),
+            ...useQueryOptions
+        })
+    }
+
 
     return {
         useGetResearchAim,
@@ -115,7 +129,8 @@ export function createSubmissionMetatextAPI(client) {
         useGetMetatextForSubmission,
         useGetMetatexts,
         useGetSubmissionMetatextByTag,
-        usePostMetatext
+        usePostMetatext,
+        useGetSubmissionMetatext
   };
 }
 

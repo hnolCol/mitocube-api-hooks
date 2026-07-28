@@ -85,6 +85,34 @@ export function createSubmissionCoreAPI(client) {
         })
     }
 
+
+    async function getSubmissionTag_API({}) {
+        const res = await client.get('/submissions/tag')
+        return res.data
+    }
+
+    const useGetSubmissionTag = (APIParams = {}, useQueryOptions = {}) => {
+        return useQuery({
+            queryKey: ["getSubmissionTAG"],
+            queryFn: () => getSubmissionTag_API({...APIParams}),
+            ...useQueryOptions
+        })
+    }
+
+
+    // submit submission
+    async function postSubmission_API({ submission }) {
+        const res = await client.post('/submissions', submission)
+        return res.data
+    }
+
+    const usePostSubmission = (useMutationOptions = {}) => {
+        return useMutation({
+            mutationFn: (APIParams) => postSubmission_API({ ...APIParams }),
+            ...useMutationOptions
+        })
+    }
+
     
 
 
@@ -93,7 +121,9 @@ export function createSubmissionCoreAPI(client) {
         useGetSubmissionCreatedAt,
         useCheckSubmission,
         useGetSubmissionHasGenotype,
-        useGetSubmissionProteomes
+        useGetSubmissionProteomes,
+        useGetSubmissionTag,
+        usePostSubmission
   };
 }
 

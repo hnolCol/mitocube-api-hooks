@@ -26,7 +26,7 @@ export function createModifyAttributesAPI(client) {
         })
     }
 
-    async function postAttribute_API({tag, text, abbreviation, priority, allow_input, children, required_trait_tags, group_tags, min_state, parents}){
+    async function patchAttribute_API({tag, text, abbreviation, priority, allow_input, children, required_trait_tags, group_tags, min_state, parents}){
         const res = await client.patch(`/attributes/${tag}`,{
             text,
             abbreviation,
@@ -43,7 +43,7 @@ export function createModifyAttributesAPI(client) {
 
     const useUpdateAttribute = (useMutationOptions = {}) => {
         return useMutation({
-            mutationFn: (APIParams) => postAttribute_API({...APIParams}),
+            mutationFn: (APIParams) => patchAttribute_API({...APIParams}),
             ...useMutationOptions
         })
     }
