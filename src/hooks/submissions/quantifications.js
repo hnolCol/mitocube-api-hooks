@@ -114,32 +114,47 @@ async function getTestQuantificationDistribution_API({
     tag,
     quantification_type,
     annotation_tag,
-    testParam,
+    annotation_group_tag,
+    ca_left_tag,
+    ca_right_tag,
+    attribute_tag,
+    within_attribute_tags,
+    within_ca_tags
 }) {
-    const res = await client.post(
+    const res = await client.get(
         `/submissions/${tag}/quantifications/test/distribution`,
-        testParam,
         {
             params: {
                 quantification_type,
                 annotation_tag,
+                annotation_group_tag,
+                ca_left_tag,
+                ca_right_tag,
+                attribute_tag,
+                within_attribute_tags,
+                within_ca_tags
             },
         }
     );
-
     return res.data;
 }
 
     
-    const useGetTestQuantificationDistributions = (APIParams = { tag, quantification_type, annotation_tag, testParams: [] }, useQueryOptions = {}) => {
+    const useGetTestQuantificationDistributions = (testParams = [], useQueryOptions = {}) => {
         return useQueries(
-            {queries: APIParams.testParams.map((testParam) => ({
-                queryKey: ["getConditionApplicationText", JSON.stringify(testParam), APIParams.tag, APIParams.quantification_type, APIParams.annotation_tag],
+            {queries: testParams.map((testParam) => ({
+                queryKey: ["getConditionApplicationText", JSON.stringify(testParam)],
                 queryFn: () => getTestQuantificationDistribution_API({
-                    tag: APIParams.tag,
-                    quantification_type: APIParams.quantification_type,
-                    annotation_tag: APIParams.annotation_tag,
-                    testParam
+                    tag: testParam.tag,
+                    quantification_type: testParam.quantification_type,
+                    annotation_tag: testParam.annotation_tag,
+                    annotation_group_tag: testParam.annotation_group_tag,
+                    ca_left_tag: testParam.ca_left_tag,
+                    ca_right_tag: testParam.ca_right_tag,
+                    attribute_tag: testParam.attribute_tag,
+                    within_attribute_tags: testParam.within_attribute_tags,
+                    within_ca_tags: testParam.within_ca_tags
+                    
                 }),
                 staleTime: 300000,
                 ...useQueryOptions
