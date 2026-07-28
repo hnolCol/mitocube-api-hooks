@@ -142,6 +142,25 @@ export function createSampleCoreAPI(client) {
             })
         }
 
+        /**
+         * @description Retrieves export-ready sample data (sample_tag, replicate, genotype, condition applications) for a submission.
+        * @param {Object} props
+        * @param {String} props.tag The submission tag
+        * @returns {Array<Object>} One row per sample, ready for download.
+        */
+        async function getSamplesExport_API({ tag }) {
+            const res = await client.get(`/samples/submissions/${tag}/export`)
+            return res.data
+        }
+
+        const useGetSamplesExport = (APIParams = { tag }, useQueryOptions = { staleTime: 0 }) => {
+            return useQuery({
+                queryKey: ["getSamplesExport", APIParams.tag],
+                queryFn: () => getSamplesExport_API({ ...APIParams }),
+                ...useQueryOptions
+            })
+        }
+
 
     return {
         useGetSample,
@@ -150,7 +169,8 @@ export function createSampleCoreAPI(client) {
         useInsertSampleGenotype,
         useUpdateSample,
         useAddSampleGenotype,
-        useSetSampleExcluded
+        useSetSampleExcluded,
+        useGetSamplesExport
     };
 }
   
