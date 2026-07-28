@@ -14,7 +14,7 @@ async function getSubmissionViews_API({ tag }) {
     return res.data
 }
 
-const useGetSubmissionViews = (APIParams = {tag }, useQueryOptions = { staleTime: 50000, placeHolderData : prev => prev || 0}) => {
+const useGetSubmissionViews = (APIParams = {tag }, useQueryOptions = { staleTime: 50000, placeholderData : prev => prev || 0}) => {
     return useQuery({
         queryKey: ["getSubmissionViews", APIParams.tag],
         queryFn: () => getSubmissionViews_API({ ...APIParams }),
@@ -22,6 +22,26 @@ const useGetSubmissionViews = (APIParams = {tag }, useQueryOptions = { staleTime
     })
 }   
 
+    /**
+ * @description Returns the view score for a submission. Endpoint: GET '/api/submissions/:tag/view_score'
+ * @param {Object} props 
+ * @param {String} props.tag The submission tag.
+ * @returns {Number} The view score for the submission
+ */
+async function getSubmissionViewScore_API({ tag }) {
+    const res = await client.get(`/submissions/${tag}/view_score`)
+    return res.data
+}
+
+const useGetSubmissionViewScore = (APIParams = {tag }, useQueryOptions = { staleTime: 50000, placeholderData : prev => prev || 0}) => {
+    return useQuery({
+        queryKey: ["getSubmissionViewScore", APIParams.tag],
+        queryFn: () => getSubmissionViewScore_API({ ...APIParams }),
+        ...useQueryOptions
+    })
+}   
+    
+    
 
 /**
  * @description Endpoint: POST '/api/submissions/:tag/views'
@@ -40,7 +60,8 @@ const usePostSubmissionView = (useMutationOptions = {}) => {
 
 return {
     useGetSubmissionViews,
-    usePostSubmissionView
+    usePostSubmissionView,
+    useGetSubmissionViewScore 
 };
 
 }

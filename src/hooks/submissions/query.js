@@ -11,15 +11,16 @@ export function createSubmissionQueryAPI(client) {
      * @param {Boolean} props.ordered - If true, the results are ordered by the submission date.
      * @returns 
      */
-    async function getSubmissionBySearchString_API({search_string, state, limit, ordered, group_by_state, genotype_tag, user_tags, user_role, attribute_tag, trait_tag, ca_tags, include_sample_ca, group_by_user, group_by_date, ca_search_string, protein_tags}) {
-        const res = await client.get(`/submissions/q`, {params : {search_string, state, limit, ordered, group_by_state, group_by_date, genotype_tag, user_tags, user_role, attribute_tag, trait_tag, ca_tags, include_sample_ca, group_by_user, ca_search_string, protein_tags}})
-        return res.data 
+    async function getSubmissionBySearchString_API({ search_string, state, limit, ordered, group_by_state, genotype_tag, user_tags, user_role, attribute_tag, trait_tag, ca_tags, include_sample_ca, group_by_user, group_by_date, ca_search_string, protein_tags, sort_by_views }) {
+        const res = await client.get(`/submissions/q`, { params: { search_string, state, limit, ordered, group_by_state, group_by_date, genotype_tag, user_tags, user_role, attribute_tag, trait_tag, ca_tags, include_sample_ca, group_by_user, ca_search_string, protein_tags, sort_by_views } })
+        return res.data
     }
     
 
-    const useGetSubmissionByQuery = (APIParams = {search_string, state, limit, ordered, group_by_state, group_by_date, group_by_user, genotype_tag, user_tags, user_role, attribute_tag, trait_tag, ca_tags, ca_search_string}, useQueryOptions = {staleTime : 300000, placeholderData: (prev) => prev}) => {
+    const useGetSubmissionByQuery = (APIParams = { search_string, state, limit, ordered, group_by_state, group_by_date, group_by_user, genotype_tag, user_tags, user_role, attribute_tag, trait_tag, ca_tags, ca_search_string, sort_by_views, protein_tags }, useQueryOptions = { staleTime: 300000, placeholderData: (prev) => prev }) => {
         return useQuery({
-            queryKey: ["submission_query", APIParams.search_string, APIParams.state, APIParams.limit, APIParams.ordered, APIParams.group_by_state, APIParams.group_by_date, APIParams.genotype_tag, APIParams.user_tags, APIParams.user_role, APIParams.ca_tags, APIParams.attribute_tag, APIParams.trait_tag, APIParams.include_sample_ca, APIParams.group_by_user, APIParams.ca_search_string, APIParams.protein_tags],
+            queryKey: ["submission_query", APIParams.search_string, APIParams.state, APIParams.limit, APIParams.ordered, APIParams.group_by_state, APIParams.group_by_date, APIParams.genotype_tag, APIParams.user_tags, APIParams.user_role,
+                APIParams.ca_tags, APIParams.attribute_tag, APIParams.trait_tag, APIParams.include_sample_ca, APIParams.group_by_user, APIParams.ca_search_string, APIParams.protein_tags, APIParams.sort_by_views],
             queryFn: () => getSubmissionBySearchString_API({ ...APIParams }),
             ...useQueryOptions
         })
@@ -31,20 +32,36 @@ export function createSubmissionQueryAPI(client) {
      * @returns 
      */
     async function getSubmissionQueryCount_API({ search_string, state, genotype_tag, user_tags, user_role, attribute_tag, trait_tag, limit, ordered, group_by_state, include_sample_ca, ca_search_string, ca_tags, protein_tags }) {
-        const res = await client.get(`/submissions/q/count`, { params: { search_string, state, genotype_tag, user_tags, user_role, attribute_tag, trait_tag, limit, ordered, group_by_state, include_sample_ca, ca_search_string, ca_tags, protein_tags} })
+        const res = await client.get(`/submissions/q/count`, { params: { search_string, state, genotype_tag, user_tags, user_role, attribute_tag, trait_tag, limit, ordered, group_by_state, include_sample_ca, ca_search_string, ca_tags, protein_tags } })
         return res.data
     }
 
-    const useGetSubmissionQueryCount = (APIParams = {search_string, state, genotype_tag, user_tags, user_role, attribute_tag, trait_tag, limit, ordered, group_by_state, include_sample_ca, ca_search_string, ca_tags, protein_tags}, useQueryOptions) => {
+    const useGetSubmissionQueryCount = (APIParams = { search_string, state, genotype_tag, user_tags, user_role, attribute_tag, trait_tag, limit, ordered, group_by_state, include_sample_ca, ca_search_string, ca_tags, protein_tags }, useQueryOptions) => {
         return useQuery({
             queryKey: ["submissions", "query", "count", APIParams.search_string, APIParams.state, APIParams.genotype_tag, APIParams.user_tags, APIParams.user_role, APIParams.attribute_tag, APIParams.trait_tag, APIParams.limit, APIParams.ordered, APIParams.group_by_state, APIParams.include_sample_ca, APIParams.ca_search_string, APIParams.ca_tags, APIParams.protein_tags],
             queryFn: () => getSubmissionQueryCount_API({ ...APIParams }),
             ...useQueryOptions
         });
     }
+
+
+    async function getTrendingSubmissions_API({ limit }) {
+        const res = await client.get(`/submissions/trending`, { params: { limit } })
+        return res.data
+    }   
+    const useGetTrendingSubmissions = (APIParams = { limit }) => {
+        return useQuery({
+            queryKey: ["submissions", "trending", APIParams.limit],
+            queryFn: () => getTrendingSubmissions_API({ ...APIParams }),
+            staleTime: 300000
+        })
+    }
+
+
     
     return {
         useGetSubmissionByQuery,
-        useGetSubmissionQueryCount
+        useGetSubmissionQueryCount,
+        useGetTrendingSubmissions
     }
 }

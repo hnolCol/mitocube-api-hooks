@@ -4,12 +4,12 @@ import { useQuery, useMutation } from "@tanstack/react-query"
 export function createSubmissionDurationsAPI(client) {
 
 /**
- * @description Returns the number of views for a submission. Endpoint: GET '/api/submissions/:tag/views'
+ * @description Returns the duration between two submission states. Endpoint: GET '/api/submissions/stats/durations'
  * @param {Object} props 
  * @param {String} props.state01 The initial submission state.
  * @param {String} props.state02 The target submission state.
  * @param {Boolean} props.aggregate If true, the results are aggregated and returned as an object with min, max, mean, median, stddev.
- * @returns {Number} The number of views for the submission
+ * @returns {Number} The duration between the two submission states
  */
 async function getSubmissionDurations_API({ state_01, state_02, aggregate = "dist" }) {
     const res = await client.get(`/stats/submissions/durations`, {
