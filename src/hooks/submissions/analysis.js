@@ -1,4 +1,4 @@
-import { useQuery, useQueries } from "@tanstack/react-query"
+import { useQuery, useQueries, useMutation } from "@tanstack/react-query"
 
 export function createSubmissionAnalysisAPI(client) {
   
@@ -105,12 +105,24 @@ const useGetSubmissionHeatmap = (APIParams = {tag, annotation_tag, n_clusters, f
     }
 
 
+    async function getSubmissionCompare_API({ comparisons }) {
+        const res = await client.post(`/submissions/analysis/compare`, comparisons)
+        return res.data
+    }
+
+    const usePostSubmissionCompare = (useMutationOptions = {}) => {
+        return useMutation({mutationFn: (APIParams) => getSubmissionCompare_API({...APIParams}), ...useMutationOptions})
+    }   
+
+
+
   return {
     useGetSubmissionPCA,
     useGetSubmissionVolcano,
     useGetSubmissionVolcanos,
     useGetSubmissionHeatmap,
-    useGetSubmissionAnnotationNetwork
+    useGetSubmissionAnnotationNetwork,
+    usePostSubmissionCompare
   };
 }
 
