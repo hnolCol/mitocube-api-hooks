@@ -90,11 +90,61 @@ export function createProteinFeatureQueryAPI(client) {
     }
 
 
+    async function getProteinTopology_API({ tag }) {
+        const res = await client.get(`/features/proteins/${tag}/topology`)
+        return res.data
+    }
+    
+    const useGetProteinTopology = (
+        APIParams = { tag: "" },
+        useQueryOptions = { staleTime: Infinity }
+    ) => {
+        return useQuery({
+            queryKey: ["getProteinTopology", APIParams.tag],
+            queryFn: () => getProteinTopology_API({ ...APIParams }),
+            enabled: Boolean(APIParams.tag),
+            ...useQueryOptions,
+        })
+    }
+    
+    const useGetProteinsTopology = (APIParams = { tags: [] }, useQueryOptions = { staleTime: Infinity }) => {
+        return useQueries({
+            queries: APIParams.tags.map((tag) => ({
+                queryKey: ["getProteinTopology", tag],
+                queryFn: () => getProteinTopology_API({ tag }),
+                enabled: Boolean(tag),
+                staleTime: Infinity,
+                ...useQueryOptions,
+            }))
+        })
+    }
+
+    async function getProteinStructure_API({ tag }) {
+        const res = await client.get(`/features/proteins/${tag}/structure`)
+        return res.data
+    }
+    
+    const useGetProteinStructure = (
+        APIParams = { tag: "" },
+        useQueryOptions = { staleTime: Infinity }
+    ) => {
+        return useQuery({
+            queryKey: ["getProteinStructure", APIParams.tag],
+            queryFn: () => getProteinStructure_API({ ...APIParams }),
+            enabled: Boolean(APIParams.tag),
+            ...useQueryOptions,
+        })
+    }
+
+
 return {
     useGetProteinFeatureByQuery,
     useGetProteinByTag,
     useGetProteins,
     useGetProteinInterproFeatures,
-    useGetProteinsInterproFeatures
+    useGetProteinsInterproFeatures,
+    useGetProteinTopology,
+    useGetProteinsTopology,
+    useGetProteinStructure
 };
 }
