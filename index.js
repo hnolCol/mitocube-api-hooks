@@ -79,6 +79,7 @@ import { createPhenotypeAssociationsAPI } from "./src/hooks/phenotype/phenotype_
 import { createClinVarAPI } from "./src/hooks/diseases/ClinVar";
 import { createQueryCrosslinksAPI } from "./src/hooks/crosslink/crosslink";
 import { createQueryExternalResourcesAPI } from "./src/hooks/crosslink/external_resource";
+import { createModifyExternalResourcesAPI } from "./src/hooks/crosslink/query_crosslinkresource";
 import { create } from "lodash";
 import { createAuthenticationMFAAPI } from "./src/hooks/authorization/mfa";
 import { createQueryProtocolsAPI } from "./src/hooks/protocols/find";
@@ -316,6 +317,7 @@ export default {
     },
     crosslink: {
         createQueryCrosslinksAPI,
-        createQueryExternalResourcesAPI
+        createQueryExternalResourcesAPI,
+        createModifyExternalResourcesAPI
     }      
 }
