@@ -176,6 +176,24 @@ const usePostInstrumentState = (useMutationOptions = {}) => {
         ...useMutationOptions
     });
 }
+/**
+ * @description Retrieves an overview of all instruments, including their current state and other relevant information. 
+ * @param {Object} props
+ * @returns {import("./types").InstrumentOverview[]} - An array of instrument overviews
+ */ 
+
+async function getInstrumentsOverview_API({}) {
+    const res = await client.get(`/instruments/overview`)
+    return res.data
+}
+
+const useGetInstrumentsOverview = (APIParams = {}, useQueryOptions = {staleTime: 30000}) => {
+    return useQuery({
+        queryKey: ["getInstrumentsOverview"],
+        queryFn: () => getInstrumentsOverview_API({...APIParams}),
+        ...useQueryOptions
+    });
+}
 
 return {
     useGetInstrumentTypes,
@@ -186,7 +204,8 @@ return {
     useGetInstrumentStateByQuery,
     useGetInstrumentStateDurations,
     useGetSpecificInstrumentStateDurations,
-    usePostInstrumentState
+    usePostInstrumentState,
+    useGetInstrumentsOverview
 }
 
 }

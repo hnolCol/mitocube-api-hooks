@@ -8,14 +8,34 @@ export function createSubmissionRunlistAPI(client) {
      * @param {String} props.tag - The submission tag
      * @returns 
      */
-    async function getRunlist_API({tag}) {
-        const res = await client.get(`/submissions/${tag}/runlist`)
+    
+    async function getRunlist_API({ tag, rl_tag }) {               
+        const res = await client.get(`/submissions/${tag}/runlist/${rl_tag}`)
         return res.data
     }
     const useGetRunlist = (APIParams = {}, useQueryOptions = {staleTime : 3000000}) => {
         return useQuery({
-            queryKey: ["submissionRunlist", APIParams.tag],
+            queryKey: ["submissionRunlist", APIParams.tag, APIParams.rl_tag],
             queryFn: () => getRunlist_API({ ...APIParams }),
+            enabled: !!APIParams.tag && !!APIParams.rl_tag,          
+            ...useQueryOptions
+        })
+    }
+
+    /**
+     * @description Returns all runlists for a given submission.
+     * @param {Object} props 
+     * @param {String} props.tag - The submission tag
+     * @returns 
+     */
+    async function getRunlists_API({ tag }) {                      
+        const res = await client.get(`/submissions/${tag}/runlists`)
+        return res.data
+    }
+    const useGetRunlists = (APIParams = {}, useQueryOptions = { staleTime: 3000000 }) => {
+        return useQuery({
+            queryKey: ["submissionRunlists", APIParams.tag],
+            queryFn: () => getRunlists_API({ ...APIParams }),
             ...useQueryOptions
         })
     }
@@ -43,9 +63,8 @@ export function createSubmissionRunlistAPI(client) {
      * @param {String} props.tag - The submission tag
      * @returns 
      */
-
-    async function deleteRunlist_API({tag}) {
-        const res = await client.delete(`/submissions/${tag}/runlist`)
+    async function deleteRunlist_API({ tag, rl_tag }) {             
+        const res = await client.delete(`/submissions/${tag}/runlist/${rl_tag}`)
         return res.data
     }
 
@@ -58,6 +77,7 @@ export function createSubmissionRunlistAPI(client) {
 
     return {        
         useGetRunlist,
+        useGetRunlists,
         usePostRunlist,
         useDeleteRunlist
     };
