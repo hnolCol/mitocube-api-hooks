@@ -85,6 +85,7 @@ import { createAuthenticationMFAAPI } from "./src/hooks/authorization/mfa";
 import { createQueryProtocolsAPI } from "./src/hooks/protocols/find";
 import { createModifyProtocolAPI } from "./src/hooks/protocols/modify";
 import { createSubmissionProtocolsAPI } from "./src/hooks/submissions/protocols";
+import { createPolicyAPI } from "./src/hooks/policy/policy";
 
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
@@ -319,5 +320,8 @@ export default {
         createQueryCrosslinksAPI,
         createQueryExternalResourcesAPI,
         createModifyExternalResourcesAPI
-    }      
+    },
+    policy: {
+        createPolicyAPI
+    }   
 }
