@@ -190,6 +190,24 @@ export function createQueryTraitsAPI(client) {
         })
     }
 
+    /**
+     * @description Export all traits for a given attribute tag as a CSV file.
+     * @param {Object} props
+     * @param {String} props.attribute_tag
+     */
+        async function exportAttributeTraits_API({ tag }) {
+            const res = await client.get(`/attributes/${tag}/traits/export`)
+            return res.data
+        }
+    
+        const useExportAttributeTraits = (APIParams = { tag }, useQueryOptions = { staleTime: 3000000 }) => {
+            return useQuery({
+                queryKey: ["exportAttributeTraits", APIParams.tag],
+                queryFn: () => exportAttributeTraits_API({ ...APIParams }),
+                ...useQueryOptions
+            })
+        }  
+
 return {
     useGetRequiredTraits,
     useGetTraitByTag,
@@ -199,6 +217,7 @@ return {
     useGetTraitText,
     useGetTraitDescription,
     useGetTraitPriority,
-    useGetTraitPermissions
+    useGetTraitPermissions,
+    useExportAttributeTraits
 }
 }

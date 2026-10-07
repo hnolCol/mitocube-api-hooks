@@ -36,16 +36,20 @@ export function createFeaturesProteinsRankingAPI(client) {
  * @param {String} props.tag - The protein group tag 
  * @returns {ProteinGroupSubmissionRanking[]} The ranked submission tags for the given protein group tag
  */
-async function getProteinGroupSubmissionStats_API({ tag, limit }) {
+async function getProteinGroupSubmissionStats_API({ tag, limit, ca_tags, include_sample_ca, user_tags }) {
     const res = await client.get(`/features/protein_groups/${tag}/stats`, {
-        params: { limit }
+        params: { limit,
+            ca_tags: Array.isArray(ca_tags) && ca_tags.length > 0 ? ca_tags.join(";") : undefined,
+            include_sample_ca,
+            user_tags: Array.isArray(user_tags) && user_tags.length > 0 ? user_tags.join(";") : undefined
+         }
     });
     return res.data;
 }
 
-function useGetProteinGroupSubmissionStats(APIParams = {tag, limit}, useQueryOptions = { staleTime: Infinity}) {
+function useGetProteinGroupSubmissionStats(APIParams = {tag, limit, ca_tags, include_sample_ca, user_tags}, useQueryOptions = { staleTime: Infinity}) {
     return useQuery({
-        queryKey: ["getProteinGroupSubmissionStats", APIParams.tag, APIParams.limit],
+        queryKey: ["getProteinGroupSubmissionStats", APIParams.tag, APIParams.limit, APIParams.ca_tags, APIParams.include_sample_ca, APIParams.user_tags],
         queryFn: () => getProteinGroupSubmissionStats_API({ ...APIParams }),
         ...useQueryOptions
     });

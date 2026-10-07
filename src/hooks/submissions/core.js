@@ -114,7 +114,23 @@ export function createSubmissionCoreAPI(client) {
     }
 
     
-
+    /**
+     * @description Downloads the submission metadata as a markdown file (Blob).
+     * @param {Object} props 
+     * @returns {Blob} The markdown file.
+     */
+    
+    async function getSubmissionMarkdownFile_API({ tag, ...params }) {
+    const res = await client.get(`/submissions/${tag}/export/md/file`, { params, responseType: "blob" })
+    return res.data
+        }
+    
+    const useDownloadSubmissionMarkdownFile = (useMutationOptions = {}) => {
+    return useMutation({
+    mutationFn: (APIParams) => getSubmissionMarkdownFile_API({ ...APIParams }),
+    ...useMutationOptions
+            })
+        }
 
     return {
         useGetSubmissionExists,
@@ -123,7 +139,8 @@ export function createSubmissionCoreAPI(client) {
         useGetSubmissionHasGenotype,
         useGetSubmissionProteomes,
         useGetSubmissionTag,
-        usePostSubmission
+        usePostSubmission,
+        useDownloadSubmissionMarkdownFile
   };
 }
 
