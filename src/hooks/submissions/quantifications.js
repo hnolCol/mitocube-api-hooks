@@ -85,29 +85,10 @@ export function createSubmissionQuantificationAPI(client) {
     }
 
 
-        /**
-     * @description Endpoint: POST '/api/submissions/:tag/quantifications/test/distribution' Uses post to submit the test params in the body as a list of objects
-     * @param {Object} props
-     * @param {String} props.tag The submission tag.
-     * @param {String} props.quantification_type The type of quantification to check. E.g., "proteins" or "precursors" or "protein_groups", or any.
-     * @param {String} props.annotation_tag The annotation tag to filter the distribution.
-     * @param {Object} props.testParams The parameters for the test.
-     * @returns {Boolean} If insertion of view was successful
-     */
-    async function postTestQuantificationDistribution_API({ tag, quantification_type, annotation_tag, testParams }) {
-        const res = await client.post(`/submissions/${tag}/quantifications/test/distribution`,  testParams, { params : { quantification_type, annotation_tag } })
-        return res.data
-    }
-
-    const usePostTestQuantificationDistribution = (useMutationOptions = {}) => {
-        return useMutation({mutationFn: (APIParams) => postTestQuantificationDistribution_API({...APIParams}), ...useMutationOptions})
-    }
-
     /**
  * @description Endpoint:
- * POST '/api/submissions/:tag/quantifications/test/distribution'
+ * GET '/api/submissions/:tag/quantifications/test/distribution'
  *
- * Although this uses POST because the payload is complex,
  * React Query will cache the result using the queryKey.
  */
 async function getTestQuantificationDistribution_API({
@@ -229,8 +210,6 @@ async function getTestQuantificationDistribution_API({
         useRecalculateStatistics,
         useGetStatsOutdated,
         useGetSubmissionSampleQuantification
-        // useGetTestQuantificationDistribution,
-        // usePostTestQuantificationDistribution
     }
 
 }

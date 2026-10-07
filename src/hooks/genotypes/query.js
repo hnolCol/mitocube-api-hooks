@@ -93,7 +93,7 @@ export function createQueryGenotypesAPI(client) {
      */
 
     async function getGenotypeProteins_API({ genotype_tag }) {
-        const res = await client.get(`/genotypes/${genotype_tag}/Proteins`)
+        const res = await client.get(`/genotypes/${genotype_tag}/proteins`)
         return res.data
     }
 
@@ -133,7 +133,7 @@ export function createQueryGenotypesAPI(client) {
      */
 
     async function getGenotypeItem_API({ genotype_tag }) {
-        const res = await client.get(`/genotypes/${genotype_tag}/Item`)
+        const res = await client.get(`/genotypes/${genotype_tag}/item`)
         return res.data
     }
 

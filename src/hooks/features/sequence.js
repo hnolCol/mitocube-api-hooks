@@ -40,7 +40,7 @@ function useGetSequenceByFeatureKey(APIParams = {}, useQueryOptions = { staleTim
  * @returns {Number} - The percentage of the protein sequence covered by peptides
  */
 async function getProteinSequenceCoverage_API({ tag }) {
-    const res = await client.get(`/features/${tag}/sequence_coverage`)
+    const res = await client.get(`/features/proteins/${tag}/sequence_coverage`)
     return res.data
 }
 
