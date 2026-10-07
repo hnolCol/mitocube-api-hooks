@@ -236,6 +236,23 @@ export function createQueryAttributesAPI(client) {
         )
     }
 
+    /**
+     * @description Export attributes and its information 
+     * @returns {import("./types").Attribute[]} - The attributes and traits tags ordered by priority
+     */
+    async function exportAttributes_API() {
+        const res = await client.get(`/attributes/export`)
+        return res.data
+    }
+
+    const useExportAttributes = (useQueryOptions = { staleTime: 300000 }) => {
+        return useQuery({
+            queryKey: ["exportAttributes"],
+            queryFn: exportAttributes_API,
+            ...useQueryOptions
+        });
+    }   
+
     
 return {
     useGetAttribute,
@@ -248,6 +265,7 @@ return {
     useGetAttributesByQuery,
     useGetAttributeMinState,
     useGetAttributeAbbreviation,
-    useGetAttributeGroupsByAttribute
+    useGetAttributeGroupsByAttribute,
+    useExportAttributes
   };
 }

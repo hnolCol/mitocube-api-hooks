@@ -1,4 +1,5 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
+import { use } from "react";
 
 export function createCoreInstrumentsAPI(client) {
 
@@ -176,6 +177,115 @@ const usePostInstrumentState = (useMutationOptions = {}) => {
         ...useMutationOptions
     });
 }
+/**
+ * @description Retrieves an overview of all instruments, including their current state and other relevant information. 
+ * @param {Object} props
+ * @returns {import("./types").InstrumentOverview[]} - An array of instrument overviews
+ */ 
+
+async function getInstrumentsOverview_API({}) {
+    const res = await client.get(`/instruments/overview`)
+    return res.data
+}
+
+const useGetInstrumentsOverview = (APIParams = {}, useQueryOptions = {staleTime: 30000}) => {
+    return useQuery({
+        queryKey: ["getInstrumentsOverview"],
+        queryFn: () => getInstrumentsOverview_API({...APIParams}),
+        ...useQueryOptions
+    });
+}
+
+/**
+    * @description Retrieves a summary of quantification data for a specific instrument within a given time range.
+ * @param {*} param0 
+ * @returns 
+ */
+async function getInstrumentQuantificationSummary_API({tag, timestamp_min, timestamp_max}) {
+    const res = await client.get(`/instruments/${tag}/quantification/summary`, {params: {timestamp_min, timestamp_max}})
+    return res.data
+}
+const useGetInstrumentQuantificationSummary = (APIParams = {tag}, useQueryOptions = {staleTime: 60000}) => {
+    return useQuery({ queryKey: ["getInstrumentQuantificationSummary", APIParams.tag, APIParams.timestamp_min, APIParams.timestamp_max], queryFn: () => getInstrumentQuantificationSummary_API({...APIParams}), ...useQueryOptions });
+}
+
+/**
+    * @description Retrieves a summary of state duration data for a specific instrument within a given time range.
+ * @param {*} param0 
+ * @returns 
+ */
+async function getInstrumentStateDurationSummary_API({tag, timestamp_min, timestamp_max}) {
+    const res = await client.get(`/instruments/${tag}/state/durations/summary`, {params: {timestamp_min, timestamp_max}})
+    return res.data
+}
+const useGetInstrumentStateDurationSummary = (APIParams = {tag}, useQueryOptions = {staleTime: 60000}) => {
+    return useQuery({ queryKey: ["getInstrumentStateDurationSummary", APIParams.tag, APIParams.timestamp_min, APIParams.timestamp_max], queryFn: () => getInstrumentStateDurationSummary_API({...APIParams}), ...useQueryOptions });
+}
+
+/**
+ * @description Retrieves all instrument states from the database.
+ * @returns {import("./types").InstrumentState[]} - An array of all instrument states
+ */ 
+async function getAllInstrumentStates_API({}) {
+    const res = await client.get(`/instruments/states/all`)
+    return res.data
+}
+const useGetAllInstrumentStates = (APIParams = {}, useQueryOptions = {staleTime: Infinity}) => {
+    return useQuery({ queryKey: ["getAllInstrumentStates"], queryFn: () => getAllInstrumentStates_API({...APIParams}), ...useQueryOptions });
+}
+
+
+/**
+ * @description Retrieves the fractional state durations for a specific instrument within a given time range.
+ * @param {*} param0 
+ * @returns 
+ */
+async function getFractionalInstrumentStateDurations_API({tag, timestamp_min, timestamp_max, limit}) {
+    const res = await client.get(`/instruments/${tag}/states/durations/fraction`, {params: {timestamp_min, timestamp_max, limit}})
+    return res.data
+}
+const useGetFractionalInstrumentStateDurations = (APIParams = {tag}, useQueryOptions = {staleTime: 60000}) => {
+    return useQuery({
+        queryKey: ["getFractionalInstrumentStateDurations", APIParams.tag, APIParams.timestamp_min, APIParams.timestamp_max],
+        queryFn: () => getFractionalInstrumentStateDurations_API({...APIParams}),
+        ...useQueryOptions
+    })
+}
+
+
+/**
+ * @description Retrieves past submissions for a specific instrument with pagination support.
+ * @param {*} param0 
+ * @returns 
+ */
+async function getInstrumentPastSubmissions_API({tag, offset, limit}) {
+    const res = await client.get(`/instruments/${tag}/submissions/past`, {params: {offset, limit}})
+    return res.data
+}
+const useGetInstrumentPastSubmissions = (APIParams = {tag, offset, limit}, useQueryOptions = {staleTime: 30000}) => {
+    return useQuery({
+        queryKey: ["getInstrumentPastSubmissions", APIParams.tag, APIParams.offset, APIParams.limit],
+        queryFn: () => getInstrumentPastSubmissions_API({...APIParams}),
+        ...useQueryOptions
+    })
+}
+
+/**
+ * @description Retrieves the unique protein group count for a specific instrument in a given year.
+ * @param {*} param0 
+ * @returns 
+ */
+async function getInstrumentUniqueProteinGroupCount_API({tag, year}) {
+    const res = await client.get(`/instruments/${tag}/quantification/unique-count`, {params: {year}})
+    return res.data
+}
+const useGetInstrumentUniqueProteinGroupCount = (APIParams = {tag, year}, useQueryOptions = {staleTime: 60000}) => {
+    return useQuery({
+        queryKey: ["getInstrumentUniqueProteinGroupCount", APIParams.tag, APIParams.year],
+        queryFn: () => getInstrumentUniqueProteinGroupCount_API({...APIParams}),
+        ...useQueryOptions
+    })
+}
 
 return {
     useGetInstrumentTypes,
@@ -186,7 +296,14 @@ return {
     useGetInstrumentStateByQuery,
     useGetInstrumentStateDurations,
     useGetSpecificInstrumentStateDurations,
-    usePostInstrumentState
+    usePostInstrumentState,
+    useGetInstrumentsOverview,
+    useGetInstrumentQuantificationSummary,
+    useGetInstrumentStateDurationSummary,
+    useGetAllInstrumentStates,
+    useGetFractionalInstrumentStateDurations,
+    useGetInstrumentPastSubmissions,
+    useGetInstrumentUniqueProteinGroupCount
 }
 
 }
