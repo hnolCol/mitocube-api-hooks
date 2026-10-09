@@ -26,17 +26,46 @@ export function createConsortiumsAPI(client) {
 
     /**
      * @description The list of consortium tags the current user can share into.
+     * @param {Object} props
+     * @param {Number} props.limit
      * @returns {String[]} Returns the list of consortium tags of the user.
      */
-    async function getUserConsortiums_API() {
-    const res = await client.get('/consortiums/user', {})
+    async function getUserConsortiums_API({ limit }) {
+    const res = await client.get('/consortiums/user', { params: { limit } })
     return res.data
     }
 
     const useGetUserConsortiums = (APIParams = {}, useQueryOptions = {}) => {
     return useQuery({
-        queryKey: ["getUserConsortiums"],
+        queryKey: ["getUserConsortiums", APIParams.limit],
         queryFn: () => getUserConsortiums_API({ ...APIParams }),
+        ...useQueryOptions
+    })
+    }
+
+
+    /**
+     * @description Find consortiums by search string, user tags, or submission tags.
+     * @param {Object} props
+     * @param {String} props.search_string
+     * @param {String[]} props.user_tags
+     * @param {String[]} props.submission_tags
+     * @param {Number} props.limit
+     * @returns {String[]} - The consortium tags matching the search criteria.
+     */
+    async function getConsortiumsByQuery_API({ search_string, user_tags, submission_tags, limit }) {
+    const res = await client.get('/consortiums/q', { params: { search_string, user_tags, submission_tags, limit } })
+    return res.data
+    }
+
+    const useGetConsortiumsByQuery = (APIParams = { search_string, user_tags, submission_tags, limit: 40 }, useQueryOptions = {}) => {
+    return useQuery({
+        queryKey: ["getConsortiumsByQuery",
+            APIParams.search_string,
+            APIParams.user_tags,
+            APIParams.submission_tags,
+            APIParams.limit],
+        queryFn: () => getConsortiumsByQuery_API({ ...APIParams }),
         ...useQueryOptions
     })
     }
@@ -122,6 +151,7 @@ export function createConsortiumsAPI(client) {
 
   return {
     useGetConsortiums,
+    useGetConsortiumsByQuery,
     useGetUserConsortiums,
     useGetConsortiumByTag,
     useGetConsortiumSubmissions,
