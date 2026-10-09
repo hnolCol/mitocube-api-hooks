@@ -89,6 +89,7 @@ import { createPrecursorAPI } from "./src/hooks/features/precursors";
 import { createPTMSitesAPI } from "./src/hooks/features/ptms";
 import { createPerformanceRunsAPI, createQCStandardsAPI } from "./src/hooks/performance/runs";
 import { createPolicyAPI } from "./src/hooks/policy/policy";
+import { createConsortiumsAPI } from "./src/hooks/consortiums/consortiums";
 
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
@@ -340,5 +341,8 @@ export default {
     },
     policy: {
         createPolicyAPI
-    }   
+    },
+    consortiums: {
+        createConsortiumsAPI
+    }
 }
