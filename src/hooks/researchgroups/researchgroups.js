@@ -179,8 +179,68 @@ export function createResearchGroupsAPI(client) {
 
 
 
+
+    /**
+     * @description Returns the research groups a user is a member of.
+     * @param {Object} props
+     * @param {String} props.user_tag The user tag to look up the research groups for.
+     * @returns {String[]} Returns the list of research group tags of the user.
+     */
+    async function getResearchGroupsOfUser_API({ user_tag }) {
+    const res = await client.get(`/researchgroups/users/${user_tag}`, {})
+    return res.data
+    }
+    const useGetResearchGroupsOfUser = (APIParams = { user_tag }, useQueryOptions = {}) => {
+    return useQuery({queryKey: ["getResearchGroupsOfUser", APIParams.user_tag], queryFn: () => getResearchGroupsOfUser_API({...APIParams}), enabled: !!APIParams.user_tag, ...useQueryOptions})
+    }
+
+    /**
+     * @description Returns the heads (PIs) of the research group.
+     * @param {Object} props
+     * @param {String} props.tag Research group tag
+     * @returns {String[]} Returns the list of user tags that are heads (PIs) of the research group.
+     */
+    async function getResearchGroupHeads_API({ tag }) {
+    const res = await client.get(`/researchgroups/${tag}/heads`, {})
+    return res.data
+    }
+    const useGetResearchGroupHeads = (APIParams = {tag}, useQueryOptions = {}) => {
+    return useQuery({queryKey: ["getResearchGroupHeads", APIParams.tag], queryFn: () => getResearchGroupHeads_API({...APIParams}), enabled: !!APIParams.tag, ...useQueryOptions})
+    }
+
+    /**
+     * @description Makes a user a head (PI) of the research group. Requires at least curator rights.
+     * @param {Object} props
+     * @param {String} props.tag Research group tag
+     * @param {String} props.user_tag The user tag to make a head (PI).
+     */
+    async function postResearchGroupHead_API({ tag, user_tag }) {
+    const res = await client.post(`/researchgroups/${tag}/heads/${user_tag}`, {})
+    return res.data
+    }
+    const usePostResearchGroupHead = (useMutationOptions = {}) => {
+    return useMutation({mutationFn: (APIParams = { tag, user_tag }) => postResearchGroupHead_API({...APIParams}), ...useMutationOptions})
+    }
+
+    /**
+     * @description Removes a user as head (PI) of the research group. Requires at least curator rights.
+     * @param {Object} props
+     * @param {String} props.tag Research group tag
+     * @param {String} props.user_tag The user tag to remove as head (PI).
+     */
+    async function deleteResearchGroupHead_API({ tag, user_tag }) {
+    const res = await client.delete(`/researchgroups/${tag}/heads/${user_tag}`)
+    return res.data
+    }
+    const useDeleteResearchGroupHead = (useMutationOptions = {}) => {
+    return useMutation({mutationFn: (APIParams = { tag, user_tag }) => deleteResearchGroupHead_API({...APIParams}), ...useMutationOptions})
+    }
   return {
     useGetResearchGroups,
+    useGetResearchGroupsOfUser,
+    useGetResearchGroupHeads,
+    usePostResearchGroupHead,
+    useDeleteResearchGroupHead,
     useGetResearchGroupUsers,
       useGetResearchGroupByTag,
     useGetResearchGroupSubmissionCount,
