@@ -345,7 +345,7 @@ export default {
     },
     consortiums: {
         createConsortiumsAPI
-    }
+    },
     plates: {
         createPlatesAPI
     }   
