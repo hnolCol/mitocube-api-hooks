@@ -100,9 +100,33 @@ export function createSubmissionCountAPI(client) {
 
 
 
+    /**
+     * @description Returns the number of precursors in a submission
+     * @param {Object} props 
+     * @param {String} props.tag The submission tag.
+     * @returns {Object} The number of precursors quantified in the submission
+     */
+    async function getSubmissionPrecursorCount_API({ tag }) {
+        const res = await client.get(`/submissions/counts/${tag}/precursors`, {
+            params: {  }
+        })
+        return res.data
+    }
+
+    const useGetSubmissionPrecursorCount = (APIParams = {tag}, useQueryOptions = { staleTime: 500}) => {
+        return useQuery({
+            queryKey: ["getSubmissionPrecursorCount", APIParams.tag],
+            queryFn: () => getSubmissionPrecursorCount_API({ ...APIParams }),
+            ...useQueryOptions
+        });
+    }
+
+
+
     return {
         useGetSubmissionProteinGroupCount,
         useGetSubmissionPeptideCount,
-        useGetSubmissionSampleProteinGroupCount
+        useGetSubmissionSampleProteinGroupCount,
+        useGetSubmissionPrecursorCount
     };
 }   
