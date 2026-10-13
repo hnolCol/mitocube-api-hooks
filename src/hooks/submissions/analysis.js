@@ -105,6 +105,27 @@ const useGetSubmissionHeatmap = (APIParams = {tag, annotation_tag, n_clusters, f
     }
 
 
+    /**
+     * @description Checks if the submission has precursor (quantification) data. Endpoint: GET '/api/submissions/{submission_tag}/quantifications/exists'
+     * @param {Object} props
+     * @param {String} props.submission_tag - The tag of the submission.
+     * @returns {Boolean} True if the submission has precursor data, false otherwise.
+     */
+    async function getSubmissionHasPrecursors_API({ submission_tag }) {
+        const res = await client.get(`/submissions/${submission_tag}/quantifications/exists`, {
+            params: { quantification_type: "precursors" }
+        })
+        return res.data
+    }
+
+    const useGetSubmissionHasPrecursors = (APIParams = {submission_tag}, useQueryOptions = { staleTime: Infinity }) => {
+        return useQuery({
+            queryKey: ["getSubmissionHasPrecursors", APIParams.submission_tag],
+            queryFn: () => getSubmissionHasPrecursors_API({ ...APIParams }),
+            ...useQueryOptions
+        })
+    }
+
     async function getSubmissionCompare_API({ comparisons }) {
         const res = await client.post(`/submissions/analysis/compare`, comparisons)
         return res.data
@@ -122,6 +143,7 @@ const useGetSubmissionHeatmap = (APIParams = {tag, annotation_tag, n_clusters, f
     useGetSubmissionVolcanos,
     useGetSubmissionHeatmap,
     useGetSubmissionAnnotationNetwork,
+    useGetSubmissionHasPrecursors,
     usePostSubmissionCompare
   };
 }
