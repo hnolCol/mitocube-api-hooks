@@ -19,5 +19,5 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Run offline unit tests
-        run: yarn test src/test/test.js
+      - name: Run unit tests
+        run: yarn test
