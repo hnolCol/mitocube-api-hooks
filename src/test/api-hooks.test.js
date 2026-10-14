@@ -99,3 +99,29 @@ test("hook queries with different parameters use distinct query keys", async () 
         { params: { quantification_type: "precursors" } }
     );
 });
+
+import { createSubmissionDurationsAPI } from "../hooks/stats/submissions";
+
+test("useGetSubmissionViews calls the submission views stats endpoint", async () => {
+    const client = createMockClient(() => 7);
+    const { useGetSubmissionViews } = createSubmissionDurationsAPI(client);
+    const { result } = renderHook(
+        () => useGetSubmissionViews({ submission_tag: "S1" }),
+        { wrapper: createWrapper() }
+    );
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(client.get).toHaveBeenCalledWith("/stats/submissions/S1/views");
+    expect(result.current.data).toBe(7);
+});
+
+test("useGetProteinViews calls the protein views stats endpoint", async () => {
+    const client = createMockClient(() => 3);
+    const { useGetProteinViews } = createSubmissionDurationsAPI(client);
+    const { result } = renderHook(
+        () => useGetProteinViews({ feature_tag: "F1" }),
+        { wrapper: createWrapper() }
+    );
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(client.get).toHaveBeenCalledWith("/stats/submissions/proteins/F1/views");
+    expect(result.current.data).toBe(3);
+});

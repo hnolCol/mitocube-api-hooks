@@ -26,8 +26,48 @@ const useGetSubmissionDuration = (APIParams = {state_01, state_02, aggregate }, 
     })
 }   
 
+/**
+ * @description Returns the number of views for a submission. Endpoint: GET '/api/stats/submissions/{submission_tag}/views'
+ * @param {Object} props 
+ * @param {String} props.submission_tag The submission tag.
+ * @returns {Number} The number of views for the submission
+ */
+async function getSubmissionViews_API({ submission_tag }) {
+    const res = await client.get(`/stats/submissions/${submission_tag}/views`)
+    return res.data
+}
+
+const useGetSubmissionViews = (APIParams = { submission_tag }, useQueryOptions = { staleTime: 50000 }) => {
+    return useQuery({
+        queryKey: ["getSubmissionViews", APIParams.submission_tag],
+        queryFn: () => getSubmissionViews_API({ ...APIParams }),
+        ...useQueryOptions
+    })
+}
+
+/**
+ * @description Returns the number of views for a protein feature. Endpoint: GET '/api/stats/submissions/proteins/{feature_tag}/views'
+ * @param {Object} props 
+ * @param {String} props.feature_tag The protein feature tag.
+ * @returns {Number} The number of views for the protein feature
+ */
+async function getProteinViews_API({ feature_tag }) {
+    const res = await client.get(`/stats/submissions/proteins/${feature_tag}/views`)
+    return res.data
+}
+
+const useGetProteinViews = (APIParams = { feature_tag }, useQueryOptions = { staleTime: 50000 }) => {
+    return useQuery({
+        queryKey: ["getProteinViews", APIParams.feature_tag],
+        queryFn: () => getProteinViews_API({ ...APIParams }),
+        ...useQueryOptions
+    })
+}
+
 return {
-    useGetSubmissionDuration
+    useGetSubmissionDuration,
+    useGetSubmissionViews,
+    useGetProteinViews
 };
 
 }
