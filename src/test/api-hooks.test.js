@@ -125,3 +125,33 @@ test("useGetProteinViews calls the protein views stats endpoint", async () => {
     expect(client.get).toHaveBeenCalledWith("/stats/submissions/proteins/F1/views");
     expect(result.current.data).toBe(3);
 });
+
+import { createCollaborationsAPI } from "../hooks/collaborations/collaborations";
+
+test("useGetSubmissionExplore passes repeated ca_tags and user_tags query parameters", async () => {
+    const client = createMockClient(() => []);
+    const { useGetSubmissionExplore } = createCollaborationsAPI(client);
+    const { result } = renderHook(
+        () => useGetSubmissionExplore({ search_string: "mito", limit: 40, ca_tags: ["CA1", "CA2"], user_tags: ["U1"] }),
+        { wrapper: createWrapper() }
+    );
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(client.get).toHaveBeenCalledWith(
+        "/collaborations/submissions/explore?ca_tags=CA1&ca_tags=CA2&user_tags=U1",
+        { params: { search_string: "mito", limit: 40 } }
+    );
+});
+
+test("useGetSubmissionExplore omits tag query parameters when no tags are given", async () => {
+    const client = createMockClient(() => []);
+    const { useGetSubmissionExplore } = createCollaborationsAPI(client);
+    const { result } = renderHook(
+        () => useGetSubmissionExplore({ search_string: "mito" }),
+        { wrapper: createWrapper() }
+    );
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(client.get).toHaveBeenCalledWith(
+        "/collaborations/submissions/explore",
+        { params: { search_string: "mito", limit: undefined } }
+    );
+});
