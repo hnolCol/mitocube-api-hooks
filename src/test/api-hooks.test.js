@@ -181,3 +181,19 @@ test("useUpdateImpressum sends title and text via PUT", async () => {
     expect(client.put).toHaveBeenCalledWith("/impressum", { title: "Impressum", text: "updated" });
     expect(result.current.data).toEqual({ title: "Impressum", text: "updated" });
 });
+
+import { createSimilarSubmissionsAPI } from "../hooks/submissions/similar";
+test("useGetSimilarSubmissions calls the similar submissions endpoint with query parameters", async () => {
+    const client = createMockClient(() => ({ submission_tag: "S1", similar: [] }));
+    const { useGetSimilarSubmissions } = createSimilarSubmissionsAPI(client);
+    const { result } = renderHook(
+        () => useGetSimilarSubmissions({ tag: "S1", limit: 10, include_sample_ca: true }),
+        { wrapper: createWrapper() }
+    );
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(client.get).toHaveBeenCalledWith(
+        "/submissions/similar",
+        { params: { tag: "S1", limit: 10, include_sample_ca: true } }
+    );
+    expect(result.current.data.submission_tag).toBe("S1");
+});

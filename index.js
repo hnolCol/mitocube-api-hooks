@@ -45,6 +45,7 @@ import { createUserViewsAPI } from "./src/hooks/users/views";
 import { createSubmissionCountAPI } from "./src/hooks/submissions/count";
 import { createFeatureDataAPI } from "./src/hooks/features/data";
 import { createSubmissionAnalysisAPI } from "./src/hooks/submissions/analysis";
+import { createSimilarSubmissionsAPI } from "./src/hooks/submissions/similar";
 import { createProteinFeatureQueryAPI } from "./src/hooks/features/proteins/query";
 import { createSampleCountAPI } from "./src/hooks/samples/count";
 import { createQueryTraitsAPI } from "./src/hooks/attributes/requires";
@@ -255,6 +256,7 @@ export default {
         },
         analysis: {
             createSubmissionAnalysisAPI,
+            createSimilarSubmissionsAPI,
         },
         statistics: {
             createSubmissionRankingAPI
