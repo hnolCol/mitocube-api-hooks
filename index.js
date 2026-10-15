@@ -45,6 +45,7 @@ import { createUserViewsAPI } from "./src/hooks/users/views";
 import { createSubmissionCountAPI } from "./src/hooks/submissions/count";
 import { createFeatureDataAPI } from "./src/hooks/features/data";
 import { createSubmissionAnalysisAPI } from "./src/hooks/submissions/analysis";
+import { createSimilarSubmissionsAPI } from "./src/hooks/submissions/similar";
 import { createProteinFeatureQueryAPI } from "./src/hooks/features/proteins/query";
 import { createSampleCountAPI } from "./src/hooks/samples/count";
 import { createQueryTraitsAPI } from "./src/hooks/attributes/requires";
@@ -89,6 +90,7 @@ import { createPrecursorAPI } from "./src/hooks/features/precursors";
 import { createPTMSitesAPI } from "./src/hooks/features/ptms";
 import { createPerformanceRunsAPI, createQCStandardsAPI } from "./src/hooks/performance/runs";
 import { createPolicyAPI } from "./src/hooks/policy/policy";
+import { createImpressumAPI } from "./src/hooks/impressum/impressum";
 import { createConsortiumsAPI } from "./src/hooks/consortiums/consortiums";
 import { createCollaborationsAPI } from "./src/hooks/collaborations/collaborations";
 import { createMessagesAPI } from "./src/hooks/messages/messages";
@@ -254,6 +256,7 @@ export default {
         },
         analysis: {
             createSubmissionAnalysisAPI,
+            createSimilarSubmissionsAPI,
         },
         statistics: {
             createSubmissionRankingAPI
@@ -344,6 +347,9 @@ export default {
     },
     policy: {
         createPolicyAPI
+    },
+    impressum: {
+        createImpressumAPI
     },
     consortiums: {
         createConsortiumsAPI
