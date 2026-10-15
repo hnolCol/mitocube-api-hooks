@@ -155,3 +155,29 @@ test("useGetSubmissionExplore omits tag query parameters when no tags are given"
         { params: { search_string: "mito", limit: undefined } }
     );
 });
+
+import { createImpressumAPI } from "../hooks/impressum/impressum";
+test("useGetImpressum calls the impressum endpoint", async () => {
+    const client = createMockClient(() => ({ title: "Impressum", text: "default" }));
+    const { useGetImpressum } = createImpressumAPI(client);
+    const { result } = renderHook(
+        () => useGetImpressum(),
+        { wrapper: createWrapper() }
+    );
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(client.get).toHaveBeenCalledWith("/impressum");
+    expect(result.current.data).toEqual({ title: "Impressum", text: "default" });
+});
+test("useUpdateImpressum sends title and text via PUT", async () => {
+    const client = { get: jest.fn(), put: jest.fn(async (url, body) => ({ data: { title: body.title, text: body.text } })) };
+    const { useUpdateImpressum } = createImpressumAPI(client);
+    const { result } = renderHook(
+        () => useUpdateImpressum(),
+        { wrapper: createWrapper() }
+    );
+    const promise = result.current.mutateAsync({ title: "Impressum", text: "updated" });
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    await promise;
+    expect(client.put).toHaveBeenCalledWith("/impressum", { title: "Impressum", text: "updated" });
+    expect(result.current.data).toEqual({ title: "Impressum", text: "updated" });
+});

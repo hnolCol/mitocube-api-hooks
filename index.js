@@ -89,6 +89,7 @@ import { createPrecursorAPI } from "./src/hooks/features/precursors";
 import { createPTMSitesAPI } from "./src/hooks/features/ptms";
 import { createPerformanceRunsAPI, createQCStandardsAPI } from "./src/hooks/performance/runs";
 import { createPolicyAPI } from "./src/hooks/policy/policy";
+import { createImpressumAPI } from "./src/hooks/impressum/impressum";
 import { createConsortiumsAPI } from "./src/hooks/consortiums/consortiums";
 import { createCollaborationsAPI } from "./src/hooks/collaborations/collaborations";
 import { createMessagesAPI } from "./src/hooks/messages/messages";
@@ -344,6 +345,9 @@ export default {
     },
     policy: {
         createPolicyAPI
+    },
+    impressum: {
+        createImpressumAPI
     },
     consortiums: {
         createConsortiumsAPI
