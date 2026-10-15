@@ -4,14 +4,24 @@ import { useQuery, useMutation } from "@tanstack/react-query"
 export function createCollaborationsAPI(client) {
 
     /**
-     * @description Finds submissions by title and returns only the minimal metadata required to request collaboration (title, owner, research group, state). Endpoint: GET '/api/collaborations/submissions/explore'
+     * @description Finds submissions by title and tags and returns only the minimal metadata required to request collaboration (title, owner, research group, state). Endpoint: GET '/api/collaborations/submissions/explore'
      * @param {Object} props 
      * @param {String} [props.search_string] - The search string to match against the submission title.
      * @param {Number} [props.limit=40] - The limit of submissions to return.
-     * @returns {Object[]} The submission explore data (tag, title, state, created_at, owner_tag, owner_firstname, owner_lastname, owner_institute, research_group_tag, research_group_text, research_group_institute, has_open_collaboration_request).
+     * @param {String[]} [props.ca_tags] - Condition application tags the submission must have (AND semantics, submission- or sample-level).
+     * @param {String[]} [props.user_tags] - User tags that must be creator or collaborator of the submission (AND semantics).
+     * @returns {Object[]} The submission explore data (tag, title, state, created_at, owner_tag, owner_firstname, owner_lastname, owner_institute, research_group_tag, research_group_text, research_group_institute, has_open_collaboration_request, matched_condition_application_tags, matched_user_tags).
      */
-    async function getSubmissionExplore_API({ search_string, limit }) {
-        const res = await client.get(`/collaborations/submissions/explore`, {
+    async function getSubmissionExplore_API({ search_string, limit, ca_tags, user_tags }) {
+        const repeatedParams = []
+        if (Array.isArray(ca_tags)) {
+            ca_tags.forEach(tag => { if (tag) repeatedParams.push(`ca_tags=${encodeURIComponent(tag)}`) })
+        }
+        if (Array.isArray(user_tags)) {
+            user_tags.forEach(tag => { if (tag) repeatedParams.push(`user_tags=${encodeURIComponent(tag)}`) })
+        }
+        const queryString = repeatedParams.length > 0 ? `?${repeatedParams.join("&")}` : ""
+        const res = await client.get(`/collaborations/submissions/explore${queryString}`, {
             params: { search_string, limit }
         })
         return res.data
@@ -19,7 +29,7 @@ export function createCollaborationsAPI(client) {
 
     const useGetSubmissionExplore = (APIParams = {}, useQueryOptions = { staleTime: 500 }) => {
         return useQuery({
-            queryKey: ["getSubmissionExplore", APIParams.search_string, APIParams.limit],
+            queryKey: ["getSubmissionExplore", APIParams.search_string, APIParams.limit, APIParams.ca_tags, APIParams.user_tags],
             queryFn: () => getSubmissionExplore_API({ ...APIParams }),
             ...useQueryOptions
         });
