@@ -95,6 +95,7 @@ import { createConsortiumsAPI } from "./src/hooks/consortiums/consortiums";
 import { createCollaborationsAPI } from "./src/hooks/collaborations/collaborations";
 import { createMessagesAPI } from "./src/hooks/messages/messages";
 import { createPlatesAPI } from "./src/hooks/plates/plates";
+import { createDepositionRequestsAPI } from "./src/hooks/requests/depositions";
 
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
@@ -362,5 +363,8 @@ export default {
     },
     plates: {
         createPlatesAPI
+    },
+    requests: {
+        createDepositionRequestsAPI
     }   
 }
