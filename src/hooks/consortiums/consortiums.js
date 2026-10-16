@@ -299,6 +299,27 @@ export function createConsortiumsAPI(client) {
     return useMutation({mutationFn: (APIParams = { tag, group_tags }) => deleteConsortiumGroups_API({...APIParams}), ...useMutationOptions})
     }
 
+    /**
+     * @description The consortium tags with a pending share request for the submission.
+     * @param {Object} props
+     * @param {String} props.submission_tag Submission tag
+     * @returns {String[]} Returns the list of consortium tags with a pending share request.
+     */
+    async function getPendingConsortiumShares_API({ submission_tag }) {
+        const res = await client.get(`/consortiums/submissions/${submission_tag}/pending`, {})
+        return res.data
+    }
+
+    const useGetPendingConsortiumShares = (APIParams = { submission_tag }, useQueryOptions = {}) => {
+        return useQuery({
+            queryKey: ["getPendingConsortiumShares", APIParams.submission_tag],
+            queryFn: () => getPendingConsortiumShares_API({ ...APIParams }),
+            enabled: !!APIParams.submission_tag,
+            ...useQueryOptions
+        })
+    }
+
+
   return {
     useGetConsortiums,
     useGetConsortiumsByQuery,
@@ -317,6 +338,7 @@ export function createConsortiumsAPI(client) {
     useGetMyPendingShareRequests,
     useApproveConsortiumShareRequest,
     useDenyConsortiumShareRequest,
-    useDeleteConsortium
+    useDeleteConsortium,
+    useGetPendingConsortiumShares
   };
 }
