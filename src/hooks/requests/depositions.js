@@ -100,6 +100,39 @@ export function createDepositionRequestsAPI(client) {
         });
     }
     /**
+     * @description Returns whether a pending deposition request exists for the submission. Requires access to the submission. Endpoint: GET '/api/requests/depositions/submissions/{submission_tag}/exists'
+     * @param {Object} props
+     * @param {String} props.submission_tag - The tag of the submission.
+     * @returns {Object} {"pending": true/false}
+     */
+    async function getSubmissionDepositionRequestExists_API({ submission_tag }) {
+        const res = await client.get(`/requests/depositions/submissions/${submission_tag}/exists`)
+        return res.data
+    }
+    const useGetSubmissionDepositionRequestExists = (APIParams = {}, useQueryOptions = { staleTime: 500 }) => {
+        return useQuery({
+            queryKey: ["getSubmissionDepositionRequestExists", APIParams.submission_tag],
+            queryFn: () => getSubmissionDepositionRequestExists_API({ ...APIParams }),
+            ...useQueryOptions
+        });
+    }
+    /**
+     * @description Revokes (permanently deletes) a pending deposition request. Only the user who created the request, curators/admins or a research group head (PI) of the creator's research group can revoke it. Endpoint: DELETE '/api/requests/depositions/{request_tag}'
+     * @param {Object} props
+     * @param {String} props.request_tag - The tag of the deposition request to revoke.
+     * @returns {Object} {"tag": request_tag, "deleted": true}
+     */
+    async function revokeDepositionRequest_API({ request_tag }) {
+        const res = await client.delete(`/requests/depositions/${request_tag}`)
+        return res.data
+    }
+    const useDeleteDepositionRequest = (useMutationOptions = {}) => {
+        return useMutation({
+            mutationFn: (APIParams) => revokeDepositionRequest_API({ ...APIParams }),
+            ...useMutationOptions
+        })
+    }
+    /**
      * @description Completes a pending deposition request. Stores the accession identifier and optional url and login token on the request and notifies the requesting user. Curator rights required. Endpoint: POST '/api/requests/depositions/{request_tag}/complete'
      * @param {Object} props
      * @param {String} props.request_tag - The tag of the deposition request.
@@ -146,6 +179,8 @@ export function createDepositionRequestsAPI(client) {
         useGetPendingDepositionRequests,
         useGetMyDepositionRequests,
         useGetSubmissionDepositionRequests,
+        useGetSubmissionDepositionRequestExists,
+        useDeleteDepositionRequest,
         usePostCompleteDepositionRequest,
         usePostRejectDepositionRequest
     };

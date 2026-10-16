@@ -14,7 +14,8 @@ const createWrapper = () => {
 const createMockClient = (handler) => {
     const get = jest.fn(async (url, config) => ({ data: handler(url, config?.params) }));
     const post = jest.fn(async (url, body) => ({ data: { tag: "DR1" } }));
-    return { get, post };
+    const delete_ = jest.fn(async (url) => ({ data: { tag: "DR1", deleted: true } }));
+    return { get, post, delete: delete_ };
 };
 
 test("useGetDepositionRequests calls the depositions endpoint with status and limit", async () => {
@@ -88,6 +89,31 @@ test("usePostDepositionRequest posts submission_tag, database and comment", asyn
         database: "PRIDE",
         comment: "Please deposit"
     });
+});
+
+test("useGetSubmissionDepositionRequestExists calls the exists endpoint", async () => {
+    const client = createMockClient(() => ({ pending: true }));
+    const { useGetSubmissionDepositionRequestExists } = createDepositionRequestsAPI(client);
+    const { result } = renderHook(
+        () => useGetSubmissionDepositionRequestExists({ submission_tag: "S1" }),
+        { wrapper: createWrapper() }
+    );
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(client.get).toHaveBeenCalledWith("/requests/depositions/submissions/S1/exists");
+    expect(result.current.data).toEqual({ pending: true });
+});
+
+test("useDeleteDepositionRequest deletes the request", async () => {
+    const client = createMockClient(() => []);
+    const { useDeleteDepositionRequest } = createDepositionRequestsAPI(client);
+    const { result } = renderHook(() => useDeleteDepositionRequest(), {
+        wrapper: createWrapper()
+    });
+    await act(async () => {
+        result.current.mutate({ request_tag: "DR1" });
+    });
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(client.delete).toHaveBeenCalledWith("/requests/depositions/DR1");
 });
 
 test("usePostCompleteDepositionRequest posts identifier, url and token", async () => {
