@@ -197,3 +197,43 @@ test("useGetSimilarSubmissions calls the similar submissions endpoint with query
     );
     expect(result.current.data.submission_tag).toBe("S1");
 });
+import { createQueryUsersByQueryAPI } from "../hooks/users/query_users";
+test("useGetUserByQuery passes roles as a semicolon separated string", async () => {
+    const client = createMockClient(() => ["U1", "U2"]);
+    const { useGetUserByQuery } = createQueryUsersByQueryAPI(client);
+    const { result } = renderHook(
+        () => useGetUserByQuery({ search_string: "mito", roles: [2, 4], limit: 10 }),
+        { wrapper: createWrapper() }
+    );
+    await waitFor(() => expect(result.current.data).toEqual(["U1", "U2"]));
+    expect(client.get).toHaveBeenCalledWith(
+        "/users/q",
+        { params: { search_string: "mito", roles: "2;4", limit: 10 } }
+    );
+});
+test("useGetUserByQuery leaves roles untouched when no roles are given", async () => {
+    const client = createMockClient(() => []);
+    const { useGetUserByQuery } = createQueryUsersByQueryAPI(client);
+    const { result } = renderHook(
+        () => useGetUserByQuery({ search_string: "mito", limit: 10 }),
+        { wrapper: createWrapper() }
+    );
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(client.get).toHaveBeenCalledWith(
+        "/users/q",
+        { params: { search_string: "mito", roles: undefined, limit: 10 } }
+    );
+});
+test("usePostUserRoleChange posts to the admin role endpoint with the role query parameter", async () => {
+    const client = { get: jest.fn(), post: jest.fn(async (url, body, config) => ({ data: true })) };
+    const { usePostUserRoleChange } = createQueryUsersByQueryAPI(client);
+    const { result } = renderHook(
+        () => usePostUserRoleChange(),
+        { wrapper: createWrapper() }
+    );
+    const promise = result.current.mutateAsync({ user_tag: "U1", role: 2 });
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    await promise;
+    expect(client.post).toHaveBeenCalledWith("/users/U1/role", null, { params: { role: 2 } });
+    expect(result.current.data).toBe(true);
+});
