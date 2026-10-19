@@ -18,7 +18,7 @@ const createMockClient = (handler) => {
     };
 };
 
-test("useGetSubmissionDuration passes the user_tags, ca_tags and include_sample_ca filters", async () => {
+test("useGetSubmissionDuration passes the user_tags, ca_tags, include_sample_ca and genotype_tags filters", async () => {
     const client = createMockClient(() => 42);
     const { useGetSubmissionDuration } = createSubmissionDurationsAPI(client);
     const { result } = renderHook(
@@ -27,7 +27,8 @@ test("useGetSubmissionDuration passes the user_tags, ca_tags and include_sample_
             state_02: "done",
             user_tags: ["usr_abc", "usr_def"],
             ca_tags: ["ca_1", "ca_2"],
-            include_sample_ca: true
+            include_sample_ca: true,
+            genotype_tags: ["gen_a", "gen_b"]
         }),
         { wrapper: createWrapper() }
     );
@@ -42,7 +43,8 @@ test("useGetSubmissionDuration passes the user_tags, ca_tags and include_sample_
             state: undefined,
             user_tags: "usr_abc;usr_def",
             ca_tags: "ca_1;ca_2",
-            include_sample_ca: true
+            include_sample_ca: true,
+            genotype_tags: "gen_a;gen_b"
         }
     });
 });
@@ -51,7 +53,7 @@ test("useGetSamplesPerSubmission passes the user_tags, ca_tags and include_sampl
     const client = createMockClient(() => []);
     const { useGetSamplesPerSubmission } = createSubmissionDurationsAPI(client);
     const { result } = renderHook(
-        () => useGetSamplesPerSubmission({ years: "2024", user_tags: ["usr_abc"], ca_tags: ["ca_1"] }),
+        () => useGetSamplesPerSubmission({ years: "2024", user_tags: ["usr_abc"], ca_tags: ["ca_1"], genotype_tags: "gen_a" }),
         { wrapper: createWrapper() }
     );
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
@@ -61,7 +63,8 @@ test("useGetSamplesPerSubmission passes the user_tags, ca_tags and include_sampl
             state: undefined,
             user_tags: "usr_abc",
             ca_tags: "ca_1",
-            include_sample_ca: undefined
+            include_sample_ca: undefined,
+            genotype_tags: "gen_a"
         }
     });
 });
@@ -78,7 +81,8 @@ test("useGetSubmissionCountsByYear calls the submissions counts endpoint with fi
             group_by_entity: "condition_application",
             user_tags: ["usr_abc"],
             ca_tags: ["ca_1", "ca_2"],
-            include_sample_ca: true
+            include_sample_ca: true,
+            genotype_tags: ["gen_a"]
         }),
         { wrapper: createWrapper() }
     );
@@ -92,7 +96,8 @@ test("useGetSubmissionCountsByYear calls the submissions counts endpoint with fi
             group_by_entity: "condition_application",
             user_tags: "usr_abc",
             ca_tags: "ca_1;ca_2",
-            include_sample_ca: true
+            include_sample_ca: true,
+            genotype_tags: "gen_a"
         }
     });
     expect(result.current.data).toEqual([{ group: "RG1", count: 3, year: 2024 }]);
@@ -105,7 +110,8 @@ test("useGetSampleCountsByResearchGroup calls the samples counts endpoint with f
         () => useGetSampleCountsByResearchGroup({
             years: "2024",
             user_tags: ["usr_abc"],
-            ca_tags: ["ca_1"]
+            ca_tags: ["ca_1"],
+            genotype_tags: ["gen_a", "gen_b"]
         }),
         { wrapper: createWrapper() }
     );
@@ -117,7 +123,8 @@ test("useGetSampleCountsByResearchGroup calls the samples counts endpoint with f
             state: undefined,
             user_tags: "usr_abc",
             ca_tags: "ca_1",
-            include_sample_ca: undefined
+            include_sample_ca: undefined,
+            genotype_tags: "gen_a;gen_b"
         }
     });
 });
@@ -131,7 +138,8 @@ test("useGetSubmissionCountsByUser calls the user counts endpoint with filters",
             research_group_tags: ["rg_1", "rg_2"],
             user_tags: ["usr_abc"],
             ca_tags: ["ca_1"],
-            include_sample_ca: false
+            include_sample_ca: false,
+            genotype_tags: "gen_a"
         }),
         { wrapper: createWrapper() }
     );
@@ -143,7 +151,8 @@ test("useGetSubmissionCountsByUser calls the user counts endpoint with filters",
             research_group_tags: "rg_1;rg_2",
             user_tags: "usr_abc",
             ca_tags: "ca_1",
-            include_sample_ca: false
+            include_sample_ca: false,
+            genotype_tags: "gen_a"
         }
     });
 });
@@ -157,7 +166,8 @@ test("useGetSubmissionProteinGroupCount passes the filters to the quantification
         () => useGetSubmissionProteinGroupCount({
             user_tags: ["usr_abc", "usr_def"],
             ca_tags: ["ca_1"],
-            include_sample_ca: true
+            include_sample_ca: true,
+            genotype_tags: ["gen_a"]
         }),
         { wrapper: createWrapper() }
     );
@@ -166,7 +176,8 @@ test("useGetSubmissionProteinGroupCount passes the filters to the quantification
         params: {
             user_tags: "usr_abc;usr_def",
             ca_tags: "ca_1",
-            include_sample_ca: true
+            include_sample_ca: true,
+            genotype_tags: "gen_a"
         }
     });
 });
@@ -183,7 +194,8 @@ test("useGetSubmissionProteinGroupCount omits filters when none are given", asyn
         params: {
             user_tags: undefined,
             ca_tags: undefined,
-            include_sample_ca: undefined
+            include_sample_ca: undefined,
+            genotype_tags: undefined
         }
     });
 });
