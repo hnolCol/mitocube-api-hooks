@@ -117,7 +117,7 @@ const useGetProteinViews = (APIParams = { feature_tag }, useQueryOptions = { sta
  * @param {String|String[]} [props.ca_tags] Condition application tag(s) restricting the submissions to submissions containing these condition applications (semicolon-delimited if string).
  * @param {Boolean} [props.include_sample_ca=false] If true, sample-level condition applications are matched as well when ca_tags is set.
  * @param {String|String[]} [props.genotype_tags] Genotype tag(s) restricting the submissions to submissions whose samples contain all of these genotypes (semicolon-delimited if string).
- * @returns {Object[]} Flat rows [{ group, count, year }].
+ * @returns {Object[]} Flat rows [{ group, year, value }].
  */
 async function getSubmissionCountsByYear_API({ group_by = "research_group", years, state, attribute_tag, group_by_entity = "trait", user_tags, ca_tags, include_sample_ca, genotype_tags }) {
     const res = await client.get(`/stats/submissions/counts/submissions`, {
@@ -148,7 +148,7 @@ const useGetSubmissionCountsByYear = (APIParams = {}, useQueryOptions = { staleT
  * @param {String|String[]} [props.ca_tags] Condition application tag(s) restricting the submissions to submissions containing these condition applications (semicolon-delimited if string).
  * @param {Boolean} [props.include_sample_ca=false] If true, sample-level condition applications are matched as well when ca_tags is set.
  * @param {String|String[]} [props.genotype_tags] Genotype tag(s) restricting the submissions to submissions whose samples contain all of these genotypes (semicolon-delimited if string).
- * @returns {Object[]} Flat rows [{ group, count, year }].
+ * @returns {Object[]} Flat rows [{ group, year, value }].
  */
 async function getSampleCountsByResearchGroup_API({ group_by = "research_group", years, state, user_tags, ca_tags, include_sample_ca, genotype_tags }) {
     const res = await client.get(`/stats/submissions/counts/samples`, {
@@ -179,7 +179,7 @@ const useGetSampleCountsByResearchGroup = (APIParams = {}, useQueryOptions = { s
  * @param {String|String[]} [props.ca_tags] Condition application tag(s) restricting the submissions to submissions containing these condition applications (semicolon-delimited if string).
  * @param {Boolean} [props.include_sample_ca=false] If true, sample-level condition applications are matched as well when ca_tags is set.
  * @param {String|String[]} [props.genotype_tags] Genotype tag(s) restricting the submissions to submissions whose samples contain all of these genotypes (semicolon-delimited if string).
- * @returns {Object[]} Flat rows [{ group, count, year }].
+ * @returns {Object[]} Flat rows [{ group, year, value }].
  */
 async function getSubmissionCountsByUser_API({ years, state, research_group_tags, user_tags, ca_tags, include_sample_ca, genotype_tags }) {
     const res = await client.get(`/stats/submissions/counts/users`, {

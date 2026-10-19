@@ -70,7 +70,7 @@ test("useGetSamplesPerSubmission passes the user_tags, ca_tags and include_sampl
 });
 
 test("useGetSubmissionCountsByYear calls the submissions counts endpoint with filters", async () => {
-    const client = createMockClient(() => [{ group: "RG1", count: 3, year: 2024 }]);
+    const client = createMockClient(() => [{ group: "RG1", year: 2024, value: 3 }]);
     const { useGetSubmissionCountsByYear } = createSubmissionDurationsAPI(client);
     const { result } = renderHook(
         () => useGetSubmissionCountsByYear({
@@ -100,11 +100,11 @@ test("useGetSubmissionCountsByYear calls the submissions counts endpoint with fi
             genotype_tags: "gen_a"
         }
     });
-    expect(result.current.data).toEqual([{ group: "RG1", count: 3, year: 2024 }]);
+    expect(result.current.data).toEqual([{ group: "RG1", year: 2024, value: 3 }]);
 });
 
 test("useGetSampleCountsByResearchGroup calls the samples counts endpoint with filters", async () => {
-    const client = createMockClient(() => [{ group: "RG1", count: 5, year: 2024 }]);
+    const client = createMockClient(() => [{ group: "RG1", year: 2024, value: 5 }]);
     const { useGetSampleCountsByResearchGroup } = createSubmissionDurationsAPI(client);
     const { result } = renderHook(
         () => useGetSampleCountsByResearchGroup({
@@ -130,7 +130,7 @@ test("useGetSampleCountsByResearchGroup calls the samples counts endpoint with f
 });
 
 test("useGetSubmissionCountsByUser calls the user counts endpoint with filters", async () => {
-    const client = createMockClient(() => [{ group: "John Doe", count: 2, year: 2024 }]);
+    const client = createMockClient(() => [{ group: "John Doe", year: 2024, value: 2 }]);
     const { useGetSubmissionCountsByUser } = createSubmissionDurationsAPI(client);
     const { result } = renderHook(
         () => useGetSubmissionCountsByUser({
