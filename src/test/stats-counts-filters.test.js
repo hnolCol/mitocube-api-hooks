@@ -199,3 +199,59 @@ test("useGetSubmissionProteinGroupCount omits filters when none are given", asyn
         }
     });
 });
+
+test("useGetSubmissionCountsByState calls the states counts endpoint with filters", async () => {
+    const client = createMockClient(() => [{ state_tag: "submitted", value: 31 }]);
+    const { useGetSubmissionCountsByState } = createSubmissionDurationsAPI(client);
+    const { result } = renderHook(
+        () => useGetSubmissionCountsByState({
+            user_tags: ["usr_abc"],
+            ca_tags: ["ca_1"],
+            include_sample_ca: true,
+            genotype_tags: ["gen_a", "gen_b"]
+        }),
+        { wrapper: createWrapper() }
+    );
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(client.get).toHaveBeenCalledWith("/stats/submissions/counts/states", {
+        params: {
+            user_tags: "usr_abc",
+            ca_tags: "ca_1",
+            include_sample_ca: true,
+            genotype_tags: "gen_a;gen_b"
+        }
+    });
+    expect(result.current.data).toEqual([{ state_tag: "submitted", value: 31 }]);
+});
+
+test("useGetProteinGroupCountsByYear calls the protein-groups counts endpoint with filters", async () => {
+    const client = createMockClient(() => [
+        { year: 2024, protein_groups: 158342, submissions: 23 }
+    ]);
+    const { useGetProteinGroupCountsByYear } = createSubmissionDurationsAPI(client);
+    const { result } = renderHook(
+        () => useGetProteinGroupCountsByYear({
+            years: "2024;2025",
+            state: "done",
+            user_tags: ["usr_abc"],
+            ca_tags: ["ca_1"],
+            include_sample_ca: false,
+            genotype_tags: "gen_a"
+        }),
+        { wrapper: createWrapper() }
+    );
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(client.get).toHaveBeenCalledWith("/stats/submissions/counts/protein-groups", {
+        params: {
+            years: "2024;2025",
+            state: "done",
+            user_tags: "usr_abc",
+            ca_tags: "ca_1",
+            include_sample_ca: false,
+            genotype_tags: "gen_a"
+        }
+    });
+    expect(result.current.data).toEqual([
+        { year: 2024, protein_groups: 158342, submissions: 23 }
+    ]);
+});

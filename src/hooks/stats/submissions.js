@@ -201,12 +201,72 @@ const useGetSubmissionCountsByUser = (APIParams = {}, useQueryOptions = { staleT
     })
 }   
 
+/**
+ * @description Returns the number of submissions currently in each state. Endpoint: GET '/api/stats/submissions/counts/states'
+ * @param {Object} props 
+ * @param {String|String[]} [props.user_tags] User tag(s) restricting the submissions to submissions created or collaborated on by these users (semicolon-delimited if string).
+ * @param {String|String[]} [props.ca_tags] Condition application tag(s) restricting the submissions to submissions containing these condition applications (semicolon-delimited if string).
+ * @param {Boolean} [props.include_sample_ca=false] If true, sample-level condition applications are matched as well when ca_tags is set.
+ * @param {String|String[]} [props.genotype_tags] Genotype tag(s) restricting the submissions to submissions whose samples contain all of these genotypes (semicolon-delimited if string).
+ * @returns {Object[]} Flat rows [{ state_tag, value }].
+ */
+async function getSubmissionCountsByState_API({ user_tags, ca_tags, include_sample_ca, genotype_tags }) {
+    const res = await client.get(`/stats/submissions/counts/states`, {
+        params: {
+            user_tags: Array.isArray(user_tags) && user_tags.length > 0 ? user_tags.join(";") : user_tags,
+            ca_tags: Array.isArray(ca_tags) && ca_tags.length > 0 ? ca_tags.join(";") : ca_tags,
+            include_sample_ca,
+            genotype_tags: Array.isArray(genotype_tags) && genotype_tags.length > 0 ? genotype_tags.join(";") : genotype_tags }
+    })
+    return res.data
+}
+
+const useGetSubmissionCountsByState = (APIParams = {}, useQueryOptions = { staleTime: 50000 }) => {
+    return useQuery({
+        queryKey: ["getSubmissionCountsByState", APIParams.user_tags, APIParams.ca_tags, APIParams.include_sample_ca, APIParams.genotype_tags],
+        queryFn: () => getSubmissionCountsByState_API({ ...APIParams }),
+        ...useQueryOptions
+    })
+}   
+
+/**
+ * @description Returns per-year protein group statistics: the sum of quantified protein groups of all submissions created in that year and the number of those submissions. Endpoint: GET '/api/stats/submissions/counts/protein-groups'
+ * @param {Object} props 
+ * @param {String} [props.years] Semicolon-delimited years restricting the year buckets (e.g. "2024;2025").
+ * @param {String} [props.state] Semicolon-delimited submission states restricting the submissions (e.g. "submitted;done").
+ * @param {String|String[]} [props.user_tags] User tag(s) restricting the submissions to submissions created or collaborated on by these users (semicolon-delimited if string).
+ * @param {String|String[]} [props.ca_tags] Condition application tag(s) restricting the submissions to submissions containing these condition applications (semicolon-delimited if string).
+ * @param {Boolean} [props.include_sample_ca=false] If true, sample-level condition applications are matched as well when ca_tags is set.
+ * @param {String|String[]} [props.genotype_tags] Genotype tag(s) restricting the submissions to submissions whose samples contain all of these genotypes (semicolon-delimited if string).
+ * @returns {Object[]} Flat rows [{ year, protein_groups, submissions }].
+ */
+async function getProteinGroupCountsByYear_API({ years, state, user_tags, ca_tags, include_sample_ca, genotype_tags }) {
+    const res = await client.get(`/stats/submissions/counts/protein-groups`, {
+        params: { years, state,
+            user_tags: Array.isArray(user_tags) && user_tags.length > 0 ? user_tags.join(";") : user_tags,
+            ca_tags: Array.isArray(ca_tags) && ca_tags.length > 0 ? ca_tags.join(";") : ca_tags,
+            include_sample_ca,
+            genotype_tags: Array.isArray(genotype_tags) && genotype_tags.length > 0 ? genotype_tags.join(";") : genotype_tags }
+    })
+    return res.data
+}
+
+const useGetProteinGroupCountsByYear = (APIParams = {}, useQueryOptions = { staleTime: 50000 }) => {
+    return useQuery({
+        queryKey: ["getProteinGroupCountsByYear", APIParams.years, APIParams.state, APIParams.user_tags, APIParams.ca_tags, APIParams.include_sample_ca, APIParams.genotype_tags],
+        queryFn: () => getProteinGroupCountsByYear_API({ ...APIParams }),
+        ...useQueryOptions
+    })
+}   
+
 return {
     useGetSubmissionDuration,
     useGetSamplesPerSubmission,
     useGetSubmissionCountsByYear,
     useGetSampleCountsByResearchGroup,
     useGetSubmissionCountsByUser,
+    useGetSubmissionCountsByState,
+    useGetProteinGroupCountsByYear,
     useGetSubmissionViews,
     useGetProteinViews,
 };
