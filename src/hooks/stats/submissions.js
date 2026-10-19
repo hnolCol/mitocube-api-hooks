@@ -12,18 +12,26 @@ export function createSubmissionDurationsAPI(client) {
  * @param {Boolean} [props.group_by_year=false] If true, returns flat per-year quantile rows [{ year, min, q25, median, q75, max, N }] in days, bucketed by the submission's created_at year.
  * @param {String} [props.years] Semicolon-delimited years restricting the year buckets (e.g. "2024;2025").
  * @param {String} [props.state] Semicolon-delimited submission states restricting the submissions (e.g. "submitted;done").
+ * @param {String|String[]} [props.user_tags] User tag(s) restricting the submissions to submissions created or collaborated on by these users (semicolon-delimited if string).
+ * @param {String|String[]} [props.ca_tags] Condition application tag(s) restricting the submissions to submissions containing these condition applications (semicolon-delimited if string).
+ * @param {Boolean} [props.include_sample_ca=false] If true, sample-level condition applications are matched as well when ca_tags is set.
+ * @param {String|String[]} [props.genotype_tags] Genotype tag(s) restricting the submissions to submissions whose samples contain all of these genotypes (semicolon-delimited if string).
  * @returns {Number|Object|Object[]} The duration between the two submission states, a distribution object, or per-year quantile rows if group_by_year is true.
  */
-async function getSubmissionDurations_API({ state_01, state_02, aggregate = "dist", group_by_year = false, years, state }) {
+async function getSubmissionDurations_API({ state_01, state_02, aggregate = "dist", group_by_year = false, years, state, user_tags, ca_tags, include_sample_ca, genotype_tags }) {
     const res = await client.get(`/stats/submissions/durations`, {
-        params: { state_01, state_02, aggregate, group_by_year, years, state }
+        params: { state_01, state_02, aggregate, group_by_year, years, state,
+            user_tags: Array.isArray(user_tags) && user_tags.length > 0 ? user_tags.join(";") : user_tags,
+            ca_tags: Array.isArray(ca_tags) && ca_tags.length > 0 ? ca_tags.join(";") : ca_tags,
+            include_sample_ca,
+            genotype_tags: Array.isArray(genotype_tags) && genotype_tags.length > 0 ? genotype_tags.join(";") : genotype_tags }
     })
     return res.data
 }
 
 const useGetSubmissionDuration = (APIParams = {state_01, state_02, aggregate }, useQueryOptions = { staleTime: 50000 }) => {
     return useQuery({
-        queryKey: ["getSubmissionDurations", APIParams.state_01, APIParams.state_02, APIParams.aggregate, APIParams.group_by_year, APIParams.years, APIParams.state],
+        queryKey: ["getSubmissionDurations", APIParams.state_01, APIParams.state_02, APIParams.aggregate, APIParams.group_by_year, APIParams.years, APIParams.state, APIParams.user_tags, APIParams.ca_tags, APIParams.include_sample_ca, APIParams.genotype_tags],
         queryFn: () => getSubmissionDurations_API({ ...APIParams }),
         ...useQueryOptions
     })
@@ -34,18 +42,26 @@ const useGetSubmissionDuration = (APIParams = {state_01, state_02, aggregate }, 
  * @param {Object} props 
  * @param {String} [props.years] Semicolon-delimited years restricting the year buckets (e.g. "2024;2025").
  * @param {String} [props.state] Semicolon-delimited submission states restricting the submissions (e.g. "submitted;done").
+ * @param {String|String[]} [props.user_tags] User tag(s) restricting the submissions to submissions created or collaborated on by these users (semicolon-delimited if string).
+ * @param {String|String[]} [props.ca_tags] Condition application tag(s) restricting the submissions to submissions containing these condition applications (semicolon-delimited if string).
+ * @param {Boolean} [props.include_sample_ca=false] If true, sample-level condition applications are matched as well when ca_tags is set.
+ * @param {String|String[]} [props.genotype_tags] Genotype tag(s) restricting the submissions to submissions whose samples contain all of these genotypes (semicolon-delimited if string).
  * @returns {Object[]} Flat rows [{ year, min, q25, median, q75, max, N }].
  */
-async function getSamplesPerSubmission_API({ years, state }) {
+async function getSamplesPerSubmission_API({ years, state, user_tags, ca_tags, include_sample_ca, genotype_tags }) {
     const res = await client.get(`/stats/submissions/samples_per_submission`, {
-        params: { years, state }
+        params: { years, state,
+            user_tags: Array.isArray(user_tags) && user_tags.length > 0 ? user_tags.join(";") : user_tags,
+            ca_tags: Array.isArray(ca_tags) && ca_tags.length > 0 ? ca_tags.join(";") : ca_tags,
+            include_sample_ca,
+            genotype_tags: Array.isArray(genotype_tags) && genotype_tags.length > 0 ? genotype_tags.join(";") : genotype_tags }
     })
     return res.data
 }
 
 const useGetSamplesPerSubmission = (APIParams = {}, useQueryOptions = { staleTime: 50000 }) => {
     return useQuery({
-        queryKey: ["getSamplesPerSubmission", APIParams.years, APIParams.state],
+        queryKey: ["getSamplesPerSubmission", APIParams.years, APIParams.state, APIParams.user_tags, APIParams.ca_tags, APIParams.include_sample_ca, APIParams.genotype_tags],
         queryFn: () => getSamplesPerSubmission_API({ ...APIParams }),
         ...useQueryOptions
     })
@@ -89,11 +105,170 @@ const useGetProteinViews = (APIParams = { feature_tag }, useQueryOptions = { sta
     })
 }
 
+/**
+ * @description Returns the number of submissions per research group or trait and year. Endpoint: GET '/api/stats/submissions/counts/submissions'
+ * @param {Object} props 
+ * @param {String} [props.group_by="research_group"] Grouping of the counts ("research_group" or "trait").
+ * @param {String} [props.years] Semicolon-delimited years restricting the year buckets (e.g. "2024;2025").
+ * @param {String} [props.state] Semicolon-delimited submission states restricting the submissions (e.g. "submitted;done").
+ * @param {String} [props.attribute_tag] Attribute tag restricting the traits (only for group_by="trait").
+ * @param {String} [props.group_by_entity="trait"] Entity used for grouping ("trait" or "condition_application").
+ * @param {String|String[]} [props.user_tags] User tag(s) restricting the submissions to submissions created or collaborated on by these users (semicolon-delimited if string).
+ * @param {String|String[]} [props.ca_tags] Condition application tag(s) restricting the submissions to submissions containing these condition applications (semicolon-delimited if string).
+ * @param {Boolean} [props.include_sample_ca=false] If true, sample-level condition applications are matched as well when ca_tags is set.
+ * @param {String|String[]} [props.genotype_tags] Genotype tag(s) restricting the submissions to submissions whose samples contain all of these genotypes (semicolon-delimited if string).
+ * @returns {Object[]} Flat rows [{ group, year, value }].
+ */
+async function getSubmissionCountsByYear_API({ group_by = "research_group", years, state, attribute_tag, group_by_entity = "trait", user_tags, ca_tags, include_sample_ca, genotype_tags }) {
+    const res = await client.get(`/stats/submissions/counts/submissions`, {
+        params: { group_by, years, state, attribute_tag, group_by_entity,
+            user_tags: Array.isArray(user_tags) && user_tags.length > 0 ? user_tags.join(";") : user_tags,
+            ca_tags: Array.isArray(ca_tags) && ca_tags.length > 0 ? ca_tags.join(";") : ca_tags,
+            include_sample_ca,
+            genotype_tags: Array.isArray(genotype_tags) && genotype_tags.length > 0 ? genotype_tags.join(";") : genotype_tags }
+    })
+    return res.data
+}
+
+const useGetSubmissionCountsByYear = (APIParams = {}, useQueryOptions = { staleTime: 50000 }) => {
+    return useQuery({
+        queryKey: ["getSubmissionCountsByYear", APIParams.group_by, APIParams.years, APIParams.state, APIParams.attribute_tag, APIParams.group_by_entity, APIParams.user_tags, APIParams.ca_tags, APIParams.include_sample_ca, APIParams.genotype_tags],
+        queryFn: () => getSubmissionCountsByYear_API({ ...APIParams }),
+        ...useQueryOptions
+    })
+}   
+
+/**
+ * @description Returns the number of samples per research group and year. Endpoint: GET '/api/stats/submissions/counts/samples'
+ * @param {Object} props 
+ * @param {String} [props.group_by="research_group"] Grouping of the counts ("research_group").
+ * @param {String} [props.years] Semicolon-delimited years restricting the year buckets (e.g. "2024;2025").
+ * @param {String} [props.state] Semicolon-delimited submission states restricting the submissions (e.g. "submitted;done").
+ * @param {String|String[]} [props.user_tags] User tag(s) restricting the submissions to submissions created or collaborated on by these users (semicolon-delimited if string).
+ * @param {String|String[]} [props.ca_tags] Condition application tag(s) restricting the submissions to submissions containing these condition applications (semicolon-delimited if string).
+ * @param {Boolean} [props.include_sample_ca=false] If true, sample-level condition applications are matched as well when ca_tags is set.
+ * @param {String|String[]} [props.genotype_tags] Genotype tag(s) restricting the submissions to submissions whose samples contain all of these genotypes (semicolon-delimited if string).
+ * @returns {Object[]} Flat rows [{ group, year, value }].
+ */
+async function getSampleCountsByResearchGroup_API({ group_by = "research_group", years, state, user_tags, ca_tags, include_sample_ca, genotype_tags }) {
+    const res = await client.get(`/stats/submissions/counts/samples`, {
+        params: { group_by, years, state,
+            user_tags: Array.isArray(user_tags) && user_tags.length > 0 ? user_tags.join(";") : user_tags,
+            ca_tags: Array.isArray(ca_tags) && ca_tags.length > 0 ? ca_tags.join(";") : ca_tags,
+            include_sample_ca,
+            genotype_tags: Array.isArray(genotype_tags) && genotype_tags.length > 0 ? genotype_tags.join(";") : genotype_tags }
+    })
+    return res.data
+}
+
+const useGetSampleCountsByResearchGroup = (APIParams = {}, useQueryOptions = { staleTime: 50000 }) => {
+    return useQuery({
+        queryKey: ["getSampleCountsByResearchGroup", APIParams.group_by, APIParams.years, APIParams.state, APIParams.user_tags, APIParams.ca_tags, APIParams.include_sample_ca, APIParams.genotype_tags],
+        queryFn: () => getSampleCountsByResearchGroup_API({ ...APIParams }),
+        ...useQueryOptions
+    })
+}   
+
+/**
+ * @description Returns the number of submissions per user and year. Endpoint: GET '/api/stats/submissions/counts/users'
+ * @param {Object} props 
+ * @param {String} [props.years] Semicolon-delimited years restricting the year buckets (e.g. "2024;2025").
+ * @param {String} [props.state] Semicolon-delimited submission states restricting the submissions (e.g. "submitted;done").
+ * @param {String|String[]} [props.research_group_tags] Research group tag(s) restricting the counted users (semicolon-delimited if string).
+ * @param {String|String[]} [props.user_tags] User tag(s) restricting the submissions to submissions created or collaborated on by these users (semicolon-delimited if string).
+ * @param {String|String[]} [props.ca_tags] Condition application tag(s) restricting the submissions to submissions containing these condition applications (semicolon-delimited if string).
+ * @param {Boolean} [props.include_sample_ca=false] If true, sample-level condition applications are matched as well when ca_tags is set.
+ * @param {String|String[]} [props.genotype_tags] Genotype tag(s) restricting the submissions to submissions whose samples contain all of these genotypes (semicolon-delimited if string).
+ * @returns {Object[]} Flat rows [{ group, year, value }].
+ */
+async function getSubmissionCountsByUser_API({ years, state, research_group_tags, user_tags, ca_tags, include_sample_ca, genotype_tags }) {
+    const res = await client.get(`/stats/submissions/counts/users`, {
+        params: { years, state,
+            research_group_tags: Array.isArray(research_group_tags) && research_group_tags.length > 0 ? research_group_tags.join(";") : research_group_tags,
+            user_tags: Array.isArray(user_tags) && user_tags.length > 0 ? user_tags.join(";") : user_tags,
+            ca_tags: Array.isArray(ca_tags) && ca_tags.length > 0 ? ca_tags.join(";") : ca_tags,
+            include_sample_ca,
+            genotype_tags: Array.isArray(genotype_tags) && genotype_tags.length > 0 ? genotype_tags.join(";") : genotype_tags }
+    })
+    return res.data
+}
+
+const useGetSubmissionCountsByUser = (APIParams = {}, useQueryOptions = { staleTime: 50000 }) => {
+    return useQuery({
+        queryKey: ["getSubmissionCountsByUser", APIParams.years, APIParams.state, APIParams.research_group_tags, APIParams.user_tags, APIParams.ca_tags, APIParams.include_sample_ca, APIParams.genotype_tags],
+        queryFn: () => getSubmissionCountsByUser_API({ ...APIParams }),
+        ...useQueryOptions
+    })
+}   
+
+/**
+ * @description Returns the number of submissions currently in each state. Endpoint: GET '/api/stats/submissions/counts/states'
+ * @param {Object} props 
+ * @param {String|String[]} [props.user_tags] User tag(s) restricting the submissions to submissions created or collaborated on by these users (semicolon-delimited if string).
+ * @param {String|String[]} [props.ca_tags] Condition application tag(s) restricting the submissions to submissions containing these condition applications (semicolon-delimited if string).
+ * @param {Boolean} [props.include_sample_ca=false] If true, sample-level condition applications are matched as well when ca_tags is set.
+ * @param {String|String[]} [props.genotype_tags] Genotype tag(s) restricting the submissions to submissions whose samples contain all of these genotypes (semicolon-delimited if string).
+ * @returns {Object[]} Flat rows [{ state_tag, value }].
+ */
+async function getSubmissionCountsByState_API({ user_tags, ca_tags, include_sample_ca, genotype_tags }) {
+    const res = await client.get(`/stats/submissions/counts/states`, {
+        params: {
+            user_tags: Array.isArray(user_tags) && user_tags.length > 0 ? user_tags.join(";") : user_tags,
+            ca_tags: Array.isArray(ca_tags) && ca_tags.length > 0 ? ca_tags.join(";") : ca_tags,
+            include_sample_ca,
+            genotype_tags: Array.isArray(genotype_tags) && genotype_tags.length > 0 ? genotype_tags.join(";") : genotype_tags }
+    })
+    return res.data
+}
+
+const useGetSubmissionCountsByState = (APIParams = {}, useQueryOptions = { staleTime: 50000 }) => {
+    return useQuery({
+        queryKey: ["getSubmissionCountsByState", APIParams.user_tags, APIParams.ca_tags, APIParams.include_sample_ca, APIParams.genotype_tags],
+        queryFn: () => getSubmissionCountsByState_API({ ...APIParams }),
+        ...useQueryOptions
+    })
+}   
+
+/**
+ * @description Returns per-year protein group statistics: the sum of quantified protein groups of all submissions created in that year and the number of those submissions. Endpoint: GET '/api/stats/submissions/counts/protein-groups'
+ * @param {Object} props 
+ * @param {String} [props.years] Semicolon-delimited years restricting the year buckets (e.g. "2024;2025").
+ * @param {String} [props.state] Semicolon-delimited submission states restricting the submissions (e.g. "submitted;done").
+ * @param {String|String[]} [props.user_tags] User tag(s) restricting the submissions to submissions created or collaborated on by these users (semicolon-delimited if string).
+ * @param {String|String[]} [props.ca_tags] Condition application tag(s) restricting the submissions to submissions containing these condition applications (semicolon-delimited if string).
+ * @param {Boolean} [props.include_sample_ca=false] If true, sample-level condition applications are matched as well when ca_tags is set.
+ * @param {String|String[]} [props.genotype_tags] Genotype tag(s) restricting the submissions to submissions whose samples contain all of these genotypes (semicolon-delimited if string).
+ * @returns {Object[]} Flat rows [{ year, protein_groups, submissions }].
+ */
+async function getProteinGroupCountsByYear_API({ years, state, user_tags, ca_tags, include_sample_ca, genotype_tags }) {
+    const res = await client.get(`/stats/submissions/counts/protein-groups`, {
+        params: { years, state,
+            user_tags: Array.isArray(user_tags) && user_tags.length > 0 ? user_tags.join(";") : user_tags,
+            ca_tags: Array.isArray(ca_tags) && ca_tags.length > 0 ? ca_tags.join(";") : ca_tags,
+            include_sample_ca,
+            genotype_tags: Array.isArray(genotype_tags) && genotype_tags.length > 0 ? genotype_tags.join(";") : genotype_tags }
+    })
+    return res.data
+}
+
+const useGetProteinGroupCountsByYear = (APIParams = {}, useQueryOptions = { staleTime: 50000 }) => {
+    return useQuery({
+        queryKey: ["getProteinGroupCountsByYear", APIParams.years, APIParams.state, APIParams.user_tags, APIParams.ca_tags, APIParams.include_sample_ca, APIParams.genotype_tags],
+        queryFn: () => getProteinGroupCountsByYear_API({ ...APIParams }),
+        ...useQueryOptions
+    })
+}   
+
 return {
     useGetSubmissionDuration,
     useGetSamplesPerSubmission,
+    useGetSubmissionCountsByYear,
+    useGetSampleCountsByResearchGroup,
+    useGetSubmissionCountsByUser,
+    useGetSubmissionCountsByState,
+    useGetProteinGroupCountsByYear,
     useGetSubmissionViews,
-    useGetProteinViews
+    useGetProteinViews,
 };
 
 }
