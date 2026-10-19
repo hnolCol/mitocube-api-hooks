@@ -108,7 +108,7 @@ const useGetProteinViews = (APIParams = { feature_tag }, useQueryOptions = { sta
 /**
  * @description Returns the number of submissions per research group or trait and year. Endpoint: GET '/api/stats/submissions/counts/submissions'
  * @param {Object} props 
- * @param {String} [props.group_by="research_group"] Grouping of the counts ("research_group", "user" or "trait").
+ * @param {String} [props.group_by="research_group"] Grouping of the counts ("research_group" or "trait").
  * @param {String} [props.years] Semicolon-delimited years restricting the year buckets (e.g. "2024;2025").
  * @param {String} [props.state] Semicolon-delimited submission states restricting the submissions (e.g. "submitted;done").
  * @param {String} [props.attribute_tag] Attribute tag restricting the traits (only for group_by="trait").
