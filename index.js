@@ -39,7 +39,7 @@ import { createSubmissionUsersAPI } from "./src/hooks/submissions/users";
 import { createSubmissionViewsAPI } from "./src/hooks/submissions/views";
 import { createSubmissionDurationsAPI } from "./src/hooks/stats/submissions";
 import { createSubmissionQuantificationAPI } from "./src/hooks/submissions/quantifications";
-import { createOpenAIAPI } from "./src/hooks/openai/cypher";
+import { createOpenAIAPI } from "./src/hooks/openai/cypher";import { createYearReportAPI } from "./src/hooks/reports/year_report";
 import { createSubmissionMetatextAPI} from "./src/hooks/submissions/metatexts";
 import { createUserViewsAPI } from "./src/hooks/users/views";
 import { createSubmissionCountAPI } from "./src/hooks/submissions/count";
@@ -366,5 +366,8 @@ export default {
     },
     requests: {
         createDepositionRequestsAPI
+    },
+    reports: {
+        createYearReportAPI
     }   
 }
