@@ -198,7 +198,7 @@ export function createConsortiumsAPI(client) {
     return res.data
     }
     const useGetMyPendingShareRequests = (useQueryOptions = {}) => {
-    return useQuery({queryKey: ["getMyPendingShareRequests"], queryFn: () => getMyPendingShareRequests_API(), ...useQueryOptions})
+    return useQuery({queryKey: ["getPendingConsortiumShareRequests"], queryFn: () => getMyPendingShareRequests_API(), ...useQueryOptions})
     }
 
     /**
