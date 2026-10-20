@@ -66,6 +66,8 @@ import { createProteinFavoriteAPI } from "./src/hooks/features/proteins/favorite
 import { createSubmissionRunlistAPI } from "./src/hooks/submissions/runlist";
 import { createSubmissionRankingAPI } from "./src/hooks/submissions/ranking";
 import { createStatisticInfoAPI } from "./src/hooks/info/statistics";
+import { createKeyFiguresAPI } from "./src/hooks/info/keyfigures";
+import { createSubmissionSummaryAPI } from "./src/hooks/submissions/summary";
 import { createBackendInfoAPI} from "./src/hooks/info/backend";
 import axios from "axios";
 import { createAuthenticationAPI } from "./src/hooks/authorization/login";
@@ -218,6 +220,9 @@ export default {
         title: {
             createSubmissionTitleAPI
         },
+        summary: {
+            createSubmissionSummaryAPI
+        },
         samples: {
             createSubmissionSamplesAPI
         },
@@ -323,6 +328,7 @@ export default {
         createTermsOfUseAPI,
         createBackendInfoAPI,
         createStatisticInfoAPI,
+        createKeyFiguresAPI
     },
     diseases: {
         createDiseasesAPI,
