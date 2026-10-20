@@ -3,13 +3,19 @@ import { useMutation, useQuery } from "@tanstack/react-query"
 export function createCoreUsersAPI(client) {
 
     /**
-     * @description Endpoint: POST '/api/users'
-     * @param {Object} props 
-     * @param {} props.userProps
+     * @description Creates a new user. Requires admin rights. Endpoint: POST '/api/users'
+     * @param {Object} props
+     * @param {String} props.firstname - The first name of the user.
+     * @param {String} props.lastname - The last name of the user.
+     * @param {String} props.email - The email address of the user.
+     * @param {String} props.role - The role of the user.
+     * @param {String[]} props.research_group_tags - The research group tag(s) of the user (at least one).
+     * @param {String} props.institute - The institute of the user.
+     * @returns {String} The tag/label of the created user.
      */
-    async function postUser_API({ firstname, lastname, email, role, research_group, institute }) {
+    async function postUser_API({ firstname, lastname, email, role, research_group_tags, institute }) {
         const res = await client.post('/users',
-        { firstname, lastname, email, role, research_group, institute }
+        { firstname, lastname, email, role, research_group_tags, institute }
         )
         return res.data 
     }
