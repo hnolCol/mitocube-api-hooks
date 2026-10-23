@@ -1,6 +1,7 @@
 import { createFeatureSequenceAPI } from "./src/hooks/features/sequence"
 import { createModifyAttributesAPI } from "./src/hooks/attributes/modify";
 import { createQueryAttributesAPI} from "./src/hooks/attributes/query_attributes";
+import { createAttributeRequestsAPI } from "./src/hooks/attributes/requests";
 import { useDeleteFilter, useGetFilters, usePostFilter } from "./src/hooks/filters/filters";
 import { createModifyAnnotationsAPI } from "./src/hooks/annotations/annotations";
 import { createQueryAnnotationsAPI } from "./src/hooks/annotations/annotations_query";
@@ -117,7 +118,8 @@ export default {
     },
     attributes: {
         createModifyAttributesAPI,
-        createQueryAttributesAPI
+        createQueryAttributesAPI,
+        createAttributeRequestsAPI
     },
     condition_applications: {
         createConditionApplicationAPI
@@ -129,7 +131,7 @@ export default {
     },
     annotations: {
         createModifyAnnotationsAPI,
-        createQueryAnnotationsAPI
+        createQueryAnnotationsAPI,
     },
     // info: {
     //     createTermsOfUseAPI,
