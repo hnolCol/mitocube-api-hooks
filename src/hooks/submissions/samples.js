@@ -9,14 +9,23 @@ export function createSubmissionSamplesAPI(client) {
      * @param {String} props.tag
      * @returns {string[]} - The submission sample tags. 
      */
-    async function getSubmissionSampleNames_API({ tag }) {
-        const res = await client.get(`/submissions/${tag}/samples`)
+    /**
+     * @description Returns the samples tags associated with the submission. If ignore_excluded is true,
+     * excluded samples are omitted. If ignore_lost is true, lost samples are omitted.
+     * @param {Object} props
+     * @param {String} props.tag
+     * @param {Boolean} [props.ignore_excluded] Omit excluded samples
+     * @param {Boolean} [props.ignore_lost] Omit lost samples
+     * @returns {string[]} - The submission sample tags. 
+     */
+    async function getSubmissionSampleNames_API({ tag, ignore_excluded = false, ignore_lost = false }) {
+        const res = await client.get(`/submissions/${tag}/samples`, { params: { ignore_excluded, ignore_lost } })
         return res.data 
     }
 
-    const useGetSubmissionSampleTags = (APIParams = {tag}, useQueryOptions = {}) => {
+    const useGetSubmissionSampleTags = (APIParams = { tag }, useQueryOptions = {}) => {
         return useQuery({
-            queryKey: ["submission_samples_tags", APIParams.tag],
+            queryKey: ["submission_samples_tags", APIParams.tag, APIParams.ignore_excluded, APIParams.ignore_lost],
             queryFn: () => getSubmissionSampleNames_API({ ...APIParams }),
             ...useQueryOptions
         })
