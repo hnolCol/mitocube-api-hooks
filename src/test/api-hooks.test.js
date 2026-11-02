@@ -3,6 +3,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createSubmissionAnalysisAPI } from "../hooks/submissions/analysis";
 import { createPrecursorAPI } from "../hooks/features/precursors";
 import { createSubmissionCoreAPI } from "../hooks/submissions/core";
+import { createSampleCoreAPI } from "../hooks/samples/samples";
+import { createSubmissionSamplesAPI } from "../hooks/submissions/samples";
 
 const createWrapper = () => {
     const queryClient = new QueryClient({
@@ -236,4 +238,76 @@ test("usePostUserRoleChange posts to the admin role endpoint with the role query
     await promise;
     expect(client.post).toHaveBeenCalledWith("/users/U1/role", null, { params: { role: 2 } });
     expect(result.current.data).toBe(true);
+});
+
+test("useSetSampleLost patches the lost endpoint with the lost parameter", async () => {
+    const client = createMockClient(() => true);
+    const patch = jest.fn(async () => ({ data: true }));
+    client.patch = patch;
+    const { useSetSampleLost } = createSampleCoreAPI(client);
+
+    const { result } = renderHook(
+        () => useSetSampleLost({ onMutate: () => {} }),
+        { wrapper: createWrapper() }
+    );
+
+    result.current.mutate({ tag: "sub-1|s1", lost: true });
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(patch).toHaveBeenCalledWith("/samples/sub-1|s1/lost", null, {
+        params: { lost: true }
+    });
+});
+
+test("useGetSampleComments calls the sample comments endpoint", async () => {
+    const client = createMockClient(() => [{ content: "first" }]);
+    const { useGetSampleComments } = createSampleCoreAPI(client);
+
+    const { result } = renderHook(
+        () => useGetSampleComments({ tag: "sub-1|s1" }),
+        { wrapper: createWrapper() }
+    );
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(client.get).toHaveBeenCalledWith("/samples/sub-1|s1/comments");
+    expect(result.current.data).toEqual([{ content: "first" }]);
+});
+
+test("usePostSampleComment posts content and response_to to the sample comments endpoint", async () => {
+    const client = createMockClient(() => true);
+    const post = jest.fn(async () => ({ data: true }));
+    client.post = post;
+    const { usePostSampleComment } = createSampleCoreAPI(client);
+
+    const { result } = renderHook(
+        () => usePostSampleComment({ onMutate: () => {} }),
+        { wrapper: createWrapper() }
+    );
+
+    result.current.mutate({ tag: "sub-1|s1", content: "corrupted", response_to: "abcde" });
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(client.post).toHaveBeenCalledWith("/samples/sub-1|s1/comments", {
+        content: "corrupted",
+        response_to: "abcde"
+    });
+});
+
+test("useGetSubmissionSampleTags passes ignore_excluded and ignore_lost parameters", async () => {
+    const client = createMockClient(() => ["sub-1|s1"]);
+    const { useGetSubmissionSampleTags } = createSubmissionSamplesAPI(client);
+
+    const { result } = renderHook(
+        () =>
+            useGetSubmissionSampleTags({
+                tag: "sub-1",
+                ignore_excluded: true,
+                ignore_lost: true
+            }),
+        { wrapper: createWrapper() }
+    );
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(client.get).toHaveBeenCalledWith("/submissions/sub-1/samples", {
+        params: { ignore_excluded: true, ignore_lost: true }
+    });
+    expect(result.current.data).toEqual(["sub-1|s1"]);
 });

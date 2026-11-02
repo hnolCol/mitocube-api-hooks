@@ -143,6 +143,64 @@ export function createSampleCoreAPI(client) {
         }
 
         /**
+         * @description Sets whether a sample is marked as lost (e.g. lost, corrupted or otherwise unusable). Lost samples are ignored in quantification/statistical analysis.
+         * @param {Object} props
+         * @param {String} props.tag The tag of the sample
+         * @param {Boolean} props.lost Whether the sample should be marked as lost
+         * @returns {Boolean} True if the update succeeded.
+         */
+        async function setSampleLost_API({ tag, lost }) {
+            const res = await client.patch(`/samples/${tag}/lost`, null, { params: { lost } })
+            return res.data
+        }
+
+        const useSetSampleLost = (useMutationOptions = {}) => {
+            return useMutation({
+                mutationFn: (APIParams) => setSampleLost_API({ ...APIParams }),
+                ...useMutationOptions
+            })
+        }
+
+        /**
+         * @description Returns the comments of a sample ordered by creation date.
+         * @param {Object} props
+         * @param {String} props.tag The tag of the sample
+         * @returns {Object[]} The sample comments.
+         */
+        async function getSampleComments_API({ tag }) {
+            const res = await client.get(`/samples/${tag}/comments`)
+            return res.data
+        }
+
+        const useGetSampleComments = (APIParams = { tag }, useQueryOptions = { staleTime: 0 }) => {
+            return useQuery({
+                queryKey: ["getSampleComments", APIParams.tag],
+                queryFn: () => getSampleComments_API({ ...APIParams }),
+                ...useQueryOptions
+            })
+        }
+
+        /**
+         * @description Adds a comment to a sample. Comments are stored as separate Comment nodes and are not loaded with the sample itself.
+         * @param {Object} props
+         * @param {String} props.tag The tag of the sample
+         * @param {String} props.content The comment content
+         * @param {String} [props.response_to] The tag of the comment this comment responds to
+         * @returns {Boolean} True if the comment was added.
+         */
+        async function postSampleComment_API({ tag, content, response_to = null }) {
+            const res = await client.post(`/samples/${tag}/comments`, { content, response_to })
+            return res.data
+        }
+
+        const usePostSampleComment = (useMutationOptions = {}) => {
+            return useMutation({
+                mutationFn: (APIParams) => postSampleComment_API({ ...APIParams }),
+                ...useMutationOptions
+            })
+        }
+
+        /**
          * @description Retrieves export-ready sample data (sample_tag, replicate, genotype, condition applications) for a submission.
         * @param {Object} props
         * @param {String} props.tag The submission tag
@@ -170,6 +228,9 @@ export function createSampleCoreAPI(client) {
         useUpdateSample,
         useAddSampleGenotype,
         useSetSampleExcluded,
+        useSetSampleLost,
+        useGetSampleComments,
+        usePostSampleComment,
         useGetSamplesExport
     };
 }
