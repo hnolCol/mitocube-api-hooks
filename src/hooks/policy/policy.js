@@ -16,7 +16,21 @@ export function createPolicyAPI(client) {
         })
     }
 
-    /** @description Endpoint: GET '/api/policy/status' - one entry per policy */
+    /** @description Endpoint: GET '/api/policy/permissions' - what the current user may do (insert, edit, delete) */
+    async function getPolicyPermissions_API() {
+        const res = await client.get(`/policy/permissions`)
+        return res.data
+    }
+
+    const useGetPolicyPermissions = (APIParams = {}, useQueryOptions = {}) => {
+        return useQuery({
+            queryKey: ["getPolicyPermissions"],
+            queryFn: () => getPolicyPermissions_API(),
+            ...useQueryOptions
+        })
+    }
+
+    /** @description Endpoint: GET '/api/policy/status' - one entry per existing policy */
     async function getPolicyStatus_API() {
         const res = await client.get(`/policy/status`)
         return res.data
@@ -50,8 +64,8 @@ export function createPolicyAPI(client) {
      * @param {String} props.text - markdown
      * @param {Boolean} props.required
      */
-    async function createPolicy_API({ title, text, required }) {
-        const res = await client.post(`/policy`, { title, text, required })
+    async function createPolicy_API({ type, title, text, required }) {
+        const res = await client.post(`/policy`, { type, title, text, required })
         return res.data
     }
 
@@ -98,6 +112,7 @@ export function createPolicyAPI(client) {
 
     return {
         useGetPolicies,
+        useGetPolicyPermissions,
         useGetPolicyStatus,
         useAgreePolicy,
         useCreatePolicy,
