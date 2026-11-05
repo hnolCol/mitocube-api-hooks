@@ -26,16 +26,17 @@ export function createSubmissionRankingAPI(client) {
      * @param {Object} props 
      * @param {String} props.tag - The submission ranking stats tag to fetch exclusively quantified protein groups for.
      * @param {String} props.attribute_tags - The attribute tags to filter the exclusively quantified protein groups. Multiple can be provided, separated by semicolons.
+     * @param {Boolean} props.combined - Whether to fetch combined (cross-attribute, e.g. genotype x treatment) exclusivity instead of single-attribute exclusivity.
      * @param {Number} props.limit - The maximum number of results to return.
      * @returns {import("./types").ExclusivelyQuantifiedProteinGroup[]} Exclusively quantified protein groups for the submission, filtered by the provided attribute tags if given.
      */
-    async function getSubmissionExclusivelyQuantifiedProteinGroups_API({tag, attribute_tags, annotation_tags, limit}) {
-        const res = await client.get(`/submissions/${tag}/ranking/exclusively_quantified`, {params: { attribute_tags, annotation_tags, limit }})
+    async function getSubmissionExclusivelyQuantifiedProteinGroups_API({tag, attribute_tags, annotation_tags, combined, limit}) {
+        const res = await client.get(`/submissions/${tag}/ranking/exclusively_quantified`, {params: { attribute_tags, annotation_tags, combined, limit }})
         return res.data 
     }
-    const useGetSubmissionExclusivelyQuantifiedProteinGroups = (APIParams = {tag, attribute_tags, annotation_tags, limit}, useQueryOptions = {staleTime : 300000, placeholderData: (prev) => prev}) => {
+    const useGetSubmissionExclusivelyQuantifiedProteinGroups = (APIParams = {tag, attribute_tags, annotation_tags, combined, limit}, useQueryOptions = {staleTime : 300000, placeholderData: (prev) => prev}) => {
         return useQuery({
-            queryKey: ["submission_exclusively_quantified_protein_groups", APIParams.tag, APIParams.attribute_tags, APIParams.limit, APIParams.annotation_tags],
+            queryKey: ["submission_exclusively_quantified_protein_groups", APIParams.tag, APIParams.attribute_tags, APIParams.limit, APIParams.annotation_tags, APIParams.combined],
             queryFn: () => getSubmissionExclusivelyQuantifiedProteinGroups_API({ ...APIParams }),
             ...useQueryOptions
         })

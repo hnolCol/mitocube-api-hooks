@@ -1,6 +1,7 @@
 import { renderHook, waitFor } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createSubmissionAnalysisAPI } from "../hooks/submissions/analysis";
+import { createSubmissionRankingAPI } from "../hooks/submissions/ranking";
 import { createPrecursorAPI } from "../hooks/features/precursors";
 import { createSubmissionCoreAPI } from "../hooks/submissions/core";
 import { createSampleCoreAPI } from "../hooks/samples/samples";
@@ -310,4 +311,48 @@ test("useGetSubmissionSampleTags passes ignore_excluded and ignore_lost paramete
         params: { ignore_excluded: true, ignore_lost: true }
     });
     expect(result.current.data).toEqual(["sub-1|s1"]);
+});
+
+test("useGetSubmissionExclusivelyQuantifiedProteinGroups passes the combined parameter", async () => {
+    const client = createMockClient(() => []);
+    const { useGetSubmissionExclusivelyQuantifiedProteinGroups } = createSubmissionRankingAPI(client);
+
+    const { result } = renderHook(
+        () =>
+            useGetSubmissionExclusivelyQuantifiedProteinGroups({
+                tag: "sub-1",
+                attribute_tags: "genotype",
+                combined: true
+            }),
+        { wrapper: createWrapper() }
+    );
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(client.get).toHaveBeenCalledWith(
+        "/submissions/sub-1/ranking/exclusively_quantified",
+        { params: { attribute_tags: "genotype", annotation_tags: undefined, combined: true, limit: undefined } }
+    );
+});
+
+test("useGetSubmissionExclusivelyQuantifiedProteinGroups caches combined and non-combined queries separately", async () => {
+    const client = createMockClient(() => []);
+    const { useGetSubmissionExclusivelyQuantifiedProteinGroups } = createSubmissionRankingAPI(client);
+
+    const { result, rerender } = renderHook(
+        ({ combined }) =>
+            useGetSubmissionExclusivelyQuantifiedProteinGroups({
+                tag: "sub-1",
+                combined
+            }),
+        { wrapper: createWrapper(), initialProps: { combined: false } }
+    );
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    rerender({ combined: true });
+    await waitFor(() => expect(result.current.isFetching).toBe(false));
+    expect(client.get).toHaveBeenCalledTimes(2);
+    expect(client.get).toHaveBeenLastCalledWith(
+        "/submissions/sub-1/ranking/exclusively_quantified",
+        { params: { attribute_tags: undefined, annotation_tags: undefined, combined: true, limit: undefined } }
+    );
 });
