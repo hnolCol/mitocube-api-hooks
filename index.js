@@ -99,7 +99,7 @@ import { createCollaborationsAPI } from "./src/hooks/collaborations/collaboratio
 import { createMessagesAPI } from "./src/hooks/messages/messages";
 import { createPlatesAPI } from "./src/hooks/plates/plates";
 import { createDepositionRequestsAPI } from "./src/hooks/requests/depositions";
-
+import { createTicketsAPI } from "./src/hooks/tickets/tickets";
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 
@@ -368,6 +368,9 @@ export default {
     },
     messages: {
         createMessagesAPI
+    },
+    tickets: {
+        createTicketsAPI
     },
     plates: {
         createPlatesAPI
