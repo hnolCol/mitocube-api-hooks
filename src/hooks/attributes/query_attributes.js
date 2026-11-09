@@ -173,11 +173,12 @@ export function createQueryAttributesAPI(client) {
      * @param {String} props.attribute_group - The attribute group tag. For multiple groups, use a semicolon separated string, for example "dataset;qc" 
      * @param {String} props.param_name - The name of an attribute param (boolean) that needs to be true. Example : allow_for_dataset, allow_for_qc,...
      * @param {Boolean} props.include_traits - If the traits should be returned along with the attribute that matches the given query. Note that this results in a different return type.
+     * @param {Boolean} props.include_parent_paths - If true, each returned attribute additionally carries its ordered ancestor chain (``parent_tags``, root first) and, where a child trait deterministically implies one, the resolved parent trait path (``trait_paths``). Default is false (flat list, backward compatible).
      * @param {Number} props.limit The limit applies to the number of attributes, not the number traits returned (if include_traits is enabled.)
      * @returns {import("./types").AttributeTraitQuery[]} - The traits and attributes tags ordered by priority 
      */
-    async function getAttributesAndValuesByQuery_API({search_string, min_state, attribute_groups, include_traits, limit, group_by, attribute_tags}) {
-        const res = await client.get(`/attributes/q`, {params : {search_string, min_state, attribute_groups, include_traits, limit, group_by, attribute_tags}})
+    async function getAttributesAndValuesByQuery_API({search_string, min_state, attribute_groups, include_traits, include_parent_paths, limit, group_by, attribute_tags}) {
+        const res = await client.get(`/attributes/q`, {params : {search_string, min_state, attribute_groups, include_traits, include_parent_paths, limit, group_by, attribute_tags}})
         return res.data 
     }
 
@@ -188,7 +189,8 @@ export function createQueryAttributesAPI(client) {
         limit,
         attribute_tags,
         group_by,
-        include_traits: true
+        include_traits: true,
+        include_parent_paths: false
     }, useQueryOptions = { staleTime: 300000, placeholderData: (prev) => prev }) => {
         return useQuery({
             queryKey: [
@@ -197,6 +199,7 @@ export function createQueryAttributesAPI(client) {
                 APIParams.min_state,
                 APIParams.attribute_groups,
                 APIParams.include_traits,
+                APIParams.include_parent_paths,
                 APIParams.limit,
                 APIParams.group_by,
                 APIParams.attribute_tags

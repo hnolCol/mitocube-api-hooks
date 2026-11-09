@@ -36,10 +36,19 @@
 
 
 /**
+ * @typedef TraitPathNode
+ * @type {Object}
+ * @property {String} attribute_tag
+ * @property {String} trait_tag
+ */
+
+/**
  * @typedef AttributeTraitQuery
  * @type {Object}
  * @property {String} attribute_tag
  * @property {String[]} trait_tags
+ * @property {String[]} [parent_tags] - The ordered ancestor attribute chain (root first). Only present when the query was sent with include_parent_paths.
+ * @property {Object.<String, import("./types").TraitPathNode[]>} [trait_paths] - Per trait, the fully resolved path (root first) when the child trait deterministically implies its parent trait. Traits without a unique implication are omitted. Only present when the query was sent with include_parent_paths.
  */
 
 

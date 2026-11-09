@@ -118,6 +118,15 @@ export function createSubmissionCAAPI(client) {
     }
 
 
+    /**
+     * @description Updates the condition applications (selected traits) of a submission.
+     * The backend validates the submitted attribute trees: a child-attribute trait without its parent
+     * attribute + trait is auto-completed when the implication is unambiguous, otherwise the request is
+     * rejected with a 409 and a descriptive message (available via the mutation error).
+     * @param {Object} props
+     * @param {String} props.tag The submission tag.
+     * @param {Object} props.selected_traits - The selected attribute/trait trees.
+     */
     async function updateSubmissionCA_API({ tag, selected_traits }) {
         const res = await client.post(`/submissions/${tag}/ca/update`, selected_traits)
         return res.data
