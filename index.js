@@ -39,6 +39,7 @@ import { createNewsAPI } from "./src/hooks/news/news";
 import { createSubmissionUsersAPI } from "./src/hooks/submissions/users";
 import { createSubmissionViewsAPI } from "./src/hooks/submissions/views";
 import { createSubmissionDurationsAPI } from "./src/hooks/stats/submissions";
+import { createProteomeProjectionAPI } from "./src/hooks/stats/projection";
 import { createSubmissionQuantificationAPI } from "./src/hooks/submissions/quantifications";
 import { createOpenAIAPI } from "./src/hooks/openai/cypher";import { createYearReportAPI } from "./src/hooks/reports/year_report";
 import { createSubmissionMetatextAPI} from "./src/hooks/submissions/metatexts";
@@ -282,6 +283,9 @@ export default {
     stats: {
         submissions: {
             createSubmissionDurationsAPI
+        },
+        proteomes: {
+            createProteomeProjectionAPI
         }
     },
     traits: {
