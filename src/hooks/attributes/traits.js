@@ -7,7 +7,7 @@ export function createModifyTraitsAPI(client) {
      * @description Adds a trait to an attribute.
      * @param {Object} props
      * @param {String} props.attribute_tag
-     * @param {Object} props.trait - {value, text, description}
+     * @param {Object} props.trait - {value, text, description, implies_trait_tags?} where implies_trait_tags optionally sets the traits (tags) this trait deterministically implies (IMPLIED_TRAIT edges).
      * @returns
      */
     async function postTrait_API({ attribute_tag, trait }) {
@@ -28,7 +28,7 @@ export function createModifyTraitsAPI(client) {
      * @param {Object} props
      * @param {String} props.attribute_tag
      * @param {String} props.trait_tag
-     * @param {Object} props.updates - {text?, description?, priority?}
+     * @param {Object} props.updates - {text?, description?, priority?, implies_trait_tags?} where implies_trait_tags, when provided, replaces the set of traits (tags) this trait implies (IMPLIED_TRAIT edges).
      */
     async function updateTrait_API({ attribute_tag, trait_tag, updates }) {
         const res = await client.patch(
