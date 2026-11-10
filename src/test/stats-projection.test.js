@@ -153,3 +153,21 @@ test("useGetProteomeProjectionAttributeEffects calls the attribute effects endpo
     });
     expect(result.current.data).toEqual(attributeEffectsResponse);
 });
+
+test.each([
+    ["useGetProteomeProjection", "useGetProteomeProjection", { proteome_tag: "proteome_01" }, "/stats/proteomes/proteome_01/projection", { method: "pca", n_components: 2, min_valid_fraction: 0.5 }],
+    ["useGetProteomeProjectionDriver", "useGetProteomeProjectionDriver", { proteome_tag: "proteome_01", protein_tag: "protein_01" }, "/stats/proteomes/proteome_01/projection/drivers/protein_01", { n_components: 4, min_valid_fraction: 0.5 }],
+    ["useGetProteomeProjectionConditionEffects", "useGetProteomeProjectionConditionEffects", { proteome_tag: "proteome_01", ca_tag: "ca_01" }, "/stats/proteomes/proteome_01/projection/effects/ca_01", { limit: 50, min_valid_fraction: 0.5 }],
+    ["useGetProteomeProjectionAttributeEffects", "useGetProteomeProjectionAttributeEffects", { proteome_tag: "proteome_01", attribute_tag: "att_compound" }, "/stats/proteomes/proteome_01/projection/effects/attribute/att_compound", { n_components: 4, top_proteins: 10, min_valid_fraction: 0.5 }]
+])("%s passes annotation_tag param", async (_name, hookName, baseParams, url, baseQuery) => {
+    const client = createMockClient(() => projectionResponse);
+    const hooks = createProteomeProjectionAPI(client);
+    const { result } = renderHook(
+        () => hooks[hookName]({ ...baseParams, annotation_tag: "ann_01" }),
+        { wrapper: createWrapper() }
+    );
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(client.get).toHaveBeenCalledWith(url, {
+        params: { ...baseQuery, annotation_tag: "ann_01" }
+    });
+});
