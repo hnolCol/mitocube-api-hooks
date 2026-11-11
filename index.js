@@ -92,6 +92,7 @@ import { createModifyProtocolAPI } from "./src/hooks/protocols/modify";
 import { createSubmissionProtocolsAPI } from "./src/hooks/submissions/protocols";
 import { createPrecursorAPI } from "./src/hooks/features/precursors";
 import { createPTMSitesAPI } from "./src/hooks/features/ptms";
+import { createPTMPrecursorAPI } from "./src/hooks/features/ptm_precursors";
 import { createPerformanceRunsAPI, createQCStandardsAPI } from "./src/hooks/performance/runs";
 import { createPolicyAPI } from "./src/hooks/policy/policy";
 import { createImpressumAPI } from "./src/hooks/impressum/impressum";
@@ -189,6 +190,9 @@ export default {
         },
         ptms: {
             createPTMSitesAPI
+        },
+        ptm_precursors: {
+            createPTMPrecursorAPI
         }
     },
     performance: {
