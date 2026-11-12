@@ -87,6 +87,60 @@ export function createPlatesAPI(client) {
         }
 
         /**
+     * @description Returns all runlists that have at least one run on the plate. Curators only.
+     * @param {Object} props
+     * @param {String} props.tag - The plate tag
+     */
+    async function getPlateRunlists_API({ tag }) {
+        const res = await client.get(`/plates/${tag}/runlists`)
+        return res.data
+    }
+    const useGetPlateRunlists = (APIParams = {}, useQueryOptions = {}) => {
+        return useQuery({
+            queryKey: ["plateRunlists", APIParams.tag],
+            queryFn: () => getPlateRunlists_API({ ...APIParams }),
+            enabled: !!APIParams.tag,
+            ...useQueryOptions
+        })
+    }
+
+    /**
+     * @description Returns the distinct submissions measured on the plate via any runlist. Curators only.
+     * @param {Object} props
+     * @param {String} props.tag - The plate tag
+     */
+    async function getPlateSubmissions_API({ tag }) {
+        const res = await client.get(`/plates/${tag}/submissions`)
+        return res.data
+    }
+    const useGetPlateSubmissions = (APIParams = {}, useQueryOptions = {}) => {
+        return useQuery({
+            queryKey: ["plateSubmissions", APIParams.tag],
+            queryFn: () => getPlateSubmissions_API({ ...APIParams }),
+            enabled: !!APIParams.tag,
+            ...useQueryOptions
+        })
+    }
+
+    /**
+     * @description Returns the full well grid of the plate with the well -> submission mapping and the submission legend. Curators only.
+     * @param {Object} props
+     * @param {String} props.tag - The plate tag
+     */
+    async function getPlateSubmissionsLayout_API({ tag }) {
+        const res = await client.get(`/plates/${tag}/submissions-layout`)
+        return res.data
+    }
+    const useGetPlateSubmissionsLayout = (APIParams = {}, useQueryOptions = {}) => {
+        return useQuery({
+            queryKey: ["plateSubmissionsLayout", APIParams.tag],
+            queryFn: () => getPlateSubmissionsLayout_API({ ...APIParams }),
+            enabled: !!APIParams.tag,
+            ...useQueryOptions
+        })
+    }
+
+    /**
      * @description Returns the selectable formats, cold storages, plate types and vendors.
      */
         async function getPlateOptions_API() {
@@ -107,6 +161,9 @@ export function createPlatesAPI(client) {
         usePostPlate,
         useDeletePlate,
         useGetPlateOccupied,
+        useGetPlateRunlists,
+        useGetPlateSubmissions,
+        useGetPlateSubmissionsLayout,
         useGetPlateOptions
     };
 
