@@ -10,14 +10,14 @@ export function createQueryModularProceduresAPI(client) {
      * @param {Number} props.limit - The limit
      * @returns {String[]} The modular procedure tags
      */
-    async function findModularProcedures_API({ search_string, status, limit }) {
-        const res = await client.get(`/procedures/q`, { params: { search_string, status, limit } })
+    async function findModularProcedures_API({ search_string, status, limit, latest_only }) {
+        const res = await client.get(`/procedures/q`, { params: { search_string, status, limit, latest_only } })
         return res.data
     }
 
-    const useGetModularProceduresByQuery = (APIParams = { search_string, status, limit }, useQueryOptions = {}) => {
+    const useGetModularProceduresByQuery = (APIParams = { search_string, status, limit, latest_only }, useQueryOptions = {}) => {
         return useQuery({
-            queryKey: ["findModularProcedures", APIParams.search_string, APIParams.status, APIParams.limit],
+            queryKey: ["findModularProcedures", APIParams.search_string, APIParams.status, APIParams.limit, APIParams.latest_only],
             queryFn: () => findModularProcedures_API({ ...APIParams }),
             ...useQueryOptions
         })
@@ -80,11 +80,31 @@ export function createQueryModularProceduresAPI(client) {
         })
     }
 
+    /**
+     * @description Returns the tags of all versions in the lineage of a modular procedure, oldest first.
+     * @param {Object} props
+     * @param {String} props.tag - The modular procedure tag
+     * @returns {String[]} The version tags
+     */
+    async function getModularProcedureVersions_API({ tag }) {
+        const res = await client.get(`/procedures/${tag}/versions`)
+        return res.data
+    }
+
+    const useGetModularProcedureVersions = (APIParams = { tag }, useQueryOptions = {}) => {
+        return useQuery({
+            queryKey: ["getModularProcedureVersions", APIParams.tag],
+            queryFn: () => getModularProcedureVersions_API({ ...APIParams }),
+            ...useQueryOptions
+        })
+    }
+
     return {
         useGetModularProceduresByQuery,
         useGetModularProcedureByTag,
         useGetModularProcedureSubmissions,
-        useGetSubmissionModularProcedures
+        useGetSubmissionModularProcedures,
+        useGetModularProcedureVersions
     }
 }
 
@@ -129,6 +149,25 @@ export function createModifyModularProceduresAPI(client) {
     const useUpdateModularProcedure = (useMutationOptions = {}) => {
         return useMutation({
             mutationFn: (APIParams) => updateModularProcedure_API({ ...APIParams }),
+            ...useMutationOptions
+        })
+    }
+
+    /**
+     * @description Creates a new draft version of a published modular procedure, copying its content.
+     * Submissions stay linked to the version they were assigned to.
+     * @param {Object} props
+     * @param {String} props.tag - The published modular procedure tag
+     * @returns {Object} The new draft version
+     */
+    async function createModularProcedureVersion_API({ tag }) {
+        const res = await client.post(`/procedures/${tag}/versions`)
+        return res.data
+    }
+
+    const useCreateModularProcedureVersion = (useMutationOptions = {}) => {
+        return useMutation({
+            mutationFn: (APIParams) => createModularProcedureVersion_API({ ...APIParams }),
             ...useMutationOptions
         })
     }
@@ -226,6 +265,7 @@ export function createModifyModularProceduresAPI(client) {
     return {
         usePostModularProcedure,
         useUpdateModularProcedure,
+        useCreateModularProcedureVersion,
         usePublishModularProcedure,
         useLinkModularProcedureToSubmission,
         useUnlinkModularProcedureFromSubmission,
