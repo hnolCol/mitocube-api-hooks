@@ -13,16 +13,16 @@ export function createSubmissionQueryAPI(client) {
      * @param {Boolean} [props.group_by_research_group=false] If true, the matched submission tags are grouped by the creator's research group.
      * @returns 
      */
-    async function getSubmissionBySearchString_API({ search_string, state, limit, ordered, group_by_state, genotype_tag, user_tags, user_role, attribute_tag, trait_tag, ca_tags, include_sample_ca, group_by_user, group_by_date, ca_search_string, protein_tags, sort_by_views, consortium_tags, research_group_tags, group_by_research_group }) {
-        const res = await client.get(`/submissions/q`, { params: { search_string, state, limit, ordered, group_by_state, group_by_date, genotype_tag, user_tags, user_role, attribute_tag, trait_tag, ca_tags, include_sample_ca, group_by_user, ca_search_string, protein_tags, sort_by_views, consortium_tags, research_group_tags: Array.isArray(research_group_tags) && research_group_tags.length > 0 ? research_group_tags.join(";") : research_group_tags, group_by_research_group } })
+    async function getSubmissionBySearchString_API({ search_string, state, limit, ordered, sort_order, group_by_state, genotype_tag, user_tags, user_role, attribute_tag, trait_tag, ca_tags, include_sample_ca, group_by_user, group_by_date, ca_search_string, protein_tags, sort_by_views, sort_by_state_duration, consortium_tags, research_group_tags, group_by_research_group }) {
+        const res = await client.get(`/submissions/q`, { params: { search_string, state, limit, ordered, sort_order, group_by_state, group_by_date, genotype_tag, user_tags, user_role, attribute_tag, trait_tag, ca_tags, include_sample_ca, group_by_user, ca_search_string, protein_tags, sort_by_views, sort_by_state_duration, consortium_tags, research_group_tags: Array.isArray(research_group_tags) && research_group_tags.length > 0 ? research_group_tags.join(";") : research_group_tags, group_by_research_group } })
         return res.data
     }
     
 
-    const useGetSubmissionByQuery = (APIParams = { search_string, state, limit, ordered, group_by_state, group_by_date, group_by_user, genotype_tag, user_tags, user_role, attribute_tag, trait_tag, ca_tags, ca_search_string, sort_by_views, protein_tags, consortium_tags, research_group_tags, group_by_research_group }, useQueryOptions = { staleTime: 300000, placeholderData: (prev) => prev }) => {
+    const useGetSubmissionByQuery = (APIParams = { search_string, state, limit, ordered, sort_order, group_by_state, group_by_date, group_by_user, genotype_tag, user_tags, user_role, attribute_tag, trait_tag, ca_tags, ca_search_string, sort_by_views, sort_by_state_duration, protein_tags, consortium_tags, research_group_tags, group_by_research_group }, useQueryOptions = { staleTime: 300000, placeholderData: (prev) => prev }) => {
         return useQuery({
-            queryKey: ["submission_query", APIParams.search_string, APIParams.state, APIParams.limit, APIParams.ordered, APIParams.group_by_state, APIParams.group_by_date, APIParams.genotype_tag, APIParams.user_tags, APIParams.user_role,
-                APIParams.ca_tags, APIParams.attribute_tag, APIParams.trait_tag, APIParams.include_sample_ca, APIParams.group_by_user, APIParams.ca_search_string, APIParams.protein_tags, APIParams.sort_by_views, APIParams.consortium_tags, APIParams.research_group_tags, APIParams.group_by_research_group],
+            queryKey: ["submission_query", APIParams.search_string, APIParams.state, APIParams.limit, APIParams.ordered, APIParams.sort_order, APIParams.group_by_state, APIParams.group_by_date, APIParams.genotype_tag, APIParams.user_tags, APIParams.user_role,
+                APIParams.ca_tags, APIParams.attribute_tag, APIParams.trait_tag, APIParams.include_sample_ca, APIParams.group_by_user, APIParams.ca_search_string, APIParams.protein_tags, APIParams.sort_by_views, APIParams.sort_by_state_duration, APIParams.consortium_tags, APIParams.research_group_tags, APIParams.group_by_research_group],
             queryFn: () => getSubmissionBySearchString_API({ ...APIParams }),
             ...useQueryOptions
         })
