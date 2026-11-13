@@ -259,8 +259,28 @@ const useGetProteinGroupCountsByYear = (APIParams = {}, useQueryOptions = { stal
     })
 }   
 
+/**
+ * @description Returns for every submission currently in one of the given states how long it has been in that state (days), together with its sample count and creator. Endpoint: GET '/api/submissions/durations/current'
+ * @param {Object} props
+ * @param {String} [props.states] Semicolon-delimited submission state tags to include (e.g. "0;1;2;3"). Defaults to the open work states (submitted, processed, measuring, analysis).
+ * @returns {Object[]} List of { submission_tag, state_tag, state_since, duration_days, sample_count, user_tag }, longest duration first.
+ */
+async function getCurrentStateDurations_API({ states }) {
+    const res = await client.get(`/submissions/durations/current`, { params: { states } })
+    return res.data
+}
+
+const useGetCurrentStateDurations = (APIParams = { states }, useQueryOptions = { staleTime: 50000 }) => {
+    return useQuery({
+        queryKey: ["getCurrentStateDurations", APIParams.states],
+        queryFn: () => getCurrentStateDurations_API({ ...APIParams }),
+        ...useQueryOptions
+    })
+}
+
 return {
     useGetSubmissionDuration,
+    useGetCurrentStateDurations,
     useGetSamplesPerSubmission,
     useGetSubmissionCountsByYear,
     useGetSampleCountsByResearchGroup,
