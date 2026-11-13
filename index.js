@@ -99,7 +99,7 @@ import { createConsortiumsAPI } from "./src/hooks/consortiums/consortiums";
 import { createCollaborationsAPI } from "./src/hooks/collaborations/collaborations";
 import { createMessagesAPI } from "./src/hooks/messages/messages";
 import { createPlatesAPI } from "./src/hooks/plates/plates";
-import { createQueryModularProceduresAPI, createModifyModularProceduresAPI } from "./src/hooks/modular_procedures/modular_procedures";
+import { createQueryModularProceduresAPI, createModifyModularProceduresAPI, createExecuteModularProceduresAPI } from "./src/hooks/modular_procedures/modular_procedures";
 import { createDepositionRequestsAPI } from "./src/hooks/requests/depositions";
 import { createTicketsAPI } from "./src/hooks/tickets/tickets";
 axios.defaults.headers.common['Content-Type'] = 'application/json';
@@ -382,7 +382,8 @@ export default {
     },
     modular_procedures: {
         createQueryModularProceduresAPI,
-        createModifyModularProceduresAPI
+        createModifyModularProceduresAPI,
+        createExecuteModularProceduresAPI
     },
     requests: {
         createDepositionRequestsAPI
