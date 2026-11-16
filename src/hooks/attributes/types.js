@@ -20,6 +20,7 @@
  * @property {Boolean} has_unit 
  * @property {String[]} unit 
  * @property {Boolean} allow_input
+ * @property {String} [placeholder] - Optional example value displayed as input placeholder if allow_input is true.
 */
 
 /**
