@@ -23,6 +23,17 @@
  */
 
 /**
+ * @typedef ConsortiumMembershipRequest
+ * @type {Object}
+ * @property {String} consortium_tag
+ * @property {String} user_tag
+ * @property {String} kind Either 'add' or 'remove'.
+ * @property {String} requested_by
+ * @property {String} status
+ * @property {Number} created_at
+ */
+
+/**
  * @typedef ConsortiumShareRequest
  * @type {Object}
  * @property {String} consortium_tag

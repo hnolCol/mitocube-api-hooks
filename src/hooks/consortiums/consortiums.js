@@ -258,7 +258,7 @@ export function createConsortiumsAPI(client) {
     }
 
     /**
-     * @description Returns the user tags of all users that are members of the consortiums research groups.
+     * @description Returns the user tags of all users that are direct members of the consortium.
      * @param {Object} props
      * @param {String} props.tag Consortium tag
      * @returns {String[]} Returns the list of user tags in the consortium.
@@ -272,7 +272,7 @@ export function createConsortiumsAPI(client) {
     }
 
     /**
-     * @description Adds research groups to a consortium. Requires at least curator rights.
+     * @description Adds research groups to a consortium as eligible groups. The heads (PIs) of the groups automatically become direct members of the consortium. Requires at least curator rights.
      * @param {Object} props
      * @param {String} props.tag Consortium tag
      * @param {String[]} props.group_tags The research group tags to add.
@@ -320,6 +320,116 @@ export function createConsortiumsAPI(client) {
     }
 
 
+    /**
+     * @description Returns the user tags of all users that are members of the consortiums eligible research groups. These users can be added as direct members.
+     * @param {Object} props
+     * @param {String} props.tag Consortium tag
+     * @returns {String[]} Returns the list of eligible user tags.
+     */
+    async function getConsortiumEligibleUsers_API({ tag }) {
+    const res = await client.get(`/consortiums/${tag}/eligible-users`, {})
+    return res.data
+    }
+    const useGetConsortiumEligibleUsers = (APIParams = { tag }, useQueryOptions = {}) => {
+    return useQuery({queryKey: ["getConsortiumEligibleUsers", APIParams.tag], queryFn: () => getConsortiumEligibleUsers_API({...APIParams}), enabled: !!APIParams.tag, ...useQueryOptions})
+    }
+
+    /**
+     * @description Adds users as direct members of a consortium. A user can only be added if they are a member of an eligible research group whose head (PI) is in the consortium. Requires at least curator rights.
+     * @param {Object} props
+     * @param {String} props.tag Consortium tag
+     * @param {String[]} props.user_tags The user tags to add.
+     */
+    async function postConsortiumUsers_API({ tag, user_tags }) {
+    const res = await client.post(`/consortiums/${tag}/users`, user_tags)
+    return res.data
+    }
+    const usePostConsortiumUsers = (useMutationOptions = {}) => {
+    return useMutation({mutationFn: (APIParams = { tag, user_tags }) => postConsortiumUsers_API({...APIParams}), ...useMutationOptions})
+    }
+
+    /**
+     * @description Removes direct user memberships from a consortium. Removing a head (PI) is blocked while other members depend on them. Requires at least curator rights.
+     * @param {Object} props
+     * @param {String} props.tag Consortium tag
+     * @param {String[]} props.user_tags The user tags to remove.
+     */
+    async function deleteConsortiumUsers_API({ tag, user_tags }) {
+    const res = await client.delete(`/consortiums/${tag}/users`, { data: user_tags })
+    return res.data
+    }
+    const useDeleteConsortiumUsers = (useMutationOptions = {}) => {
+    return useMutation({mutationFn: (APIParams = { tag, user_tags }) => deleteConsortiumUsers_API({...APIParams}), ...useMutationOptions})
+    }
+
+    /**
+     * @description Creates a pending membership request (kind 'add' or 'remove') for a user of a research group the current user leads (as head/PI). The request must be approved by a curator.
+     * @param {Object} props
+     * @param {String} props.consortium_tag
+     * @param {String} props.user_tag
+     * @param {String} props.kind Either 'add' or 'remove'.
+     */
+    async function postConsortiumMembershipRequest_API({ consortium_tag, user_tag, kind }) {
+    const res = await client.post(`/consortiums/${consortium_tag}/requests/users/${user_tag}`, null, { params: { kind } })
+    return res.data
+    }
+    const usePostConsortiumMembershipRequest = (useMutationOptions = {}) => {
+    return useMutation({mutationFn: (APIParams = { consortium_tag, user_tag, kind }) => postConsortiumMembershipRequest_API({...APIParams}), ...useMutationOptions})
+    }
+
+    /**
+     * @description Returns all pending consortium membership requests. Requires at least curator rights.
+     * @returns {import("./types").ConsortiumMembershipRequest[]} Returns the pending membership requests.
+     */
+    async function getPendingConsortiumMembershipRequests_API() {
+    const res = await client.get('/consortiums/requests/membership/pending', {})
+    return res.data
+    }
+    const useGetPendingConsortiumMembershipRequests = (useQueryOptions = {}) => {
+    return useQuery({queryKey: ["getPendingConsortiumMembershipRequests"], queryFn: () => getPendingConsortiumMembershipRequests_API(), ...useQueryOptions})
+    }
+
+    /**
+     * @description Returns the pending consortium membership requests that concern users of the research groups the current user leads (as head/PI) or that the current user filed themselves.
+     * @returns {import("./types").ConsortiumMembershipRequest[]} Returns the relevant pending membership requests.
+     */
+    async function getMyPendingConsortiumMembershipRequests_API() {
+    const res = await client.get('/consortiums/requests/membership', {})
+    return res.data
+    }
+    const useGetMyPendingConsortiumMembershipRequests = (useQueryOptions = {}) => {
+    return useQuery({queryKey: ["getMyPendingConsortiumMembershipRequests"], queryFn: () => getMyPendingConsortiumMembershipRequests_API(), ...useQueryOptions})
+    }
+
+    /**
+     * @description Approves a pending consortium membership request. An 'add' request adds the user as a direct member, a 'remove' request removes their membership. Requires at least curator rights.
+     * @param {Object} props
+     * @param {String} props.consortium_tag
+     * @param {String} props.user_tag
+     */
+    async function approveConsortiumMembershipRequest_API({ consortium_tag, user_tag }) {
+    const res = await client.post(`/consortiums/requests/${consortium_tag}/membership/${user_tag}/approve`, {})
+    return res.data
+    }
+    const useApproveConsortiumMembershipRequest = (useMutationOptions = {}) => {
+    return useMutation({mutationFn: (APIParams = { consortium_tag, user_tag }) => approveConsortiumMembershipRequest_API({...APIParams}), ...useMutationOptions})
+    }
+
+    /**
+     * @description Denies a pending consortium membership request. The pending relation is removed. Requires at least curator rights.
+     * @param {Object} props
+     * @param {String} props.consortium_tag
+     * @param {String} props.user_tag
+     */
+    async function denyConsortiumMembershipRequest_API({ consortium_tag, user_tag }) {
+    const res = await client.post(`/consortiums/requests/${consortium_tag}/membership/${user_tag}/deny`, {})
+    return res.data
+    }
+    const useDenyConsortiumMembershipRequest = (useMutationOptions = {}) => {
+    return useMutation({mutationFn: (APIParams = { consortium_tag, user_tag }) => denyConsortiumMembershipRequest_API({...APIParams}), ...useMutationOptions})
+    }
+
+
   return {
     useGetConsortiums,
     useGetConsortiumsByQuery,
@@ -339,6 +449,14 @@ export function createConsortiumsAPI(client) {
     useApproveConsortiumShareRequest,
     useDenyConsortiumShareRequest,
     useDeleteConsortium,
-    useGetPendingConsortiumShares
+    useGetPendingConsortiumShares,
+    useGetConsortiumEligibleUsers,
+    usePostConsortiumUsers,
+    useDeleteConsortiumUsers,
+    usePostConsortiumMembershipRequest,
+    useGetPendingConsortiumMembershipRequests,
+    useGetMyPendingConsortiumMembershipRequests,
+    useApproveConsortiumMembershipRequest,
+    useDenyConsortiumMembershipRequest
   };
 }
