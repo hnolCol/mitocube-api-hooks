@@ -284,13 +284,35 @@ export function createExecuteModularProceduresAPI(client) {
      * @param {String} props.tag - The modular procedure tag
      * @param {String} props.input_plate_tag - The input plate tag
      * @param {String} props.output_plate_tag - The output plate tag
+     * @param {String} [props.responsible_user_tag] - The user responsible for the execution (defaults to the executing user)
      * @param {Array} props.input_wells - [{position, sample_tags, output_positions}]
      * @param {Array} props.output_wells - [{position, condition_application_tags}]
+     * @param {Array} [props.output_well_metrics] - [{position, trait_tag, value}] — the trait defines the measured quantity (e.g. ug/ul of the concentration attribute)
      * @returns {Object} The created procedure execution
      */
-    async function executeModularProcedure_API({ tag, input_plate_tag, output_plate_tag, input_wells, output_wells }) {
-        const res = await client.post(`/procedures/${tag}/execute`, { input_plate_tag, output_plate_tag, input_wells, output_wells })
+    async function executeModularProcedure_API({ tag, input_plate_tag, output_plate_tag, responsible_user_tag, input_wells, output_wells, output_well_metrics }) {
+        const res = await client.post(`/procedures/${tag}/execute`, { input_plate_tag, output_plate_tag, responsible_user_tag, input_wells, output_wells, output_well_metrics })
         return res.data
+    }
+
+    /**
+     * @description Sets or updates the measured attribute values (metrics) of the output wells of a
+     * procedure execution, e.g. the protein concentration of each well (curators and admins only).
+     * @param {Object} props
+     * @param {String} props.tag - The procedure execution tag
+     * @param {Array} props.well_metrics - [{position, trait_tag, value}]
+     * @returns {Object} The updated procedure execution
+     */
+    async function setModularProcedureExecutionMetrics_API({ tag, well_metrics }) {
+        const res = await client.post(`/procedures/executions/${tag}/metrics`, well_metrics)
+        return res.data
+    }
+
+    const useSetModularProcedureExecutionMetrics = (useMutationOptions = {}) => {
+        return useMutation({
+            mutationFn: (APIParams) => setModularProcedureExecutionMetrics_API({ ...APIParams }),
+            ...useMutationOptions
+        })
     }
 
     const useExecuteModularProcedure = (useMutationOptions = {}) => {
@@ -340,6 +362,7 @@ export function createExecuteModularProceduresAPI(client) {
 
     return {
         useExecuteModularProcedure,
+        useSetModularProcedureExecutionMetrics,
         useGetModularProcedureExecution,
         useGetModularProcedureExecutions
     }
