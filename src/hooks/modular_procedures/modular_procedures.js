@@ -119,8 +119,8 @@ export function createModifyModularProceduresAPI(client) {
      * @param {String[]} props.protocol_tags - The linked protocol tags
      * @returns {Object} The created modular procedure
      */
-    async function postModularProcedure_API({ title, description, condition_application_tags, protocol_tags }) {
-        const res = await client.post(`/procedures`, { title, description, condition_application_tags, protocol_tags })
+    async function postModularProcedure_API({ title, description, condition_application_tags, condition_application_trees, protocol_tags }) {
+        const res = await client.post(`/procedures`, { title, description, condition_application_tags, condition_application_trees, protocol_tags })
         return res.data
     }
 
@@ -141,8 +141,8 @@ export function createModifyModularProceduresAPI(client) {
      * @param {String[]} props.protocol_tags - The linked protocol tags
      * @returns {Object} The updated modular procedure
      */
-    async function updateModularProcedure_API({ tag, title, description, condition_application_tags, protocol_tags }) {
-        const res = await client.patch(`/procedures/${tag}`, { title, description, condition_application_tags, protocol_tags })
+    async function updateModularProcedure_API({ tag, title, description, condition_application_tags, condition_application_trees, protocol_tags }) {
+        const res = await client.patch(`/procedures/${tag}`, { title, description, condition_application_tags, condition_application_trees, protocol_tags })
         return res.data
     }
 
