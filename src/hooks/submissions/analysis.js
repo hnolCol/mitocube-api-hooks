@@ -68,19 +68,20 @@ const useGetSubmissionVolcano = (APIParams = {tag, ca_tag_left, ca_tag_right, an
  * @param {Object} props 
  * @param {String} props.tag The submission tag.
  * @param {String} props.annotation_tag - The annotation tag to use to filter features. Only features associated with this annotation tag will be included in the heatmap.
+ * @param {String} props.sample_tags - Semicolon-separated sample tags. If given, the statistics are performed only on this subset of samples.
  * @returns {Object} The heatmap data for the submission
  */
-async function getSubmissionHeatmap_API({ tag, annotation_tag, n_clusters, fdr }) {
+async function getSubmissionHeatmap_API({ tag, annotation_tag, n_clusters, fdr, sample_tags }) {
     const res = await client.get(`/submissions/analysis/${tag}/heatmap`, {
-        params: { annotation_tag, n_clusters, fdr }
+        params: { annotation_tag, n_clusters, fdr, sample_tags }
     })
     return res.data
 }
 
 
-const useGetSubmissionHeatmap = (APIParams = {tag, annotation_tag, n_clusters, fdr}, useQueryOptions = { staleTime: 50000}) => {
+const useGetSubmissionHeatmap = (APIParams = {tag, annotation_tag, n_clusters, fdr, sample_tags}, useQueryOptions = { staleTime: 50000}) => {
     return useQuery({
-        queryKey: ["getSubmissionHeatmap", APIParams.tag, APIParams.annotation_tag, APIParams.n_clusters, APIParams.fdr],
+        queryKey: ["getSubmissionHeatmap", APIParams.tag, APIParams.annotation_tag, APIParams.n_clusters, APIParams.fdr, APIParams.sample_tags],
         queryFn: () => getSubmissionHeatmap_API({ ...APIParams }),
         ...useQueryOptions
     })
