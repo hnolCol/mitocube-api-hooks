@@ -127,6 +127,25 @@ const useGetSubmissionHeatmap = (APIParams = {tag, annotation_tag, n_clusters, f
         })
     }
 
+    /**
+     * @description Returns the unique proteins connected to condition applications or genotypes of the submission's samples (e.g. knockdown, overexpression or immunoprecipitation targets), with their sources.
+     * @param {Object} props
+     * @param {String} props.tag The submission tag.
+     * @returns {Object} The submission tag and the list of targets with sources.
+     */
+    async function getSubmissionQCTargets_API({ tag }) {
+        const res = await client.get(`/submissions/analysis/${tag}/qc/targets`)
+        return res.data
+    }
+
+    const useGetSubmissionQCTargets = (APIParams = {tag}, useQueryOptions = { staleTime: Infinity }) => {
+        return useQuery({
+            queryKey: ["getSubmissionQCTargets", APIParams.tag],
+            queryFn: () => getSubmissionQCTargets_API({ ...APIParams }),
+            ...useQueryOptions
+        })
+    }
+
     async function getSubmissionCompare_API({ comparisons }) {
         const res = await client.post(`/submissions/analysis/compare`, comparisons)
         return res.data
@@ -145,6 +164,7 @@ const useGetSubmissionHeatmap = (APIParams = {tag, annotation_tag, n_clusters, f
     useGetSubmissionHeatmap,
     useGetSubmissionAnnotationNetwork,
     useGetSubmissionHasPrecursors,
+    useGetSubmissionQCTargets,
     usePostSubmissionCompare
   };
 }
