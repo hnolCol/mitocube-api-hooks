@@ -356,3 +356,17 @@ test("useGetSubmissionExclusivelyQuantifiedProteinGroups caches combined and non
         { params: { attribute_tags: undefined, annotation_tags: undefined, combined: true, limit: undefined } }
     );
 });
+
+test("useGetSubmissionQCTargets calls the qc targets endpoint", async () => {
+    const client = createMockClient(() => ({ submission_tag: "S1", targets: [{ protein_tag: "P1", sources: [] }] }));
+    const { useGetSubmissionQCTargets } = createSubmissionAnalysisAPI(client);
+
+    const { result } = renderHook(
+        () => useGetSubmissionQCTargets({ tag: "S1" }),
+        { wrapper: createWrapper() }
+    );
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(client.get).toHaveBeenCalledWith("/submissions/analysis/S1/qc/targets");
+    expect(result.current.data.targets).toEqual([{ protein_tag: "P1", sources: [] }]);
+});
