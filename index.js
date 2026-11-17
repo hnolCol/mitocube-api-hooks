@@ -73,6 +73,8 @@ import { createSubmissionSummaryAPI } from "./src/hooks/submissions/summary";
 import { createBackendInfoAPI} from "./src/hooks/info/backend";
 import axios from "axios";
 import { createAuthenticationAPI } from "./src/hooks/authorization/login";
+import { createPATsAPI } from "./src/hooks/authorization/pats";
+import { createAcceptUseTermsAPI } from "./src/hooks/authorization/useterms";
 import { createAuthenticationTokenAPI } from "./src/hooks/authorization/token";
 import { createSubmissionCoreAPI } from "./src/hooks/submissions/core";
 import { createStateAPI } from "./src/hooks/states/core";
@@ -115,6 +117,12 @@ export default {
         },
         mfa: {
             createAuthenticationMFAAPI
+        },
+        pats: {
+            createPATsAPI
+        },
+        useterms: {
+            createAcceptUseTermsAPI
         }
     },
     metatexts: {
