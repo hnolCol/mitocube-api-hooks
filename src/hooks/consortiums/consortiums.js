@@ -430,6 +430,73 @@ export function createConsortiumsAPI(client) {
     }
 
 
+    /**
+     * @description Returns the eligible research groups of a consortium whose head (PI) agreed to the consortium terms.
+     * @param {Object} props
+     * @param {String} props.tag Consortium tag
+     * @returns {String[]} Returns the list of research group tags with a terms agreement.
+     */
+    async function getConsortiumTermsGroups_API({ tag }) {
+    const res = await client.get(`/consortiums/${tag}/terms`, {})
+    return res.data
+    }
+    const useGetConsortiumTermsGroups = (APIParams = { tag }, useQueryOptions = {}) => {
+    return useQuery({queryKey: ["getConsortiumTermsGroups", APIParams.tag], queryFn: () => getConsortiumTermsGroups_API({...APIParams}), enabled: !!APIParams.tag, ...useQueryOptions})
+    }
+
+    /**
+     * @description Agrees to the consortium terms for a research group. Requires the head (PI) of the group or a curator. Only after the agreement the users of the group can share into and see the submissions of the consortium.
+     * @param {Object} props
+     * @param {String} props.consortium_tag
+     * @param {String} props.group_tag
+     */
+    async function agreeConsortiumTerms_API({ consortium_tag, group_tag }) {
+    const res = await client.post(`/consortiums/${consortium_tag}/terms/${group_tag}`, {})
+    return res.data
+    }
+    const useAgreeConsortiumTerms = (useMutationOptions = {}) => {
+    return useMutation({mutationFn: (APIParams = { consortium_tag, group_tag }) => agreeConsortiumTerms_API({...APIParams}), ...useMutationOptions})
+    }
+
+    /**
+     * @description Revokes the research groups agreement to the consortium terms. The users of the group can then neither share submissions with the consortium nor see its shared submissions. Requires the head (PI) of the group or a curator.
+     * @param {Object} props
+     * @param {String} props.consortium_tag
+     * @param {String} props.group_tag
+     */
+    async function revokeConsortiumTerms_API({ consortium_tag, group_tag }) {
+    const res = await client.delete(`/consortiums/${consortium_tag}/terms/${group_tag}`)
+    return res.data
+    }
+    const useRevokeConsortiumTerms = (useMutationOptions = {}) => {
+    return useMutation({mutationFn: (APIParams = { consortium_tag, group_tag }) => revokeConsortiumTerms_API({...APIParams}), ...useMutationOptions})
+    }
+
+    /**
+     * @description Returns the consortiums where the current user heads (as head/PI) an eligible research group that has not yet agreed to the consortium terms.
+     * @returns {import("./types").ConsortiumTermsPending[]} Returns the pending terms agreements.
+     */
+    async function getPendingConsortiumTerms_API() {
+    const res = await client.get('/consortiums/terms/pending', {})
+    return res.data
+    }
+    const useGetPendingConsortiumTerms = (useQueryOptions = {}) => {
+    return useQuery({queryKey: ["getPendingConsortiumTerms"], queryFn: () => getPendingConsortiumTerms_API(), ...useQueryOptions})
+    }
+
+    /**
+     * @description Returns the consortiums the current user is a member of where the head (PI) of none of the users research groups agreed to the terms yet. Frontends use this to warn affected members.
+     * @returns {String[]} Returns the list of consortium tags without a terms agreement for the user.
+     */
+    async function getUserConsortiumsWithPendingTerms_API() {
+    const res = await client.get('/consortiums/user/pending-terms', {})
+    return res.data
+    }
+    const useGetUserConsortiumsWithPendingTerms = (useQueryOptions = {}) => {
+    return useQuery({queryKey: ["getUserConsortiumsWithPendingTerms"], queryFn: () => getUserConsortiumsWithPendingTerms_API(), ...useQueryOptions})
+    }
+
+
   return {
     useGetConsortiums,
     useGetConsortiumsByQuery,
@@ -457,6 +524,11 @@ export function createConsortiumsAPI(client) {
     useGetPendingConsortiumMembershipRequests,
     useGetMyPendingConsortiumMembershipRequests,
     useApproveConsortiumMembershipRequest,
-    useDenyConsortiumMembershipRequest
+    useDenyConsortiumMembershipRequest,
+    useGetConsortiumTermsGroups,
+    useAgreeConsortiumTerms,
+    useRevokeConsortiumTerms,
+    useGetPendingConsortiumTerms,
+    useGetUserConsortiumsWithPendingTerms
   };
 }

@@ -23,6 +23,13 @@
  */
 
 /**
+ * @typedef ConsortiumTermsPending
+ * @type {Object}
+ * @property {String} consortium_tag
+ * @property {String} group_tag
+ */
+
+/**
  * @typedef ConsortiumMembershipRequest
  * @type {Object}
  * @property {String} consortium_tag
