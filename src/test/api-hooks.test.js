@@ -1,4 +1,4 @@
-import { renderHook, waitFor } from "@testing-library/react";
+import { act, renderHook, waitFor } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createSubmissionAnalysisAPI } from "../hooks/submissions/analysis";
 import { createSubmissionRankingAPI } from "../hooks/submissions/ranking";
@@ -383,5 +383,79 @@ test("useGetMyIsHead calls the user is-head endpoint", async () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(client.get).toHaveBeenCalledWith("/researchgroups/user/is-head");
+    expect(result.current.data).toBe(true);
+});
+
+test("useGetMyHeadedGroups calls the user headed endpoint", async () => {
+    const client = createMockClient(() => ["rg-1"]);
+    const { useGetMyHeadedGroups } = createResearchGroupsAPI(client);
+
+    const { result } = renderHook(
+        () => useGetMyHeadedGroups(),
+        { wrapper: createWrapper() }
+    );
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(client.get).toHaveBeenCalledWith("/researchgroups/user/headed");
+    expect(result.current.data).toEqual(["rg-1"]);
+});
+
+test("useGetMySharedSubmissionsOverview calls the shared-overview endpoint", async () => {
+    const overview = [{ submission_tag: "subm-1", consortiums: [], collaborators: [] }];
+    const client = createMockClient(() => overview);
+    const { useGetMySharedSubmissionsOverview } = createResearchGroupsAPI(client);
+
+    const { result } = renderHook(
+        () => useGetMySharedSubmissionsOverview(),
+        { wrapper: createWrapper() }
+    );
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(client.get).toHaveBeenCalledWith("/researchgroups/user/shared-overview");
+    expect(result.current.data).toEqual(overview);
+});
+
+test("useGetMyExploreDisabled calls the user explore-disabled endpoint", async () => {
+    const client = createMockClient(() => false);
+    const { useGetMyExploreDisabled } = createResearchGroupsAPI(client);
+
+    const { result } = renderHook(
+        () => useGetMyExploreDisabled(),
+        { wrapper: createWrapper() }
+    );
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(client.get).toHaveBeenCalledWith("/researchgroups/user/explore-disabled");
+    expect(result.current.data).toBe(false);
+});
+
+test("useGetResearchGroupExploreDisabled calls the group explore-disabled endpoint", async () => {
+    const client = createMockClient(() => true);
+    const { useGetResearchGroupExploreDisabled } = createResearchGroupsAPI(client);
+
+    const { result } = renderHook(
+        () => useGetResearchGroupExploreDisabled({ tag: "rg-1" }),
+        { wrapper: createWrapper() }
+    );
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(client.get).toHaveBeenCalledWith("/researchgroups/rg-1/explore-disabled");
+    expect(result.current.data).toBe(true);
+});
+
+test("useSetResearchGroupExploreDisabled puts the disabled flag", async () => {
+    const client = { ...createMockClient(() => true), put: jest.fn(async () => ({ data: true })) };
+    const { useSetResearchGroupExploreDisabled } = createResearchGroupsAPI(client);
+    const { result } = renderHook(
+        () => useSetResearchGroupExploreDisabled(),
+        { wrapper: createWrapper() }
+    );
+
+    const promise = result.current.mutateAsync({ tag: "rg-1", disabled: true });
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    await promise;
+    expect(client.put).toHaveBeenCalledWith("/researchgroups/rg-1/explore-disabled",
+        null,
+        { params: { disabled: true } });
     expect(result.current.data).toBe(true);
 });
