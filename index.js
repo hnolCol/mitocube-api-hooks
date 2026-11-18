@@ -5,7 +5,6 @@ import { createAttributeRequestsAPI } from "./src/hooks/attributes/requests";
 import { useDeleteFilter, useGetFilters, usePostFilter } from "./src/hooks/filters/filters";
 import { createModifyAnnotationsAPI } from "./src/hooks/annotations/annotations";
 import { createQueryAnnotationsAPI } from "./src/hooks/annotations/annotations_query";
-import { createTermsOfUseAPI } from "./src/hooks/info/terms";
 import { createFeatureInfoAPI } from "./src/hooks/features/info";
 import { createSubmissionStateAPI } from "./src/hooks/submissions/state";
 import { createSubmissionSamplesAPI } from "./src/hooks/submissions/samples";
@@ -74,7 +73,6 @@ import { createBackendInfoAPI} from "./src/hooks/info/backend";
 import axios from "axios";
 import { createAuthenticationAPI } from "./src/hooks/authorization/login";
 import { createPATsAPI } from "./src/hooks/authorization/pats";
-import { createAcceptUseTermsAPI } from "./src/hooks/authorization/useterms";
 import { createAuthenticationTokenAPI } from "./src/hooks/authorization/token";
 import { createSubmissionCoreAPI } from "./src/hooks/submissions/core";
 import { createStateAPI } from "./src/hooks/states/core";
@@ -121,9 +119,6 @@ export default {
         pats: {
             createPATsAPI
         },
-        useterms: {
-            createAcceptUseTermsAPI
-        }
     },
     metatexts: {
         createMetatextAPI
@@ -340,7 +335,6 @@ export default {
     },
     researchgroups : createResearchGroupsAPI,
     info: {
-        createTermsOfUseAPI,
         createBackendInfoAPI,
         createStatisticInfoAPI,
         createKeyFiguresAPI
