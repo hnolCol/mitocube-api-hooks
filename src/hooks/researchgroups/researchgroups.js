@@ -235,9 +235,22 @@ export function createResearchGroupsAPI(client) {
     const useDeleteResearchGroupHead = (useMutationOptions = {}) => {
     return useMutation({mutationFn: (APIParams = { tag, user_tag }) => deleteResearchGroupHead_API({...APIParams}), ...useMutationOptions})
     }
+
+    /**
+     * @description Returns whether the current user is a head (PI) of at least one research group.
+     * @returns {Boolean} True if the current user is a head (PI) of at least one research group.
+     */
+    async function getMyIsHead_API() {
+    const res = await client.get('/researchgroups/user/is-head')
+    return res.data
+    }
+    const useGetMyIsHead = (APIParams = {}, useQueryOptions = {}) => {
+    return useQuery({queryKey: ["getMyIsHead"], queryFn: () => getMyIsHead_API({...APIParams}), ...useQueryOptions})
+    }
   return {
     useGetResearchGroups,
     useGetResearchGroupsOfUser,
+    useGetMyIsHead,
     useGetResearchGroupHeads,
     usePostResearchGroupHead,
     useDeleteResearchGroupHead,
