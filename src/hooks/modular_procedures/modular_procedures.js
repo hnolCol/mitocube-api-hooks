@@ -389,11 +389,57 @@ export function createExecuteModularProceduresAPI(client) {
         })
     }
 
+    /**
+     * @description Queries the executions visible to the user for the overview dashboard: summary
+     * entries (header data and well counts), newest first. The backend respects the user's
+     * submission scope: curators and admins see everything, group curators their group's
+     * executions, other users only the executions of their own submissions (creators).
+     * @param {Object} props
+     * @param {String} [props.search_submission_tag] - Filter for executions that placed samples of this submission
+     * @param {String} [props.status] - Filter by the current execution state (RUNNING/SUCCEEDED/FAILED/ABORTED)
+     * @param {Number} [props.limit] - The limit
+     * @returns {Object[]} The visible execution summaries
+     */
+    async function queryModularProcedureExecutions_API({ search_submission_tag, status, limit }) {
+        const res = await client.get(`/procedures/executions/q`, { params: { search_submission_tag, status, limit } })
+        return res.data
+    }
+
+    const useQueryModularProcedureExecutions = (APIParams = { search_submission_tag, status, limit }, useQueryOptions = {}) => {
+        return useQuery({
+            queryKey: ["queryModularProcedureExecutions", APIParams.search_submission_tag, APIParams.status, APIParams.limit],
+            queryFn: () => queryModularProcedureExecutions_API({ ...APIParams }),
+            ...useQueryOptions
+        })
+    }
+
+    /**
+     * @description Returns the state history of a procedure execution: the state, when it was
+     * set and the user who made the change, newest first.
+     * @param {Object} props
+     * @param {String} props.tag - The procedure execution tag
+     * @returns {Object[]} The state history [{state, created_at, user_tag}]
+     */
+    async function getModularProcedureExecutionStates_API({ tag }) {
+        const res = await client.get(`/procedures/executions/${tag}/states`)
+        return res.data
+    }
+
+    const useGetModularProcedureExecutionStates = (APIParams = { tag }, useQueryOptions = {}) => {
+        return useQuery({
+            queryKey: ["getModularProcedureExecutionStates", APIParams.tag],
+            queryFn: () => getModularProcedureExecutionStates_API({ ...APIParams }),
+            ...useQueryOptions
+        })
+    }
+
     return {
         useExecuteModularProcedure,
         useFinishModularProcedureExecution,
         useSetModularProcedureExecutionMetrics,
         useGetModularProcedureExecution,
-        useGetModularProcedureExecutions
+        useGetModularProcedureExecutions,
+        useQueryModularProcedureExecutions,
+        useGetModularProcedureExecutionStates
     }
 }
