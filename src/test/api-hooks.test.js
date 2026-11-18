@@ -6,6 +6,7 @@ import { createPrecursorAPI } from "../hooks/features/precursors";
 import { createSubmissionCoreAPI } from "../hooks/submissions/core";
 import { createSampleCoreAPI } from "../hooks/samples/samples";
 import { createSubmissionSamplesAPI } from "../hooks/submissions/samples";
+import { createResearchGroupsAPI } from "../hooks/researchgroups/researchgroups";
 
 const createWrapper = () => {
     const queryClient = new QueryClient({
@@ -369,4 +370,18 @@ test("useGetSubmissionQCTargets calls the qc targets endpoint", async () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(client.get).toHaveBeenCalledWith("/submissions/analysis/S1/qc/targets");
     expect(result.current.data.targets).toEqual([{ protein_tag: "P1", sources: [] }]);
+});
+
+test("useGetMyIsHead calls the user is-head endpoint", async () => {
+    const client = createMockClient(() => true);
+    const { useGetMyIsHead } = createResearchGroupsAPI(client);
+
+    const { result } = renderHook(
+        () => useGetMyIsHead(),
+        { wrapper: createWrapper() }
+    );
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(client.get).toHaveBeenCalledWith("/researchgroups/user/is-head");
+    expect(result.current.data).toBe(true);
 });
