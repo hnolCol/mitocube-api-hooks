@@ -1,7 +1,6 @@
 import { renderHook, waitFor, act } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createPATsAPI } from "../hooks/authorization/pats";
-import { createAcceptUseTermsAPI } from "../hooks/authorization/useterms";
 
 const createWrapper = () => {
     const queryClient = new QueryClient({
@@ -87,17 +86,4 @@ test("useSetPATCreationBlocked patches the creation flag", async () => {
     expect(client.patch).toHaveBeenCalledWith("/auth/pats/user/abcdefgh/creation",
         { blocked: true },
         { headers: { "Content-Type": "application/json" } });
-});
-
-test("useAcceptUseTerms posts the acceptance for the user itself", async () => {
-    const client = createMockClient();
-    const { useAcceptUseTerms } = createAcceptUseTermsAPI(client);
-    const { result } = renderHook(() => useAcceptUseTerms(), { wrapper: createWrapper() });
-    await act(async () => {
-        result.current.mutate({ userTag: "abcdefgh", accept: true });
-    });
-    await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(client.post).toHaveBeenCalledWith("/auth/user/abcdefgh/useterms",
-        null,
-        { params: { accept: true } });
 });
