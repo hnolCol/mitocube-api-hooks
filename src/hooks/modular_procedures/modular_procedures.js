@@ -334,10 +334,13 @@ export function createExecuteModularProceduresAPI(client) {
      * @param {String} props.tag - The procedure execution tag
      * @param {String} props.outcome - SUCCEEDED | FAILED | ABORTED
      * @param {String} [props.comment] - An optional comment (e.g. why the run failed)
+     * @param {Boolean} [props.block_output_wells] - Overrides whether the output wells stay blocked
+     * after the change (e.g. an aborted robot run with dirty wells must stay blocked); omitted it
+     * defaults to the outcome (SUCCEEDED blocks, FAILED/ABORTED release the wells for a re-run)
      * @returns {Object} The finished procedure execution
      */
-    async function finishModularProcedureExecution_API({ tag, outcome, comment }) {
-        const res = await client.post(`/procedures/executions/${tag}/finish`, { outcome, comment })
+    async function finishModularProcedureExecution_API({ tag, outcome, comment, block_output_wells }) {
+        const res = await client.post(`/procedures/executions/${tag}/finish`, { outcome, comment, block_output_wells })
         return res.data
     }
 
