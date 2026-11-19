@@ -81,6 +81,29 @@ export function createQueryModularProceduresAPI(client) {
     }
 
     /**
+     * @description Returns the current plate locations of the samples of a submission: for every
+     * sample the wells of its most recent procedure execution (input and output plate), so the
+     * submission overview can show where the samples physically are — including executions that
+     * failed (the samples stay on the plate). Restricted users cannot query foreign submissions.
+     * @param {Object} props
+     * @param {String} props.submission_tag - The submission tag
+     * @returns {Object[]} The sample locations [{sample_tag, procedure_tag, execution_tag,
+     * execution_status, created_at, wells: [{plate_tag, position, side}]}]
+     */
+    async function getSubmissionSampleLocations_API({ submission_tag }) {
+        const res = await client.get(`/procedures/submissions/${submission_tag}/wells`)
+        return res.data
+    }
+
+    const useGetSubmissionSampleLocations = (APIParams = { submission_tag }, useQueryOptions = {}) => {
+        return useQuery({
+            queryKey: ["getSubmissionSampleLocations", APIParams.submission_tag],
+            queryFn: () => getSubmissionSampleLocations_API({ ...APIParams }),
+            ...useQueryOptions
+        })
+    }
+
+    /**
      * @description Returns the tags of all versions in the lineage of a modular procedure, oldest first.
      * @param {Object} props
      * @param {String} props.tag - The modular procedure tag
@@ -104,6 +127,7 @@ export function createQueryModularProceduresAPI(client) {
         useGetModularProcedureByTag,
         useGetModularProcedureSubmissions,
         useGetSubmissionModularProcedures,
+        useGetSubmissionSampleLocations,
         useGetModularProcedureVersions
     }
 }
