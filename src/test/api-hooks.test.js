@@ -147,6 +147,22 @@ test("useGetSubmissionExplore passes repeated ca_tags and user_tags query parame
     );
 });
 
+test("useGetSubmissionExploreConditionApplications calls the explore condition application aggregation endpoint with the limit parameter", async () => {
+    const client = createMockClient(() => []);
+    const { useGetSubmissionExploreConditionApplications } = createCollaborationsAPI(client);
+    const { result } = renderHook(
+        () => useGetSubmissionExploreConditionApplications({ limit: 100 }),
+        { wrapper: createWrapper() }
+    );
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(client.get).toHaveBeenCalledWith(
+        "/collaborations/submissions/explore/cas",
+        { params: { limit: 100 } }
+    );
+    expect(result.current.data).toEqual([]);
+});
+
 test("useGetSubmissionExplore omits tag query parameters when no tags are given", async () => {
     const client = createMockClient(() => []);
     const { useGetSubmissionExplore } = createCollaborationsAPI(client);
