@@ -39,7 +39,7 @@ export function createPlatesAPI(client) {
     /**
      * @description Creates a new plate.
      * @param {Object} props
-     * @param {Object} props.plate - {name, rows, columns, plate_type, vendor, location, description}
+     * @param {Object} props.plate - {name, trait_tags, location, description} - trait_tags maps the tags of the storage attribute group's attributes to the selected trait tags
      */
     async function postPlate_API({ plate }) {
         const res = await client.post(`/plates`, plate)
@@ -141,7 +141,7 @@ export function createPlatesAPI(client) {
     }
 
     /**
-     * @description Returns the selectable formats, cold storages, plate types and vendors.
+     * @description Returns all attributes of the storage attribute group with their selectable traits (attributes: [{tag, text, parent_tag, is_format, traits}]).
      */
         async function getPlateOptions_API() {
             const res = await client.get(`/plates/options`)
