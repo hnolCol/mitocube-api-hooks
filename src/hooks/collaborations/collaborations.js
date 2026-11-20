@@ -37,6 +37,28 @@ export function createCollaborationsAPI(client) {
 
 
     /**
+     * @description Returns the aggregated top-level condition applications (attribute, trait, value) per explore-visible submission. Endpoint: GET '/api/collaborations/submissions/explore/cas'
+     * @param {Object} props
+     * @param {Number} [props.limit=1000] - The maximum number of submissions to return.
+     * @returns {Object[]} The per-submission condition application aggregates (submission_tag, condition_applications: [{ condition_application_tag, attribute_tag, attribute_text, trait_tag, trait_text, value }]).
+     */
+    async function getSubmissionExploreConditionApplications_API({ limit }) {
+        const res = await client.get(`/collaborations/submissions/explore/cas`, {
+            params: { limit }
+        })
+        return res.data
+    }
+
+    const useGetSubmissionExploreConditionApplications = (APIParams = {}, useQueryOptions = { staleTime: 60000 }) => {
+        return useQuery({
+            queryKey: ["getSubmissionExploreConditionApplications", APIParams.limit],
+            queryFn: () => getSubmissionExploreConditionApplications_API({ ...APIParams }),
+            ...useQueryOptions
+        });
+    }
+
+
+    /**
      * @description Creates a pending collaboration request for a submission. The request can be created for the requesting user itself or for one of their research groups. Endpoint: POST '/api/collaborations/requests'
      * @param {Object} props 
      * @param {String} props.submission_tag - The tag of the submission to request collaboration for.
@@ -158,6 +180,7 @@ export function createCollaborationsAPI(client) {
 
     return {
         useGetSubmissionExplore,
+        useGetSubmissionExploreConditionApplications,
         usePostCollaborationRequest,
         useGetMyCollaborationRequests,
         useGetPendingCollaborationRequests,

@@ -495,6 +495,19 @@ export function createConsortiumsAPI(client) {
     const useGetUserConsortiumsWithPendingTerms = (useQueryOptions = {}) => {
     return useQuery({queryKey: ["getUserConsortiumsWithPendingTerms"], queryFn: () => getUserConsortiumsWithPendingTerms_API(), ...useQueryOptions})
     }
+    /**
+     * @description Returns the consortiums the current user can request to join: the head (PI)
+     * of one of the users research groups agreed to the terms while the user is not a direct
+     * member yet.
+     * @returns {String[]} Returns the list of joinable consortium tags.
+     */
+    async function getUserJoinableConsortiums_API() {
+    const res = await client.get('/consortiums/user/joinable', {})
+    return res.data
+    }
+    const useGetUserJoinableConsortiums = (useQueryOptions = {}) => {
+    return useQuery({queryKey: ["getUserJoinableConsortiums"], queryFn: () => getUserJoinableConsortiums_API(), ...useQueryOptions})
+    }
 
 
   return {
@@ -529,6 +542,7 @@ export function createConsortiumsAPI(client) {
     useAgreeConsortiumTerms,
     useRevokeConsortiumTerms,
     useGetPendingConsortiumTerms,
-    useGetUserConsortiumsWithPendingTerms
+    useGetUserConsortiumsWithPendingTerms,
+    useGetUserJoinableConsortiums
   };
 }

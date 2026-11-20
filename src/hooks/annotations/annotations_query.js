@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import _ from "lodash";
 
 export function createQueryAnnotationsAPI(client) {
@@ -218,7 +218,71 @@ export function createQueryAnnotationsAPI(client) {
       ...useQueryOptions
     });
   };
-  
+
+  /**
+   * @description Enrichment analysis of annotations for a defined target protein list.
+   * One-sided Fisher exact test (greater) per annotation against a background universe,
+   * Benjamini-Hochberg FDR corrected. The universe is either the union of the proteins
+   * quantified in the given submissions (submission-wide) or all proteins of a proteome
+   * (cross-submission comparison of the same proteome).
+   * Endpoint: GET '/api/annotations/analysis/enrichment'
+   * @param {Object} props
+   * @param {String} props.target_proteins Semicolon-separated target protein tags.
+   * @param {String} [props.submission_tags] Semicolon-separated submission tags defining the universe.
+   * @param {String} [props.proteome_tag] Proteome tag defining the universe (alternative to submission_tags).
+   * @param {String} [props.group_tag] Restrict tested annotations to this annotation group.
+   * @param {String} [props.search_string] Only test annotations whose text/tag contains this string.
+   * @param {Number} [props.min_overlap=1] Minimum overlap of the annotation with the target list.
+   * @param {Number} [props.limit] Maximum number of results.
+   * @returns {Array} Records with annotation_tag, text, target_with_annotation, target_total,
+   * universe_with_annotation, universe_total, odds_ratio, p_value, fdr - sorted by p_value.
+   */
+  async function getAnnotationEnrichment_API({ target_proteins, submission_tags, proteome_tag, group_tag, search_string, min_overlap, limit }) {
+    const res = await client.get(`/annotations/analysis/enrichment`, {
+      params: { target_proteins, submission_tags, proteome_tag, group_tag, search_string, min_overlap, limit }
+    })
+    return res.data
+  }
+
+  const useGetAnnotationEnrichment = (APIParams = { target_proteins: "", submission_tags: undefined, proteome_tag: undefined, group_tag: undefined, search_string: undefined, min_overlap: 1, limit: undefined }, useQueryOptions = { staleTime: 60000 }) => {
+    return useQuery({
+      queryKey: ["getAnnotationEnrichment", APIParams.target_proteins, APIParams.submission_tags, APIParams.proteome_tag, APIParams.group_tag, APIParams.search_string, APIParams.min_overlap, APIParams.limit],
+      queryFn: () => getAnnotationEnrichment_API({ ...APIParams }),
+      ...useQueryOptions
+    });
+  }
+
+  /**
+   * @description 1D shift analysis ("systematic shifted annotations"): two-sided Mann-Whitney U
+   * test per annotation comparing the 1D values (e.g. log2FC of a volcano plot) of the
+   * annotation's member proteins against all other proteins of the background universe,
+   * Benjamini-Hochberg FDR corrected. POST because the per-protein values payload can be large.
+   * Endpoint: POST '/api/annotations/analysis/shift'
+   * @param {Object} props
+   * @param {Object} props.protein_values Map of protein tag -> 1D value (e.g. log2FC).
+   * @param {String[]} [props.submission_tags] Submissions defining the universe (alternative to proteome_tag).
+   * @param {String} [props.proteome_tag] Proteome defining the universe.
+   * @param {String} [props.group_tag] Restrict tested annotations to this annotation group.
+   * @param {String} [props.search_string] Only test annotations whose text/tag contains this string.
+   * @param {Number} [props.min_size=3] Minimum member/non-member count per annotation.
+   * @param {Number} [props.limit] Maximum number of results.
+   * @returns {Array} Records with annotation_tag, text, n_in, n_out, mean_in, mean_out, shift,
+   * direction ("up"/"down"), u_statistic, p_value, fdr - sorted by p_value.
+   */
+  async function postAnnotationShift_API({ protein_values, submission_tags, proteome_tag, group_tag, search_string, min_size, limit }) {
+    const res = await client.post(`/annotations/analysis/shift`, {
+      protein_values, submission_tags, proteome_tag, group_tag, search_string, min_size, limit
+    })
+    return res.data
+  }
+
+  const usePostAnnotationShift = (useMutationOptions = {}) => {
+    return useMutation({
+      mutationFn: (APIParams) => postAnnotationShift_API({ ...APIParams }),
+      ...useMutationOptions
+    });
+  }
+
   return {
         useGetAnnotationsByTag,
         useGetAnnotationsBySearchString,
@@ -230,6 +294,8 @@ export function createQueryAnnotationsAPI(client) {
         useGetAnnotationGroupCount,
         useGetIsProteinInAnnotation,
         useGetProteinsByAnnotation,
-        useGetAnnotationPermissions
+        useGetAnnotationPermissions,
+        useGetAnnotationEnrichment,
+        usePostAnnotationShift
    };
 }

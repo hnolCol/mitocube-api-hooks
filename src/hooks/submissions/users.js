@@ -88,13 +88,54 @@ export function createSubmissionUsersAPI(client) {
         })
     }
 
-    
+        /**
+     * @description Returns the user tags of the collaborators of a submission.
+     * @param {Object} props
+     * @param {String} props.tag The submission tag.
+     * @returns {Array} The user tags of the collaborators of the submission.
+     */
+    async function getSubmissionCollaborators_API({ tag }) {
+        const res = await client.get(`/submissions/${tag}/collaborators`)
+        return res.data
+    }
+
+    const useGetSubmissionCollaborators = (APIParams = { tag }, useQueryOptions = { staleTime: 50000 }) => {
+        return useQuery({
+            queryKey: ["getSubmissionCollaborators", APIParams.tag],
+            queryFn: () => getSubmissionCollaborators_API({ ...APIParams }),
+            enabled: !!APIParams.tag,
+            ...useQueryOptions
+        })
+    }
+
+    /**
+     * @description Removes the collaboration access of one user for a submission. Requires the
+     * creator of the submission, the head (PI) of the creators research group or a curator.
+     * @param {Object} props
+     * @param {String} props.tag The submission tag.
+     * @param {String} props.user_tag The user tag whose collaboration access is removed.
+     * @returns {Boolean} Returns true on success.
+     */
+    async function deleteSubmissionCollaborator_API({ tag, user_tag }) {
+        const res = await client.delete(`/submissions/${tag}/collaborators/${user_tag}`)
+        return res.data
+    }
+
+    const useDeleteSubmissionCollaborator = (useMutationOptions = {}) => {
+        return useMutation({
+            mutationFn: (APIParams) => deleteSubmissionCollaborator_API({ ...APIParams }),
+            ...useMutationOptions
+        })
+    }
+
 
     return {        
         useGetSubmissionUsers,
         useGetSubmissionOwner,
         useChangeSubmissionOwner,
-        useSetSubmissionCollaborators
+        useSetSubmissionCollaborators,
+        useGetSubmissionCollaborators,
+        useDeleteSubmissionCollaborator
     };
 
 }

@@ -7,6 +7,7 @@ import { createSubmissionCoreAPI } from "../hooks/submissions/core";
 import { createSampleCoreAPI } from "../hooks/samples/samples";
 import { createSubmissionSamplesAPI } from "../hooks/submissions/samples";
 import { createResearchGroupsAPI } from "../hooks/researchgroups/researchgroups";
+import { createConsortiumsAPI } from "../hooks/consortiums/consortiums";
 
 const createWrapper = () => {
     const queryClient = new QueryClient({
@@ -144,6 +145,22 @@ test("useGetSubmissionExplore passes repeated ca_tags and user_tags query parame
         "/collaborations/submissions/explore?ca_tags=CA1&ca_tags=CA2&user_tags=U1",
         { params: { search_string: "mito", limit: 40 } }
     );
+});
+
+test("useGetSubmissionExploreConditionApplications calls the explore condition application aggregation endpoint with the limit parameter", async () => {
+    const client = createMockClient(() => []);
+    const { useGetSubmissionExploreConditionApplications } = createCollaborationsAPI(client);
+    const { result } = renderHook(
+        () => useGetSubmissionExploreConditionApplications({ limit: 100 }),
+        { wrapper: createWrapper() }
+    );
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(client.get).toHaveBeenCalledWith(
+        "/collaborations/submissions/explore/cas",
+        { params: { limit: 100 } }
+    );
+    expect(result.current.data).toEqual([]);
 });
 
 test("useGetSubmissionExplore omits tag query parameters when no tags are given", async () => {
@@ -458,4 +475,33 @@ test("useSetResearchGroupExploreDisabled puts the disabled flag", async () => {
         null,
         { params: { disabled: true } });
     expect(result.current.data).toBe(true);
+});
+
+test("useGetSharingOverview calls the sharing overview endpoint", async () => {
+    const overview = [{ submission_tag: "subm-1", owner_tag: "u-1", consortium_tags: [], pending_consortium_tags: [], collaborator_tags: [] }];
+    const client = createMockClient(() => overview);
+    const { useGetSharingOverview } = createResearchGroupsAPI(client);
+
+    const { result } = renderHook(
+        () => useGetSharingOverview(),
+        { wrapper: createWrapper() }
+    );
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(client.get).toHaveBeenCalledWith("/researchgroups/sharing/overview");
+    expect(result.current.data).toEqual(overview);
+});
+
+test("useGetUserJoinableConsortiums calls the user joinable endpoint", async () => {
+    const client = createMockClient(() => ["cons-1"]);
+    const { useGetUserJoinableConsortiums } = createConsortiumsAPI(client);
+
+    const { result } = renderHook(
+        () => useGetUserJoinableConsortiums(),
+        { wrapper: createWrapper() }
+    );
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(client.get).toHaveBeenCalledWith("/consortiums/user/joinable", {});
+    expect(result.current.data).toEqual(["cons-1"]);
 });
