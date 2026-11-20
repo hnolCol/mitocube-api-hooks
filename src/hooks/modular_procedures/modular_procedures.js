@@ -219,6 +219,27 @@ export function createModifyModularProceduresAPI(client) {
     }
 
     /**
+     * @description Retires a published modular procedure (curators and admins only): because
+     * published procedures are content-hash immutable and never deleted (their executions must
+     * stay reproducible), retiring ends the life cycle - the content and hash stay forever, but
+     * the procedure can no longer be assigned or executed and the UI shows it greyed out.
+     * @param {Object} props
+     * @param {String} props.tag - The modular procedure tag
+     * @returns {Object} The retired modular procedure
+     */
+    async function retireModularProcedure_API({ tag }) {
+        const res = await client.post(`/procedures/${tag}/retire`)
+        return res.data
+    }
+
+    const useRetireModularProcedure = (useMutationOptions = {}) => {
+        return useMutation({
+            mutationFn: (APIParams) => retireModularProcedure_API({ ...APIParams }),
+            ...useMutationOptions
+        })
+    }
+
+    /**
      * @description Assigns a submission to a modular procedure (curators and admins only).
      * @param {Object} props
      * @param {String} props.tag - The modular procedure tag
@@ -295,6 +316,7 @@ export function createModifyModularProceduresAPI(client) {
         useUpdateModularProcedure,
         useCreateModularProcedureVersion,
         usePublishModularProcedure,
+        useRetireModularProcedure,
         useLinkModularProcedureToSubmission,
         useUnlinkModularProcedureFromSubmission,
         useMarkModularProcedureSubmissionDone,
