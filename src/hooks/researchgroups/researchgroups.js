@@ -285,6 +285,22 @@ export function createResearchGroupsAPI(client) {
     }
 
 
+    /**
+     * @description Returns the sharing overview of the current users research groups: one entry
+     * per submission with the owner tag, the consortiums the submission is shared with
+     * (approved and pending) and the collaborating users.
+     * @returns {Array} Entries: { submission_tag, owner_tag, consortium_tags,
+     * pending_consortium_tags, collaborator_tags }
+     */
+    async function getSharingOverview_API() {
+        const res = await client.get("/researchgroups/sharing/overview")
+        return res.data
+    }
+
+    const useGetSharingOverview = (useQueryOptions = {}) => {
+        return useQuery({ queryKey: ["getSharingOverview"], queryFn: () => getSharingOverview_API(), ...useQueryOptions })
+    }
+
     const useGetResearchGroupsOfUser = (APIParams = { user_tag }, useQueryOptions = {}) => {
     return useQuery({queryKey: ["getResearchGroupsOfUser", APIParams.user_tag], queryFn: () => getResearchGroupsOfUser_API({...APIParams}), enabled: !!APIParams.user_tag, ...useQueryOptions})
     }
@@ -337,6 +353,7 @@ export function createResearchGroupsAPI(client) {
     useGetMyIsHead,
     useGetMyHeadedGroups,
     useGetMySharedSubmissionsOverview,
+    useGetSharingOverview,
     useGetMyExploreDisabled,
     useGetResearchGroupExploreDisabled,
     useSetResearchGroupExploreDisabled,
