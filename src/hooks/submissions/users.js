@@ -103,6 +103,7 @@ export function createSubmissionUsersAPI(client) {
         return useQuery({
             queryKey: ["getSubmissionCollaborators", APIParams.tag],
             queryFn: () => getSubmissionCollaborators_API({ ...APIParams }),
+            enabled: !!APIParams.tag,
             ...useQueryOptions
         })
     }
