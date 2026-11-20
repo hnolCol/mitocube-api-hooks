@@ -196,7 +196,7 @@ export function createResearchGroupsAPI(client) {
      * @returns {Boolean} Returns true if the current user heads at least one research group.
      */
     async function getMyIsHead_API() {
-        const res = await client.get("/researchgroups/user/is-head", {})
+        const res = await client.get("/researchgroups/user/is-head")
         return res.data
     }
 
@@ -210,7 +210,7 @@ export function createResearchGroupsAPI(client) {
      * @returns {Array} Returns the tags of the headed research groups.
      */
     async function getMyHeadedGroups_API() {
-        const res = await client.get("/researchgroups/user/headed", {})
+        const res = await client.get("/researchgroups/user/headed")
         return res.data
     }
 
@@ -226,7 +226,7 @@ export function createResearchGroupsAPI(client) {
      * pending_consortium_tags, collaborator_tags }
      */
     async function getMySharedSubmissionsOverview_API() {
-        const res = await client.get("/researchgroups/user/shared-overview", {})
+        const res = await client.get("/researchgroups/user/shared-overview")
         return res.data
     }
 
@@ -241,7 +241,7 @@ export function createResearchGroupsAPI(client) {
      * @returns {Boolean} Returns true if explore is disabled by the PI of one of the users groups.
      */
     async function getMyExploreDisabled_API() {
-        const res = await client.get("/researchgroups/user/explore-disabled", {})
+        const res = await client.get("/researchgroups/user/explore-disabled")
         return res.data
     }
 
@@ -257,7 +257,7 @@ export function createResearchGroupsAPI(client) {
      * @returns {Boolean} Returns true if explore is disabled for the research group.
      */
     async function getResearchGroupExploreDisabled_API({ tag }) {
-        const res = await client.get(`/researchgroups/${tag}/explore-disabled`, {})
+        const res = await client.get(`/researchgroups/${tag}/explore-disabled`)
         return res.data
     }
 
@@ -331,84 +331,6 @@ export function createResearchGroupsAPI(client) {
     return useMutation({mutationFn: (APIParams = { tag, user_tag }) => deleteResearchGroupHead_API({...APIParams}), ...useMutationOptions})
     }
 
-    /**
-     * @description Returns whether the current user is a head (PI) of at least one research group.
-     * @returns {Boolean} True if the current user is a head (PI) of at least one research group.
-     */
-    async function getMyIsHead_API() {
-    const res = await client.get('/researchgroups/user/is-head')
-    return res.data
-    }
-    const useGetMyIsHead = (APIParams = {}, useQueryOptions = {}) => {
-    return useQuery({queryKey: ["getMyIsHead"], queryFn: () => getMyIsHead_API({...APIParams}), ...useQueryOptions})
-    }
-
-    /**
-     * @description Returns the tags of the research groups the current user heads (is PI of).
-     * @returns {String[]} The research group tags headed by the current user.
-     */
-    async function getMyHeadedGroups_API() {
-    const res = await client.get('/researchgroups/user/headed')
-    return res.data
-    }
-    const useGetMyHeadedGroups = (APIParams = {}, useQueryOptions = {}) => {
-    return useQuery({queryKey: ["getMyHeadedGroups"], queryFn: () => getMyHeadedGroups_API({...APIParams}), ...useQueryOptions})
-    }
-
-    /**
-     * @description Returns per submission of the current user and their headed groups: owner, shared
-     * consortiums (approved/pending) and collaborating users. PI only.
-     * @returns {Object[]} The shared submissions overview records of the headed groups.
-     */
-    async function getMySharedSubmissionsOverview_API() {
-    const res = await client.get('/researchgroups/user/shared-overview')
-    return res.data
-    }
-    const useGetMySharedSubmissionsOverview = (APIParams = {}, useQueryOptions = {}) => {
-    return useQuery({queryKey: ["getMySharedSubmissionsOverview"], queryFn: () => getMySharedSubmissionsOverview_API({...APIParams}), ...useQueryOptions})
-    }
-
-    /**
-     * @description Returns whether the head (PI) of any of the current users research groups disabled
-     * the explore visibility of the groups submissions.
-     * @returns {Boolean} True if the explore visibility is disabled for one of the users groups.
-     */
-    async function getMyExploreDisabled_API() {
-    const res = await client.get('/researchgroups/user/explore-disabled')
-    return res.data
-    }
-    const useGetMyExploreDisabled = (APIParams = {}, useQueryOptions = {}) => {
-    return useQuery({queryKey: ["getMyExploreDisabled"], queryFn: () => getMyExploreDisabled_API({...APIParams}), ...useQueryOptions})
-    }
-
-    /**
-     * @description Returns whether the head (PI) of the research group disabled the explore visibility.
-     * @param {Object} props
-     * @param {String} props.tag Research group tag
-     * @returns {Boolean} True if the explore visibility of the groups submissions is disabled.
-     */
-    async function getResearchGroupExploreDisabled_API({ tag }) {
-    const res = await client.get(`/researchgroups/${tag}/explore-disabled`)
-    return res.data
-    }
-    const useGetResearchGroupExploreDisabled = (APIParams = {tag}, useQueryOptions = {}) => {
-    return useQuery({queryKey: ["getResearchGroupExploreDisabled", APIParams.tag], queryFn: () => getResearchGroupExploreDisabled_API({...APIParams}), enabled: !!APIParams.tag, ...useQueryOptions})
-    }
-
-    /**
-     * @description Sets whether the head (PI) of the research group disabled the explore visibility.
-     * Requires the head (PI) of the group or a curator.
-     * @param {Object} props
-     * @param {String} props.tag Research group tag
-     * @param {Boolean} props.disabled If the explore visibility of the groups submissions is disabled.
-     */
-    async function setResearchGroupExploreDisabled_API({ tag, disabled }) {
-    const res = await client.put(`/researchgroups/${tag}/explore-disabled`, null, { params: { disabled } })
-    return res.data
-    }
-    const useSetResearchGroupExploreDisabled = (useMutationOptions = {}) => {
-    return useMutation({mutationFn: (APIParams = { tag, disabled }) => setResearchGroupExploreDisabled_API({...APIParams}), ...useMutationOptions})
-    }
   return {
     useGetResearchGroups,
     useGetResearchGroupsOfUser,
@@ -420,12 +342,6 @@ export function createResearchGroupsAPI(client) {
     useSetResearchGroupExploreDisabled,
     useGetResearchGroupHeads,
     usePostResearchGroupHead,
-    useGetMyIsHead,
-    useGetMyHeadedGroups,
-    useGetMySharedSubmissionsOverview,
-    useGetMyExploreDisabled,
-    useGetResearchGroupExploreDisabled,
-    useSetResearchGroupExploreDisabled,
     useDeleteResearchGroupHead,
     useGetResearchGroupUsers,
       useGetResearchGroupByTag,
