@@ -218,7 +218,40 @@ export function createQueryAnnotationsAPI(client) {
       ...useQueryOptions
     });
   };
-  
+
+  /**
+   * @description Enrichment analysis of annotations for a defined target protein list.
+   * One-sided Fisher exact test (greater) per annotation against a background universe,
+   * Benjamini-Hochberg FDR corrected. The universe is either the union of the proteins
+   * quantified in the given submissions (submission-wide) or all proteins of a proteome
+   * (cross-submission comparison of the same proteome).
+   * Endpoint: GET '/api/annotations/analysis/enrichment'
+   * @param {Object} props
+   * @param {String} props.target_proteins Semicolon-separated target protein tags.
+   * @param {String} [props.submission_tags] Semicolon-separated submission tags defining the universe.
+   * @param {String} [props.proteome_tag] Proteome tag defining the universe (alternative to submission_tags).
+   * @param {String} [props.group_tag] Restrict tested annotations to this annotation group.
+   * @param {String} [props.search_string] Only test annotations whose text/tag contains this string.
+   * @param {Number} [props.min_overlap=1] Minimum overlap of the annotation with the target list.
+   * @param {Number} [props.limit] Maximum number of results.
+   * @returns {Array} Records with annotation_tag, text, target_with_annotation, target_total,
+   * universe_with_annotation, universe_total, odds_ratio, p_value, fdr - sorted by p_value.
+   */
+  async function getAnnotationEnrichment_API({ target_proteins, submission_tags, proteome_tag, group_tag, search_string, min_overlap, limit }) {
+    const res = await client.get(`/annotations/analysis/enrichment`, {
+      params: { target_proteins, submission_tags, proteome_tag, group_tag, search_string, min_overlap, limit }
+    })
+    return res.data
+  }
+
+  const useGetAnnotationEnrichment = (APIParams = { target_proteins: "", submission_tags: undefined, proteome_tag: undefined, group_tag: undefined, search_string: undefined, min_overlap: 1, limit: undefined }, useQueryOptions = { staleTime: 60000 }) => {
+    return useQuery({
+      queryKey: ["getAnnotationEnrichment", APIParams.target_proteins, APIParams.submission_tags, APIParams.proteome_tag, APIParams.group_tag, APIParams.search_string, APIParams.min_overlap, APIParams.limit],
+      queryFn: () => getAnnotationEnrichment_API({ ...APIParams }),
+      ...useQueryOptions
+    });
+  }
+
   return {
         useGetAnnotationsByTag,
         useGetAnnotationsBySearchString,
@@ -230,6 +263,7 @@ export function createQueryAnnotationsAPI(client) {
         useGetAnnotationGroupCount,
         useGetIsProteinInAnnotation,
         useGetProteinsByAnnotation,
-        useGetAnnotationPermissions
+        useGetAnnotationPermissions,
+        useGetAnnotationEnrichment
    };
 }
