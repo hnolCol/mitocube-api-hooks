@@ -141,7 +141,7 @@ export function createPlatesAPI(client) {
     }
 
     /**
-     * @description Returns all attributes of the storage attribute group with their selectable traits (attributes: [{tag, text, parent_tag, is_format, traits}]).
+     * @description Returns all attributes of the storage attribute group with their selectable traits (attributes: [{tag, text, parent_tag, is_format, mandatory, traits}]). An attribute that is also part of the mandatory attribute group is flagged with mandatory and offered as a required input.
      */
         async function getPlateOptions_API() {
             const res = await client.get(`/plates/options`)
