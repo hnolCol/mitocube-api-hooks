@@ -18,6 +18,24 @@ export function createPlatesAPI(client) {
     }
 
     /**
+     * @description Returns all plates on which the submission was measured (via any runlist).
+     * @param {Object} props
+     * @param {String} props.tag - The submission tag
+     */
+    async function getPlatesBySubmission_API({ tag }) {
+        const res = await client.get(`/plates/by-submission/${tag}`)
+        return res.data
+    }
+    const useGetPlatesBySubmission = (APIParams = {}, useQueryOptions = {}) => {
+        return useQuery({
+            queryKey: ["platesBySubmission", APIParams.tag],
+            queryFn: () => getPlatesBySubmission_API({ ...APIParams }),
+            enabled: !!APIParams.tag,
+            ...useQueryOptions
+        })
+    }
+
+    /**
      * @description Suggests the next free plate name for a format.
      * @param {Object} props
      * @param {Number} props.rows - Number of rows
@@ -157,6 +175,7 @@ export function createPlatesAPI(client) {
 
     return {
         useGetPlates,
+        useGetPlatesBySubmission,
         useGetNextPlateName,
         usePostPlate,
         useDeletePlate,
