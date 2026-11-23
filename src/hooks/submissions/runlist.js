@@ -44,6 +44,9 @@ export function createSubmissionRunlistAPI(client) {
      * @description Create or update a runlist for a given submission. If a runlist already exists for the submission, it will be updated. Otherwise, a new runlist will be created.
      * @param {Object} props 
      * @param {String} props.tag - The submission tag
+     * @param {Object} props.runlist_props - The runlist properties passed to the backend.
+     * `instrument_tags` is a list of instrument tags (one per instrument type, e.g. the LC system and the mass spectrometer);
+     * the created runlist returns them as `instruments: [{tag, text}]`.
      */
     async function postRunlist_API({tag, runlist_props}) { 
         const res = await client.post(`/submissions/${tag}/runlist`, runlist_props)
