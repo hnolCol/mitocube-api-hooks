@@ -284,6 +284,60 @@ export function createResearchGroupsAPI(client) {
         return useMutation({ mutationFn: (APIParams = {}) => setResearchGroupExploreDisabled_API({ ...APIParams }), ...useMutationOptions })
     }
 
+    /**
+     * @description The explore visibility scope of the research group: whether the explore view
+     * is disabled, and whether the groups submissions are visible in the explore view to all
+     * research groups (scope 'ALL') or only to the research groups of the explicit allow list
+     * (scope 'GROUPS', the group tags in visible_to).
+     * @param {Object} props
+     * @param {String} props.tag Research group tag
+     * @returns {Object} Returns { disabled, scope, visible_to }.
+     */
+    async function getResearchGroupExploreScope_API({ tag }) {
+    const res = await client.get(`/researchgroups/${tag}/explore-scope`)
+    return res.data
+    }
+
+    const useGetResearchGroupExploreScope = (APIParams = { tag }, useQueryOptions = {}) => {
+        return useQuery({ queryKey: ["getResearchGroupExploreScope", APIParams.tag], queryFn: () => getResearchGroupExploreScope_API({ ...APIParams }), enabled: !!APIParams.tag, ...useQueryOptions })
+    }
+
+    /**
+     * @description Sets the explore visibility scope of the research group ('ALL' or 'GROUPS')
+     * and replaces its allow list of research groups. Requires the head (PI) of the research
+     * group or a curator.
+     * @param {Object} props
+     * @param {String} props.tag Research group tag
+     * @param {String} props.scope 'ALL' (visible to all research groups) or 'GROUPS' (visible only to the allow list).
+     * @param {String[]} [props.visible_to] The research group tags of the allow list (for scope 'GROUPS').
+     * @returns {Object} Returns the updated scope { disabled, scope, visible_to }.
+     */
+    async function setResearchGroupExploreScope_API({ tag, scope, visible_to }) {
+    const visible_to_tags = Array.isArray(visible_to) ? visible_to : []
+    const res = await client.put(`/researchgroups/${tag}/explore-scope`, null, { params: { scope, visible_to: visible_to_tags.join(";") } })
+    return res.data
+    }
+
+    const useSetResearchGroupExploreScope = (useMutationOptions = {}) => {
+        return useMutation({ mutationFn: (APIParams = { tag, scope, visible_to }) => setResearchGroupExploreScope_API({ ...APIParams }), ...useMutationOptions })
+    }
+
+    /**
+     * @description All other research groups (ordered alphabetically by name) that can be added
+     * to the explore visibility allow list of the research group.
+     * @param {Object} props
+     * @param {String} props.tag Research group tag
+     * @returns {Object[]} Returns the research group models (tag, text, abbreviation, institute, ...).
+     */
+    async function getResearchGroupExploreScopeTargets_API({ tag }) {
+    const res = await client.get(`/researchgroups/${tag}/explore-scope/targets`)
+    return res.data
+    }
+
+    const useGetResearchGroupExploreScopeTargets = (APIParams = { tag }, useQueryOptions = {}) => {
+        return useQuery({ queryKey: ["getResearchGroupExploreScopeTargets", APIParams.tag], queryFn: () => getResearchGroupExploreScopeTargets_API({ ...APIParams }), enabled: !!APIParams.tag, ...useQueryOptions })
+    }
+
 
     /**
      * @description Returns the sharing overview of the current users research groups: one entry
@@ -357,6 +411,9 @@ export function createResearchGroupsAPI(client) {
     useGetMyExploreDisabled,
     useGetResearchGroupExploreDisabled,
     useSetResearchGroupExploreDisabled,
+    useGetResearchGroupExploreScope,
+    useSetResearchGroupExploreScope,
+    useGetResearchGroupExploreScopeTargets,
     useGetResearchGroupHeads,
     usePostResearchGroupHead,
     useDeleteResearchGroupHead,
