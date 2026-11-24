@@ -401,6 +401,88 @@ export function createExecuteModularProceduresAPI(client) {
     }
 
     /**
+     * @description Creates an empty DRAFT procedure execution with a backend-generated ID
+     * (curators and admins only): the design (plates, sample placement, transfer map, per-well
+     * values) is saved via useSaveExecutionDraft and can be continued later; drafts do not
+     * block anything until they are started via useStartExecutionDraft.
+     * @param {Object} props
+     * @param {String} props.tag - The modular procedure tag
+     * @returns {Object} The created draft procedure execution
+     */
+    async function createExecutionDraft_API({ tag }) {
+        const res = await client.post(`/procedures/${tag}/executions/draft`)
+        return res.data
+    }
+
+    const useCreateExecutionDraft = (useMutationOptions = {}) => {
+        return useMutation({
+            mutationFn: (APIParams) => createExecutionDraft_API({ ...APIParams }),
+            ...useMutationOptions
+        })
+    }
+
+    /**
+     * @description Saves the setup of a DRAFT procedure execution (replacing the stored design
+     * wholesale): plates, responsible user, sample placement, transfer map, condition
+     * applications and per-well values. Come back and save anytime; started executions are
+     * immutable.
+     * @param {Object} props
+     * @param {String} props.tag - The draft execution tag
+     * @returns {Object} The saved draft procedure execution
+     */
+    async function saveExecutionDraft_API({ tag, input_plate_tag, output_plate_tag, responsible_user_tag, input_wells, output_wells, output_well_metrics, input_well_metrics }) {
+        const res = await client.put(`/procedures/executions/${tag}`,
+            { input_plate_tag, output_plate_tag, responsible_user_tag, input_wells, output_wells, output_well_metrics, input_well_metrics })
+        return res.data
+    }
+
+    const useSaveExecutionDraft = (useMutationOptions = {}) => {
+        return useMutation({
+            mutationFn: (APIParams) => saveExecutionDraft_API({ ...APIParams }),
+            ...useMutationOptions
+        })
+    }
+
+    /**
+     * @description Starts a saved draft execution as a run (curators and admins only): the stored
+     * design is validated in full — including the output well occupancy, which drafts do not
+     * block until they start — and the execution moves to RUNNING.
+     * @param {Object} props
+     * @param {String} props.tag - The draft execution tag
+     * @returns {Object} The started procedure execution
+     */
+    async function startExecutionDraft_API({ tag }) {
+        const res = await client.post(`/procedures/executions/${tag}/start`)
+        return res.data
+    }
+
+    const useStartExecutionDraft = (useMutationOptions = {}) => {
+        return useMutation({
+            mutationFn: (APIParams) => startExecutionDraft_API({ ...APIParams }),
+            ...useMutationOptions
+        })
+    }
+
+    /**
+     * @description Deletes a DRAFT procedure execution (and only a draft — started executions
+     * are recorded history and are never deleted).
+     * @param {Object} props
+     * @param {String} props.tag - The draft execution tag
+     * @returns {Boolean} True on success
+     */
+    async function deleteExecutionDraft_API({ tag }) {
+        const res = await client.delete(`/procedures/executions/${tag}`)
+        return res.data
+    }
+
+    const useDeleteExecutionDraft = (useMutationOptions = {}) => {
+        return useMutation({
+            mutationFn: (APIParams) => deleteExecutionDraft_API({ ...APIParams }),
+            ...useMutationOptions
+        })
+    }
+
+    /**
      * @description Returns a procedure execution by its tag.
      * @param {Object} props
      * @param {String} props.tag - The procedure execution tag
@@ -484,6 +566,10 @@ export function createExecuteModularProceduresAPI(client) {
 
     return {
         useExecuteModularProcedure,
+        useCreateExecutionDraft,
+        useSaveExecutionDraft,
+        useStartExecutionDraft,
+        useDeleteExecutionDraft,
         useFinishModularProcedureExecution,
         useSetModularProcedureExecutionMetrics,
         useGetModularProcedureExecution,
