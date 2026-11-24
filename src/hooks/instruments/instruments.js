@@ -76,6 +76,44 @@ const useGetInstrument = (APIParams = {tag}, useQueryOptions = {stateTime : Infi
 }
 
 /**
+ * @description Returns the free text info of an instrument (e.g. technician contact, service contract).
+ * @param {Object} props
+ * @param {String} props.tag - The instrument tag
+ * @returns {Object} - {instrument_tag, text, created_at, created_by, modified_at, modified_by}
+ */
+async function getInstrumentInfo_API({tag}) {
+    const res = await client.get(`/instruments/${tag}/info`)
+    return res.data
+}
+
+const useGetInstrumentInfo = (APIParams = {tag}, useQueryOptions = {}) => {
+    return useQuery({
+        queryKey: ["getInstrumentInfo", APIParams.tag],
+        queryFn: () => getInstrumentInfo_API({...APIParams}),
+        enabled: !!APIParams.tag,
+        ...useQueryOptions
+    });
+}
+
+/**
+ * @description Creates or updates the free text info of an instrument. Curators only.
+ * @param {Object} props
+ * @param {String} props.tag - The instrument tag
+ * @param {String} props.text - The info text (empty string clears it)
+ */
+async function putInstrumentInfo_API({tag, text}) {
+    const res = await client.put(`/instruments/${tag}/info`, {text})
+    return res.data
+}
+
+const usePutInstrumentInfo = (useMutationOptions = {}) => {
+    return useMutation({
+        mutationFn: (APIParams) => putInstrumentInfo_API({...APIParams}),
+        ...useMutationOptions
+    });
+}
+
+/**
  * @description Retrieves the current state of an instrument
  * @param {Object} props
  * @param {String} props.tag The instrument tag
@@ -292,6 +330,8 @@ return {
     useGetInstrumentsByType,
     useGetStatesOfAnInstrument,
     useGetInstrument,
+    useGetInstrumentInfo,
+    usePutInstrumentInfo,
     useGetInstrumentState,
     useGetInstrumentStateByQuery,
     useGetInstrumentStateDurations,

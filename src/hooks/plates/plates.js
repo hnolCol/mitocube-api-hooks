@@ -18,6 +18,24 @@ export function createPlatesAPI(client) {
     }
 
     /**
+     * @description Returns all plates on which the submission was measured (via any runlist).
+     * @param {Object} props
+     * @param {String} props.tag - The submission tag
+     */
+    async function getPlatesBySubmission_API({ tag }) {
+        const res = await client.get(`/plates/by-submission/${tag}`)
+        return res.data
+    }
+    const useGetPlatesBySubmission = (APIParams = {}, useQueryOptions = {}) => {
+        return useQuery({
+            queryKey: ["platesBySubmission", APIParams.tag],
+            queryFn: () => getPlatesBySubmission_API({ ...APIParams }),
+            enabled: !!APIParams.tag,
+            ...useQueryOptions
+        })
+    }
+
+    /**
      * @description Suggests the next free plate name for a format.
      * @param {Object} props
      * @param {Number} props.rows - Number of rows
@@ -39,7 +57,7 @@ export function createPlatesAPI(client) {
     /**
      * @description Creates a new plate.
      * @param {Object} props
-     * @param {Object} props.plate - {name, rows, columns, plate_type, vendor, location, description}
+     * @param {Object} props.plate - {name, trait_tags, location, description} - trait_tags maps the tags of the storage attribute group's attributes to the selected trait tags
      */
     async function postPlate_API({ plate }) {
         const res = await client.post(`/plates`, plate)
@@ -141,7 +159,7 @@ export function createPlatesAPI(client) {
     }
 
     /**
-     * @description Returns the selectable formats, cold storages, plate types and vendors.
+     * @description Returns all attributes of the storage attribute group with their selectable traits (attributes: [{tag, text, parent_tag, is_format, mandatory, traits}]). An attribute that is also part of the mandatory attribute group is flagged with mandatory and offered as a required input.
      */
         async function getPlateOptions_API() {
             const res = await client.get(`/plates/options`)
@@ -157,6 +175,7 @@ export function createPlatesAPI(client) {
 
     return {
         useGetPlates,
+        useGetPlatesBySubmission,
         useGetNextPlateName,
         usePostPlate,
         useDeletePlate,
