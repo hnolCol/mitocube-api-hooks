@@ -81,6 +81,29 @@ export function createQueryModularProceduresAPI(client) {
     }
 
     /**
+     * @description Returns the current plate locations of the samples of a submission: for every
+     * sample the wells of its most recent procedure execution (input and output plate), so the
+     * submission overview can show where the samples physically are — including executions that
+     * failed (the samples stay on the plate). Restricted users cannot query foreign submissions.
+     * @param {Object} props
+     * @param {String} props.submission_tag - The submission tag
+     * @returns {Object[]} The sample locations [{sample_tag, procedure_tag, execution_tag,
+     * execution_status, created_at, wells: [{plate_tag, position, side}]}]
+     */
+    async function getSubmissionSampleLocations_API({ submission_tag }) {
+        const res = await client.get(`/procedures/submissions/${submission_tag}/wells`)
+        return res.data
+    }
+
+    const useGetSubmissionSampleLocations = (APIParams = { submission_tag }, useQueryOptions = {}) => {
+        return useQuery({
+            queryKey: ["getSubmissionSampleLocations", APIParams.submission_tag],
+            queryFn: () => getSubmissionSampleLocations_API({ ...APIParams }),
+            ...useQueryOptions
+        })
+    }
+
+    /**
      * @description Returns the tags of all versions in the lineage of a modular procedure, oldest first.
      * @param {Object} props
      * @param {String} props.tag - The modular procedure tag
@@ -104,6 +127,7 @@ export function createQueryModularProceduresAPI(client) {
         useGetModularProcedureByTag,
         useGetModularProcedureSubmissions,
         useGetSubmissionModularProcedures,
+        useGetSubmissionSampleLocations,
         useGetModularProcedureVersions
     }
 }
@@ -119,8 +143,10 @@ export function createModifyModularProceduresAPI(client) {
      * @param {String[]} props.protocol_tags - The linked protocol tags
      * @returns {Object} The created modular procedure
      */
-    async function postModularProcedure_API({ title, description, condition_application_tags, condition_application_trees, protocol_tags }) {
-        const res = await client.post(`/procedures`, { title, description, condition_application_tags, condition_application_trees, protocol_tags })
+    async function postModularProcedure_API({ title, description, condition_application_tags, condition_application_trees, protocol_tags,
+        input_plate_format, input_plate_type, output_plate_format, output_plate_type, input_attribute_tags, output_attribute_tags, success_submission_state }) {
+        const res = await client.post(`/procedures`, { title, description, condition_application_tags, condition_application_trees, protocol_tags,
+            input_plate_format, input_plate_type, output_plate_format, output_plate_type, input_attribute_tags, output_attribute_tags, success_submission_state })
         return res.data
     }
 
@@ -141,8 +167,10 @@ export function createModifyModularProceduresAPI(client) {
      * @param {String[]} props.protocol_tags - The linked protocol tags
      * @returns {Object} The updated modular procedure
      */
-    async function updateModularProcedure_API({ tag, title, description, condition_application_tags, condition_application_trees, protocol_tags }) {
-        const res = await client.patch(`/procedures/${tag}`, { title, description, condition_application_tags, condition_application_trees, protocol_tags })
+    async function updateModularProcedure_API({ tag, title, description, condition_application_tags, condition_application_trees, protocol_tags,
+        input_plate_format, input_plate_type, output_plate_format, output_plate_type, input_attribute_tags, output_attribute_tags, success_submission_state }) {
+        const res = await client.patch(`/procedures/${tag}`, { title, description, condition_application_tags, condition_application_trees, protocol_tags,
+            input_plate_format, input_plate_type, output_plate_format, output_plate_type, input_attribute_tags, output_attribute_tags, success_submission_state })
         return res.data
     }
 
@@ -186,6 +214,27 @@ export function createModifyModularProceduresAPI(client) {
     const usePublishModularProcedure = (useMutationOptions = {}) => {
         return useMutation({
             mutationFn: (APIParams) => publishModularProcedure_API({ ...APIParams }),
+            ...useMutationOptions
+        })
+    }
+
+    /**
+     * @description Retires a published modular procedure (curators and admins only): because
+     * published procedures are content-hash immutable and never deleted (their executions must
+     * stay reproducible), retiring ends the life cycle - the content and hash stay forever, but
+     * the procedure can no longer be assigned or executed and the UI shows it greyed out.
+     * @param {Object} props
+     * @param {String} props.tag - The modular procedure tag
+     * @returns {Object} The retired modular procedure
+     */
+    async function retireModularProcedure_API({ tag }) {
+        const res = await client.post(`/procedures/${tag}/retire`)
+        return res.data
+    }
+
+    const useRetireModularProcedure = (useMutationOptions = {}) => {
+        return useMutation({
+            mutationFn: (APIParams) => retireModularProcedure_API({ ...APIParams }),
             ...useMutationOptions
         })
     }
@@ -267,6 +316,7 @@ export function createModifyModularProceduresAPI(client) {
         useUpdateModularProcedure,
         useCreateModularProcedureVersion,
         usePublishModularProcedure,
+        useRetireModularProcedure,
         useLinkModularProcedureToSubmission,
         useUnlinkModularProcedureFromSubmission,
         useMarkModularProcedureSubmissionDone,
@@ -277,22 +327,50 @@ export function createModifyModularProceduresAPI(client) {
 export function createExecuteModularProceduresAPI(client) {
 
     /**
-     * @description Executes a published modular procedure on a set of samples (curators and admins only).
+     * @description Starts an execution of a published modular procedure on a set of samples (curators and admins only).
      * Maps input plate wells to output plate wells; pooling and splitting are supported.
-     * The submissions owning the input samples are marked as done in the procedure.
+     * The execution is created in the RUNNING state: the submissions are only freed when the
+     * execution is confirmed via useFinishModularProcedureExecution.
      * @param {Object} props
      * @param {String} props.tag - The modular procedure tag
-     * @param {String} props.input_plate_tag - The input plate tag
-     * @param {String} props.output_plate_tag - The output plate tag
-     * @param {String} [props.responsible_user_tag] - The user responsible for the execution (defaults to the executing user)
+     * @param {String} props.input_plate_tag - The input plate tag (must match the plate layout defined by the procedure)
+     * @param {String} props.output_plate_tag - The output plate tag (must match the plate layout defined by the procedure)
+     * @param {String} [props.responsible_user_tag] - The user responsible for the execution (defaults to the executing user; must be a curator)
      * @param {Array} props.input_wells - [{position, sample_tags, output_positions}]
      * @param {Array} props.output_wells - [{position, condition_application_tags}]
-     * @param {Array} [props.output_well_metrics] - [{position, trait_tag, value}] — the trait defines the measured quantity (e.g. ug/ul of the concentration attribute)
+     * @param {Array} [props.output_well_metrics] - [{position, trait_tag, value, side: "OUTPUT"}] — the trait defines the measured quantity (e.g. ug/ul of the concentration attribute)
+     * @param {Array} [props.input_well_metrics] - [{position, trait_tag, value, side: "INPUT"}] — the per-well values of the declared input attributes (e.g. the concentration before harmonization)
      * @returns {Object} The created procedure execution
      */
-    async function executeModularProcedure_API({ tag, input_plate_tag, output_plate_tag, responsible_user_tag, input_wells, output_wells, output_well_metrics }) {
-        const res = await client.post(`/procedures/${tag}/execute`, { input_plate_tag, output_plate_tag, responsible_user_tag, input_wells, output_wells, output_well_metrics })
+    async function executeModularProcedure_API({ tag, input_plate_tag, output_plate_tag, responsible_user_tag, input_wells, output_wells, output_well_metrics, input_well_metrics }) {
+        const res = await client.post(`/procedures/${tag}/execute`, { input_plate_tag, output_plate_tag, responsible_user_tag, input_wells, output_wells, output_well_metrics, input_well_metrics })
         return res.data
+    }
+
+    /**
+     * @description Confirms a running procedure execution with its outcome (curators and admins only).
+     * Regardless of the outcome the submissions owning the placed samples are freed for the next
+     * module; only SUCCEEDED sets the procedure's optional success submission state and makes the
+     * submissions adopt the condition applications of the module.
+     * @param {Object} props
+     * @param {String} props.tag - The procedure execution tag
+     * @param {String} props.outcome - SUCCEEDED | FAILED | ABORTED
+     * @param {String} [props.comment] - An optional comment (e.g. why the run failed)
+     * @param {Boolean} [props.block_output_wells] - Overrides whether the output wells stay blocked
+     * after the change (e.g. an aborted robot run with dirty wells must stay blocked); omitted it
+     * defaults to the outcome (SUCCEEDED blocks, FAILED/ABORTED release the wells for a re-run)
+     * @returns {Object} The finished procedure execution
+     */
+    async function finishModularProcedureExecution_API({ tag, outcome, comment, block_output_wells }) {
+        const res = await client.post(`/procedures/executions/${tag}/finish`, { outcome, comment, block_output_wells })
+        return res.data
+    }
+
+    const useFinishModularProcedureExecution = (useMutationOptions = {}) => {
+        return useMutation({
+            mutationFn: (APIParams) => finishModularProcedureExecution_API({ ...APIParams }),
+            ...useMutationOptions
+        })
     }
 
     /**
@@ -300,7 +378,7 @@ export function createExecuteModularProceduresAPI(client) {
      * procedure execution, e.g. the protein concentration of each well (curators and admins only).
      * @param {Object} props
      * @param {String} props.tag - The procedure execution tag
-     * @param {Array} props.well_metrics - [{position, trait_tag, value}]
+     * @param {Array} props.well_metrics - [{position, trait_tag, value, side: "OUTPUT" | "INPUT"}]
      * @returns {Object} The updated procedure execution
      */
     async function setModularProcedureExecutionMetrics_API({ tag, well_metrics }) {
@@ -360,10 +438,57 @@ export function createExecuteModularProceduresAPI(client) {
         })
     }
 
+    /**
+     * @description Queries the executions visible to the user for the overview dashboard: summary
+     * entries (header data and well counts), newest first. The backend respects the user's
+     * submission scope: curators and admins see everything, group curators their group's
+     * executions, other users only the executions of their own submissions (creators).
+     * @param {Object} props
+     * @param {String} [props.search_submission_tag] - Filter for executions that placed samples of this submission
+     * @param {String} [props.status] - Filter by the current execution state (RUNNING/SUCCEEDED/FAILED/ABORTED)
+     * @param {Number} [props.limit] - The limit
+     * @returns {Object[]} The visible execution summaries
+     */
+    async function queryModularProcedureExecutions_API({ search_submission_tag, status, limit }) {
+        const res = await client.get(`/procedures/executions/q`, { params: { search_submission_tag, status, limit } })
+        return res.data
+    }
+
+    const useQueryModularProcedureExecutions = (APIParams = { search_submission_tag, status, limit }, useQueryOptions = {}) => {
+        return useQuery({
+            queryKey: ["queryModularProcedureExecutions", APIParams.search_submission_tag, APIParams.status, APIParams.limit],
+            queryFn: () => queryModularProcedureExecutions_API({ ...APIParams }),
+            ...useQueryOptions
+        })
+    }
+
+    /**
+     * @description Returns the state history of a procedure execution: the state, when it was
+     * set and the user who made the change, newest first.
+     * @param {Object} props
+     * @param {String} props.tag - The procedure execution tag
+     * @returns {Object[]} The state history [{state, created_at, user_tag}]
+     */
+    async function getModularProcedureExecutionStates_API({ tag }) {
+        const res = await client.get(`/procedures/executions/${tag}/states`)
+        return res.data
+    }
+
+    const useGetModularProcedureExecutionStates = (APIParams = { tag }, useQueryOptions = {}) => {
+        return useQuery({
+            queryKey: ["getModularProcedureExecutionStates", APIParams.tag],
+            queryFn: () => getModularProcedureExecutionStates_API({ ...APIParams }),
+            ...useQueryOptions
+        })
+    }
+
     return {
         useExecuteModularProcedure,
+        useFinishModularProcedureExecution,
         useSetModularProcedureExecutionMetrics,
         useGetModularProcedureExecution,
-        useGetModularProcedureExecutions
+        useGetModularProcedureExecutions,
+        useQueryModularProcedureExecutions,
+        useGetModularProcedureExecutionStates
     }
 }
