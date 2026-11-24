@@ -177,8 +177,8 @@ export function createQueryAttributesAPI(client) {
      * @param {Number} props.limit The limit applies to the number of attributes, not the number traits returned (if include_traits is enabled.)
      * @returns {import("./types").AttributeTraitQuery[]} - The traits and attributes tags ordered by priority 
      */
-    async function getAttributesAndValuesByQuery_API({search_string, min_state, attribute_groups, include_traits, include_parent_paths, limit, group_by, attribute_tags}) {
-        const res = await client.get(`/attributes/q`, {params : {search_string, min_state, attribute_groups, include_traits, include_parent_paths, limit, group_by, attribute_tags}})
+    async function getAttributesAndValuesByQuery_API({search_string, min_state, attribute_groups, include_traits, include_parent_paths, limit, group_by, attribute_tags, allow_input}) {
+        const res = await client.get(`/attributes/q`, {params : {search_string, min_state, attribute_groups, include_traits, include_parent_paths, limit, group_by, attribute_tags, allow_input}})
         return res.data 
     }
 
