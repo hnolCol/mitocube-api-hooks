@@ -202,7 +202,8 @@ export function createQueryAttributesAPI(client) {
                 APIParams.include_parent_paths,
                 APIParams.limit,
                 APIParams.group_by,
-                APIParams.attribute_tags
+                APIParams.attribute_tags,
+                APIParams.allow_input
             ],
             queryFn: () => getAttributesAndValuesByQuery_API({ ...APIParams }),
             ...useQueryOptions
