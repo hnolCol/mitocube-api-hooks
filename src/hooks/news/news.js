@@ -15,7 +15,7 @@ export function createNewsAPI(client) {
 
     const useFindNews = (APIParams = {limit, order: 'desc'}, useQueryOptions = {}) => {
         return useQuery({
-            queryKey: ["getNews"],
+            queryKey: ["getNews", APIParams.limit, APIParams.order],   // was ["getNews"]
             queryFn: () => findNews_API({...APIParams}),
             ...useQueryOptions
         })
@@ -51,14 +51,9 @@ export function createNewsAPI(client) {
      * @param {String[]} props.feature_tags - Features (peptides, proteins, genes etc) associated with the news.
      * @returns {Boolean} If insertion was successful
      */
-    async function postNews_API({ title, content, submission_tags, feature_tags }) {
+    async function postNews_API({ title, content, submission_tags, feature_tags, research_group_tag }) {
         const res = await client.post(`/news`,
-            {
-                title,
-                content,
-                submission_tags,
-                feature_tags
-        }
+            { title, content, submission_tags, feature_tags, research_group_tag }
         )
         return res.data 
     }
@@ -79,13 +74,9 @@ export function createNewsAPI(client) {
      * @param {String[]} props.submission_tags - Updated submission tags
      * @returns {import("../../types/news").News} The updated news item
      */
-    async function updateNews_API({ tag, title, content, submission_tags, user_tag }) {
+    async function updateNews_API({ tag, title, content, submission_tags, user_tag, research_group_tag }) {
         const res = await client.put(`/news/${tag}`, {
-            tag,
-            title,
-            content,
-            submission_tags,
-            user_tag
+            tag, title, content, submission_tags, user_tag, research_group_tag
         })
         return res.data
     }
