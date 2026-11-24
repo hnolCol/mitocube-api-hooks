@@ -47,10 +47,48 @@ export function createEditUserAPI(client) {
         })
     }
 
+    /**
+     * @description Resets a user account: generates a new password (sent to the user's email), disables MFA. Requires admin rights. Endpoint: POST '/api/users/{tag}/reset'
+     * @param {Object} props
+     * @param {String} props.tag  The user tag
+     * @returns {Object} The response of the reset request.
+     */
+    async function resetUserAccount_API({ tag }) {
+        const res = await client.post(`/users/${tag}/reset`, {})
+        return res.data
+    }
+
+    const usePostResetUserAccount = (useMutationOptions = {}) => {
+        return useMutation({
+            mutationFn: (APIParams) => resetUserAccount_API({ ...APIParams }),
+            ...useMutationOptions
+        })
+    }
+
+    /**
+     * @description Resets the multi-factor authentication of a user, so it can be set up again on the next login. Requires admin rights. Endpoint: POST '/api/users/{tag}/reset_mfa'
+     * @param {Object} props
+     * @param {String} props.tag  The user tag
+     * @returns {Object} The response of the reset request.
+     */
+    async function resetUserMfa_API({ tag }) {
+        const res = await client.post(`/users/${tag}/reset_mfa`, {})
+        return res.data
+    }
+
+    const usePostResetUserMfa = (useMutationOptions = {}) => {
+        return useMutation({
+            mutationFn: (APIParams) => resetUserMfa_API({ ...APIParams }),
+            ...useMutationOptions
+        })
+    }
+
     return {
         useGetUserAttributes,
         usePatchUser,
-        usePostPasswordChange
+        usePostPasswordChange,
+        usePostResetUserAccount,
+        usePostResetUserMfa
     }
 
 }

@@ -374,6 +374,32 @@ export function createExecuteModularProceduresAPI(client) {
     }
 
     /**
+     * @description Confirms a running procedure execution with its outcome (curators and admins only).
+     * Regardless of the outcome the submissions owning the placed samples are freed for the next
+     * module; only SUCCEEDED sets the procedure's optional success submission state and makes the
+     * submissions adopt the condition applications of the module.
+     * @param {Object} props
+     * @param {String} props.tag - The procedure execution tag
+     * @param {String} props.outcome - SUCCEEDED | FAILED | ABORTED
+     * @param {String} [props.comment] - An optional comment (e.g. why the run failed)
+     * @param {Boolean} [props.block_output_wells] - Overrides whether the output wells stay blocked
+     * after the change (e.g. an aborted robot run with dirty wells must stay blocked); omitted it
+     * defaults to the outcome (SUCCEEDED blocks, FAILED/ABORTED release the wells for a re-run)
+     * @returns {Object} The finished procedure execution
+     */
+    async function finishModularProcedureExecution_API({ tag, outcome, comment, block_output_wells }) {
+        const res = await client.post(`/procedures/executions/${tag}/finish`, { outcome, comment, block_output_wells })
+        return res.data
+    }
+
+    const useFinishModularProcedureExecution = (useMutationOptions = {}) => {
+        return useMutation({
+            mutationFn: (APIParams) => finishModularProcedureExecution_API({ ...APIParams }),
+            ...useMutationOptions
+        })
+    }
+
+    /**
      * @description Sets or updates the measured attribute values (metrics) of the output wells of a
      * procedure execution, e.g. the protein concentration of each well (curators and admins only).
      * @param {Object} props
