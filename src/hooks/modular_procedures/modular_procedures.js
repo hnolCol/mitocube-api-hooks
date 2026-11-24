@@ -531,6 +531,27 @@ export function createExecuteModularProceduresAPI(client) {
      * @param {Number} [props.limit] - The limit
      * @returns {Object[]} The visible execution summaries
      */
+    /**
+     * @description Returns the positions of the plate's output wells that are blocked by
+     * executions of modular procedures (still running or kept blocked): the wells an execution
+     * setup must not map its outputs onto. Draft executions block nothing.
+     * @param {Object} props
+     * @param {String} props.tag - The plate tag
+     * @returns {String[]} The blocked well positions
+     */
+    async function getProcedurePlateOccupied_API({ tag }) {
+        const res = await client.get(`/procedures/plates/${tag}/occupied`)
+        return res.data
+    }
+
+    const useGetProcedurePlateOccupied = (APIParams = { tag }, useQueryOptions = {}) => {
+        return useQuery({
+            queryKey: ["getProcedurePlateOccupied", APIParams.tag],
+            queryFn: () => getProcedurePlateOccupied_API({ ...APIParams }),
+            ...useQueryOptions
+        })
+    }
+
     async function queryModularProcedureExecutions_API({ search_submission_tag, status, limit }) {
         const res = await client.get(`/procedures/executions/q`, { params: { search_submission_tag, status, limit } })
         return res.data
@@ -575,6 +596,7 @@ export function createExecuteModularProceduresAPI(client) {
         useGetModularProcedureExecution,
         useGetModularProcedureExecutions,
         useQueryModularProcedureExecutions,
+        useGetProcedurePlateOccupied,
         useGetModularProcedureExecutionStates
     }
 }
