@@ -283,6 +283,71 @@ export function createQueryAnnotationsAPI(client) {
     });
   }
 
+  /**
+   * @description Gene set enrichment (GSEA) style analysis of annotations for the ranked list of a
+   * pairwise condition application comparison. The ranked list is computed server side from the
+   * submission's quantifications (log2FC of ca_tag_left vs ca_tag_right), so only the ca tags and
+   * the annotation group are sent. Per annotation: weighted Kolmogorov-Smirnov running-sum
+   * enrichment score, Monte Carlo nominal p-value, NES and Benjamini-Hochberg FDR.
+   * Endpoint: GET '/api/annotations/analysis/gsea'
+   * @param {Object} props
+   * @param {String} props.submission_tag Submission tag of the pairwise comparison.
+   * @param {String} props.ca_tag_left Condition application tag of the left (up-regulated) group.
+   * @param {String} props.ca_tag_right Condition application tag of the right group.
+   * @param {String} [props.within_attribute_tags] Optional within attribute tags (as in the volcano plot).
+   * @param {String} [props.within_ca_tags] Optional within condition application tags (as in the volcano plot).
+   * @param {String} [props.annotation_tag] Optional proteome annotation tag context (as in the volcano plot).
+   * @param {String} [props.equal_variance=true] Use equal variance for the pairwise t-test.
+   * @param {String} props.group_tag Annotation group whose annotations are tested.
+   * @param {Number} [props.min_size=5] Minimum number of ranked proteins per annotation.
+   * @param {Number} [props.max_size] Maximum number of ranked proteins per annotation.
+   * @param {Number} [props.n_permutations=1000] Monte Carlo permutations for the null distribution.
+   * @param {Number} [props.weight_p=1] GSEA weight exponent p (0 = unweighted, 1 = classic).
+   * @param {Number} [props.limit] Maximum number of results.
+   * @returns {Array} Records with annotation_tag, text, size, es, nes, p_value, fdr - sorted by p_value.
+   */
+  async function getAnnotationGSEA_API({ submission_tag, ca_tag_left, ca_tag_right, within_attribute_tags, within_ca_tags, annotation_tag, equal_variance, group_tag, min_size, max_size, n_permutations, weight_p, limit }) {
+    const res = await client.get(`/annotations/analysis/gsea`, {
+      params: { submission_tag, ca_tag_left, ca_tag_right, within_attribute_tags, within_ca_tags, annotation_tag, equal_variance, group_tag, min_size, max_size, n_permutations, weight_p, limit }
+    })
+    return res.data
+  }
+
+  const useGetAnnotationGSEA = (APIParams = { submission_tag, ca_tag_left: "", ca_tag_right: "", within_attribute_tags: undefined, within_ca_tags: undefined, annotation_tag: undefined, equal_variance: true, group_tag: "", min_size: 5, max_size: undefined, n_permutations: 1000, weight_p: 1, limit: undefined }, useQueryOptions = { staleTime: 60000 }) => {
+    return useQuery({
+      queryKey: ["getAnnotationGSEA", APIParams.submission_tag, APIParams.ca_tag_left, APIParams.ca_tag_right, APIParams.within_attribute_tags, APIParams.within_ca_tags, APIParams.annotation_tag, APIParams.equal_variance, APIParams.group_tag, APIParams.min_size, APIParams.max_size, APIParams.n_permutations, APIParams.weight_p, APIParams.limit],
+      queryFn: () => getAnnotationGSEA_API({ ...APIParams }),
+      enabled: _.isObject(APIParams) && _.isString(APIParams.ca_tag_left) && APIParams.ca_tag_left.length > 0 && _.isString(APIParams.ca_tag_right) && APIParams.ca_tag_right.length > 0 && _.isString(APIParams.group_tag) && APIParams.group_tag.length > 0,
+      ...useQueryOptions
+    });
+  }
+
+  /**
+   * @description Running-sum series of a single annotation for the GSEA plot. Same comparison and
+   * parameters as useGetAnnotationGSEA, but returns the full running-sum series, hit ranks and
+   * leading edge of the annotation given by plot_annotation_tag.
+   * Endpoint: GET '/api/annotations/analysis/gsea/series'
+   * @param {Object} props Same as useGetAnnotationGSEA, plus:
+   * @param {String} props.plot_annotation_tag Tag of the annotation to plot.
+   * @returns {Object|null} Record with annotation_tag, text, size, leading_edge_size, es, nes,
+   * p_value, es_rank, running_sum (one value per rank), hit_ranks, leading_edge_ranks - or null.
+   */
+  async function getAnnotationGSEASeries_API({ submission_tag, ca_tag_left, ca_tag_right, within_attribute_tags, within_ca_tags, annotation_tag, equal_variance, group_tag, plot_annotation_tag, min_size, n_permutations, weight_p }) {
+    const res = await client.get(`/annotations/analysis/gsea/series`, {
+      params: { submission_tag, ca_tag_left, ca_tag_right, within_attribute_tags, within_ca_tags, annotation_tag, equal_variance, group_tag, plot_annotation_tag, min_size, n_permutations, weight_p }
+    })
+    return res.data
+  }
+
+  const useGetAnnotationGSEASeries = (APIParams = { submission_tag, ca_tag_left: "", ca_tag_right: "", within_attribute_tags: undefined, within_ca_tags: undefined, annotation_tag: undefined, equal_variance: true, group_tag: "", plot_annotation_tag: "", min_size: 1, n_permutations: 1000, weight_p: 1 }, useQueryOptions = { staleTime: 60000 }) => {
+    return useQuery({
+      queryKey: ["getAnnotationGSEASeries", APIParams.submission_tag, APIParams.ca_tag_left, APIParams.ca_tag_right, APIParams.within_attribute_tags, APIParams.within_ca_tags, APIParams.annotation_tag, APIParams.equal_variance, APIParams.group_tag, APIParams.plot_annotation_tag, APIParams.min_size, APIParams.n_permutations, APIParams.weight_p],
+      queryFn: () => getAnnotationGSEASeries_API({ ...APIParams }),
+      enabled: _.isObject(APIParams) && _.isString(APIParams.plot_annotation_tag) && APIParams.plot_annotation_tag.length > 0 && _.isString(APIParams.ca_tag_left) && APIParams.ca_tag_left.length > 0 && _.isString(APIParams.ca_tag_right) && APIParams.ca_tag_right.length > 0 && _.isString(APIParams.group_tag) && APIParams.group_tag.length > 0,
+      ...useQueryOptions
+    });
+  }
+
   return {
         useGetAnnotationsByTag,
         useGetAnnotationsBySearchString,
@@ -296,6 +361,8 @@ export function createQueryAnnotationsAPI(client) {
         useGetProteinsByAnnotation,
         useGetAnnotationPermissions,
         useGetAnnotationEnrichment,
-        usePostAnnotationShift
+        usePostAnnotationShift,
+        useGetAnnotationGSEA,
+        useGetAnnotationGSEASeries
    };
 }

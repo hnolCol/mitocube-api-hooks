@@ -88,3 +88,67 @@ test("usePostAnnotationShift posts the protein values payload to the shift endpo
     });
     expect(result.current.data).toEqual(records);
 });
+
+
+test("useGetAnnotationGSEA calls the gsea endpoint with ca tags and the annotation group", async () => {
+    const records = [{ annotation_tag: "ann_1", es: 0.9, nes: 2.5, p_value: 0.01, fdr: 0.02 }];
+    const client = createMockClient(() => records);
+    const { useGetAnnotationGSEA } = createQueryAnnotationsAPI(client);
+
+    const { result } = renderHook(
+        () => useGetAnnotationGSEA({
+            submission_tag: "subA",
+            ca_tag_left: "ca_left",
+            ca_tag_right: "ca_right",
+            within_attribute_tags: undefined,
+            within_ca_tags: undefined,
+            annotation_tag: undefined,
+            equal_variance: true,
+            group_tag: "group_1",
+            min_size: 5,
+            max_size: undefined,
+            n_permutations: 1000,
+            weight_p: 1,
+            limit: undefined
+        }),
+        { wrapper: createWrapper() }
+    );
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(client.get).toHaveBeenCalledWith(
+        "/annotations/analysis/gsea",
+        { params: { submission_tag: "subA", ca_tag_left: "ca_left", ca_tag_right: "ca_right", within_attribute_tags: undefined, within_ca_tags: undefined, annotation_tag: undefined, equal_variance: true, group_tag: "group_1", min_size: 5, max_size: undefined, n_permutations: 1000, weight_p: 1, limit: undefined } }
+    );
+    expect(result.current.data).toEqual(records);
+});
+
+test("useGetAnnotationGSEASeries calls the gsea series endpoint for one annotation", async () => {
+    const series = { annotation_tag: "ann_1", running_sum: [0, 0.1, 0.2], hit_ranks: [1, 2] };
+    const client = createMockClient(() => series);
+    const { useGetAnnotationGSEASeries } = createQueryAnnotationsAPI(client);
+
+    const { result } = renderHook(
+        () => useGetAnnotationGSEASeries({
+            submission_tag: "subA",
+            ca_tag_left: "ca_left",
+            ca_tag_right: "ca_right",
+            within_attribute_tags: undefined,
+            within_ca_tags: undefined,
+            annotation_tag: undefined,
+            equal_variance: true,
+            group_tag: "group_1",
+            plot_annotation_tag: "ann_1",
+            min_size: 1,
+            n_permutations: 1000,
+            weight_p: 1
+        }),
+        { wrapper: createWrapper() }
+    );
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(client.get).toHaveBeenCalledWith(
+        "/annotations/analysis/gsea/series",
+        { params: { submission_tag: "subA", ca_tag_left: "ca_left", ca_tag_right: "ca_right", within_attribute_tags: undefined, within_ca_tags: undefined, annotation_tag: undefined, equal_variance: true, group_tag: "group_1", plot_annotation_tag: "ann_1", min_size: 1, n_permutations: 1000, weight_p: 1 } }
+    );
+    expect(result.current.data).toEqual(series);
+});
