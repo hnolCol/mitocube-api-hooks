@@ -556,6 +556,28 @@ export function createExecuteModularProceduresAPI(client) {
         })
     }
 
+    /**
+     * @description Returns a map of the plate's well positions to the tags of the DRAFT
+     * executions using them (input or output side). Drafts block nothing, but setups use this
+     * to warn about potential conflicts between parallel drafts (only the execution that
+     * starts first gets the wells).
+     * @param {Object} props
+     * @param {String} props.tag - The plate tag
+     * @returns {Object} Map of well position to draft execution tags
+     */
+    async function getProcedurePlateDraftWells_API({ tag }) {
+        const res = await client.get(`/procedures/plates/${tag}/drafts/occupied`)
+        return res.data
+    }
+
+    const useGetProcedurePlateDraftWells = (APIParams = { tag }, useQueryOptions = {}) => {
+        return useQuery({
+            queryKey: ["getProcedurePlateDraftWells", APIParams.tag],
+            queryFn: () => getProcedurePlateDraftWells_API({ ...APIParams }),
+            ...useQueryOptions
+        })
+    }
+
     async function queryModularProcedureExecutions_API({ search_submission_tag, status, limit }) {
         const res = await client.get(`/procedures/executions/q`, { params: { search_submission_tag, status, limit } })
         return res.data
@@ -601,6 +623,7 @@ export function createExecuteModularProceduresAPI(client) {
         useGetModularProcedureExecutions,
         useQueryModularProcedureExecutions,
         useGetProcedurePlateOccupied,
+        useGetProcedurePlateDraftWells,
         useGetModularProcedureExecutionStates
     }
 }
