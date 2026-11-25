@@ -144,9 +144,11 @@ export function createModifyModularProceduresAPI(client) {
      * @returns {Object} The created modular procedure
      */
     async function postModularProcedure_API({ title, description, condition_application_tags, condition_application_trees, protocol_tags,
-        input_plate_format, input_plate_type, output_plate_format, output_plate_type, input_attribute_tags, output_attribute_tags, success_submission_state }) {
+        input_plate_format, input_plate_type, output_plate_format, output_plate_type, input_attribute_tags, output_attribute_tags, success_submission_state,
+        required_submission_state, pubmed_ids, min_output_wells_per_sample, max_output_wells_per_sample }) {
         const res = await client.post(`/procedures`, { title, description, condition_application_tags, condition_application_trees, protocol_tags,
-            input_plate_format, input_plate_type, output_plate_format, output_plate_type, input_attribute_tags, output_attribute_tags, success_submission_state })
+            input_plate_format, input_plate_type, output_plate_format, output_plate_type, input_attribute_tags, output_attribute_tags, success_submission_state,
+            required_submission_state, pubmed_ids, min_output_wells_per_sample, max_output_wells_per_sample })
         return res.data
     }
 
@@ -168,9 +170,11 @@ export function createModifyModularProceduresAPI(client) {
      * @returns {Object} The updated modular procedure
      */
     async function updateModularProcedure_API({ tag, title, description, condition_application_tags, condition_application_trees, protocol_tags,
-        input_plate_format, input_plate_type, output_plate_format, output_plate_type, input_attribute_tags, output_attribute_tags, success_submission_state }) {
+        input_plate_format, input_plate_type, output_plate_format, output_plate_type, input_attribute_tags, output_attribute_tags, success_submission_state,
+        required_submission_state, pubmed_ids, min_output_wells_per_sample, max_output_wells_per_sample }) {
         const res = await client.patch(`/procedures/${tag}`, { title, description, condition_application_tags, condition_application_trees, protocol_tags,
-            input_plate_format, input_plate_type, output_plate_format, output_plate_type, input_attribute_tags, output_attribute_tags, success_submission_state })
+            input_plate_format, input_plate_type, output_plate_format, output_plate_type, input_attribute_tags, output_attribute_tags, success_submission_state,
+            required_submission_state, pubmed_ids, min_output_wells_per_sample, max_output_wells_per_sample })
         return res.data
     }
 
