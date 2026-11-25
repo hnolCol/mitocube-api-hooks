@@ -172,6 +172,26 @@ export function createQueryTraitsAPI(client) {
         });
     }
 
+    /**
+     * @description Returns for each required trait of the attribute the attribute tags that own
+     * the trait (resolved backend-side via the HAS_TRAIT relationship from the unique trait tag).
+     * @param {Object} props
+     * @param {String} props.tag The attribute tag.
+     * @returns {Object.<String, String[]>} - Maps each required trait tag to its owner attribute tags.
+     */
+    async function getRequiredTraitOwnersForAttribute_API({ tag }) {
+        const res = await client.get(`/attributes/${tag}/required_traits/owners`)
+        return res.data
+    }
+
+    const useGetRequiredTraitOwners = (APIParams = { tag }, useQueryOptions = { staleTime: 300000 }) => {
+        return useQuery({
+            queryKey: ["getRequiredTraitOwners", APIParams.tag],
+            queryFn: () => getRequiredTraitOwnersForAttribute_API({ ...APIParams }),
+            ...useQueryOptions
+        });
+    }
+
 
     /**
      * @description Returns the current user's permissions for traits and attributes.
@@ -210,6 +230,7 @@ export function createQueryTraitsAPI(client) {
 
 return {
     useGetRequiredTraits,
+    useGetRequiredTraitOwners,
     useGetTraitByTag,
     useGetTraitBySearchString,
     useGetTraitsByAttributeTag,
