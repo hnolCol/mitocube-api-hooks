@@ -17,6 +17,7 @@ import { createModifySymptomsAPI } from "./src/hooks/maintenance/symptoms";
 import { createQuerySymptomsAPI } from "./src/hooks/maintenance/symptoms_query";
 import { createSubmissionQueryAPI } from "./src/hooks/submissions/query";
 import { createSubmissionTitleAPI } from "./src/hooks/submissions/title";
+import { createSubmissionLinksAPI } from "./src/hooks/submissions/links";
 import { createCoreMaintenanceEventsAPI } from "./src/hooks/maintenance/events";
 import { createModifyMaintenanceProceduresAPI } from "./src/hooks/maintenance/procedures";
 import { createQueryMaintenanceProceduresAPI} from "./src/hooks/maintenance/procedures_query";
@@ -226,6 +227,9 @@ export default {
         },
         title: {
             createSubmissionTitleAPI
+        },
+        links: {
+            createSubmissionLinksAPI
         },
         summary: {
             createSubmissionSummaryAPI
