@@ -578,14 +578,14 @@ export function createExecuteModularProceduresAPI(client) {
         })
     }
 
-    async function queryModularProcedureExecutions_API({ search_submission_tag, status, limit }) {
-        const res = await client.get(`/procedures/executions/q`, { params: { search_submission_tag, status, limit } })
+    async function queryModularProcedureExecutions_API({ search_submission_tag, status, search_plate_tag, limit }) {
+        const res = await client.get(`/procedures/executions/q`, { params: { search_submission_tag, status, search_plate_tag, limit } })
         return res.data
     }
 
-    const useQueryModularProcedureExecutions = (APIParams = { search_submission_tag, status, limit }, useQueryOptions = {}) => {
+    const useQueryModularProcedureExecutions = (APIParams = { search_submission_tag, status, search_plate_tag, limit }, useQueryOptions = {}) => {
         return useQuery({
-            queryKey: ["queryModularProcedureExecutions", APIParams.search_submission_tag, APIParams.status, APIParams.limit],
+            queryKey: ["queryModularProcedureExecutions", APIParams.search_submission_tag, APIParams.status, APIParams.search_plate_tag, APIParams.limit],
             queryFn: () => queryModularProcedureExecutions_API({ ...APIParams }),
             ...useQueryOptions
         })
