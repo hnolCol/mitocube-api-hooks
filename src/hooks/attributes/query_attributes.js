@@ -1,4 +1,5 @@
 import { useQuery, useQueries } from "@tanstack/react-query"
+import _ from "lodash"
 
 export function createQueryAttributesAPI(client) {
 
@@ -10,7 +11,7 @@ export function createQueryAttributesAPI(client) {
      */
     async function getAttributeByTag_API({ tag }) {
         const res = await client.get(`/attributes/${tag}`)
-        return res.data 
+        return { ...res.data, abbreviation: _.get(res.data, "abbr") }
     }
 
     const useGetAttribute = (APIParams = { tag }, useQueryOptions = {}) => {
