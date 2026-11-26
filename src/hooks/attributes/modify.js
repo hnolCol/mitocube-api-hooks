@@ -6,7 +6,7 @@ export function createModifyAttributesAPI(client) {
     async function postAttribute_API({text, abbreviation, placeholder, priority, allow_input, children, required_trait_tags, group_tags, min_state, traits, parents}){
         const res = await client.post(`/attributes`,{
             text,
-            abbreviation,
+            abbr: abbreviation,
             placeholder,
             priority,
             min_state,
@@ -30,7 +30,7 @@ export function createModifyAttributesAPI(client) {
     async function patchAttribute_API({tag, text, abbreviation, placeholder, priority, allow_input, children, required_trait_tags, group_tags, min_state, parents}){
         const res = await client.patch(`/attributes/${tag}`,{
             text,
-            abbreviation,
+            abbr: abbreviation,
             placeholder,
             priority,
             min_state,

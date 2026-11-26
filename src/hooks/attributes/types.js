@@ -20,6 +20,8 @@
  * @property {Boolean} has_unit 
  * @property {String[]} unit 
  * @property {Boolean} allow_input
+ * @property {String} [abbr] - Optional abbreviation for the attribute, used in UI.
+ * @property {String} [abbreviation] - Alias of abbr, mapped by the API hooks.
  * @property {String} [placeholder] - Optional example value displayed as input placeholder if allow_input is true.
 */
 

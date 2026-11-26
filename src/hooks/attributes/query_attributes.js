@@ -1,4 +1,5 @@
 import { useQuery, useQueries } from "@tanstack/react-query"
+import _ from "lodash"
 
 export function createQueryAttributesAPI(client) {
 
@@ -10,7 +11,7 @@ export function createQueryAttributesAPI(client) {
      */
     async function getAttributeByTag_API({ tag }) {
         const res = await client.get(`/attributes/${tag}`)
-        return res.data 
+        return { ...res.data, abbreviation: _.get(res.data, "abbr") }
     }
 
     const useGetAttribute = (APIParams = { tag }, useQueryOptions = {}) => {
@@ -90,10 +91,30 @@ export function createQueryAttributesAPI(client) {
         return res.data 
     }
 
+    /**
+     * @description Returns all ancestor attribute tags of an attribute, closest parent first.
+     * @param {Object} props
+     * @param {String} props.tag The attribute tag to be returned.  
+     * @returns {String[]} - The attribute tags of the attribute's ancestors
+     */
+    async function getAttributeAncestorsByTag_API({ tag }) {
+        const res = await client.get(`/attributes/${tag}/ancestors`)
+        return res.data 
+    }
+
     const useGetAttributeParents = (APIParams = { tag }, useQueryOptions = {}) => {
         return useQuery({
             queryKey: ["getAttributeParents", APIParams.tag],
             queryFn: () => getAttributeParentsByTag_API({ ...APIParams }),
+            staleTime: 300000,
+            ...useQueryOptions
+        })
+    }
+
+    const useGetAttributeAncestors = (APIParams = { tag }, useQueryOptions = {}) => {
+        return useQuery({
+            queryKey: ["getAttributeAncestors", APIParams.tag],
+            queryFn: () => getAttributeAncestorsByTag_API({ ...APIParams }),
             staleTime: 300000,
             ...useQueryOptions
         })
@@ -264,6 +285,7 @@ return {
     useGetAttributeCount,
     useGetAttributeChildren,
     useGetAttributeParents,
+  useGetAttributeAncestors,
     useGetAttributeByGroup,
     useGetAttributeGroups,
     useGetAttributesByQuery,
