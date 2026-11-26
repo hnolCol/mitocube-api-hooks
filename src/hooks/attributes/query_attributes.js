@@ -11,7 +11,7 @@ export function createQueryAttributesAPI(client) {
      */
     async function getAttributeByTag_API({ tag }) {
         const res = await client.get(`/attributes/${tag}`)
-        return { ...res.data, abbreviation: _.get(res.data, "abbr") }
+        return { ...res.data }
     }
 
     const useGetAttribute = (APIParams = { tag }, useQueryOptions = {}) => {
